@@ -1,0 +1,23 @@
+<h2>Sign In</h2>
+<div class="col-container">
+  <form [formGroup]="myForm" novalidate>
+    <div class="form-container">
+      <mat-form-field class="form-field">
+        <input matInput placeholder="email" formControlName="ownerEmail" />
+        <mat-error *ngIf="handleError('ownerEmail', 'required')">
+          required
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <input matInput placeholder="password" formControlName="ownerPassword" />
+        <mat-error *ngIf="handleError('ownerPassword', 'required')">
+          required
+        </mat-error>
+      </mat-form-field>
+      <div class="button-container">
+        <button type="button" [disabled]="!myForm.valid" mat-raised-button color="primary" (click)="submitBtn()">SIGN IN</button>
+      </div>
+    </div>
+  </form>
+  <div class="form-footer"></div>
+</div>
