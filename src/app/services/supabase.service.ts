@@ -10,7 +10,7 @@ import { IUnit, IUnitTable } from '../interfaces/iunit';
 import { IProfileUpdate } from '../interfaces/iprofileupdate';
 import { IProfileLongUpdate } from '../interfaces/iprofile-long-update';
 import { environment } from '../../environments/environment';
-import { Globals } from '../globals';
+import { Globals } from '../interfaces/globals';
 import { IData } from '../interfaces/idata';
 
 @Injectable({
@@ -18,8 +18,6 @@ import { IData } from '../interfaces/idata';
 })
 
 export class SupabaseService {
-
-  ////////////////////// Properties \\\\\\\\\\\\\\\\\\\\\\\
 
   private supabase: SupabaseClient;
   private iProfile: IProfile;
@@ -72,8 +70,8 @@ export class SupabaseService {
   //* >>>>>>>>>>>>>>>>>>>  GET USERS  <<<<<<<<<<<<<<<<<<<<<<
 
   public getUserData(user: string) {
-    var type: string = this.ds.getUserType();
-    console.log("SupabaseService > getUserData() user = " + user + ' type = ' + type);
+    //var type: string = this.ds.getUserType();
+    console.log("SupabaseService > getUserData() user = " + user );
     this.getUserProfile(user);
   };
 
@@ -82,18 +80,19 @@ export class SupabaseService {
 
     let { data, error } = await this.supabase.from('profiles').select().eq('user', userID).single();
     if (!error) {
+      let profile = data;
       this.iProfile = {
-        unit: data.unit,
-        id: data.id,
-        email: data.email,
-        cell: data.cell,
-        lastname: data.lastname,
-        type: data.type,
-        firstname: data.firstname,
-        lease:data.lease
+        unit: profile['unit'],
+        id: data['id'],
+        email: data['email'],
+        cell: data['cell'],
+        lastname: data['lastname'],
+        type: data['type'],
+        firstname: data['firstname'],
+        lease:data['lease']
       };
       this.ds.setUserProfile(this.iProfile);
-      this.getUserVehicles(data.unit)
+      this.getUserVehicles(data['unit'])
     } else {
       alert("Supabase getProfile " + error)
     }
@@ -107,7 +106,7 @@ export class SupabaseService {
     let { data, error } = await this.supabase.from('profiles').select('*').eq('unit', unit);
     if (!error) {
       console.log("SupabaseService > fetchAdminProfiles_3 success!");
-      this.myProfiles = data;
+      //!this.myProfiles = data;
       this.publishFetchedProfiles();
       
       this.getUnit(unit);

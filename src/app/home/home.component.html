@@ -1,0 +1,16 @@
+
+<div class="card-wrapper">
+    <mat-card>
+      <mat-card-header>
+        <h1 class="card-title">Home</h1>
+      </mat-card-header>
+      <mat-card-content>
+        <app-sign-in *ngIf="!userAuthenticated"></app-sign-in>
+        <div *ngIf="userAuthenticated">
+            MENU
+        </div>
+        <div class="spacer-10"></div>
+        <mat-card-footer></mat-card-footer>
+      </mat-card-content>
+    </mat-card>
+  </div>

@@ -56,20 +56,20 @@ export class AuthService {
     console.log("AuthService > getUserProfile() ");
     let { data, error }  =  await this.supabase.from('profiles').select().eq('user', userID).single();
     if(!error){
-      this.uNum = data.unit;
+      this.uNum = data['unit'];
       var aProfile:IProfile = { 
-      id:data.id,
-      unit:data.unit,
-      email:data.email,
-      cell:data.cell,
-      lastname:data.lastname,
-      type:data.type,
-      firstname:data.firstname,
-      lease:data.lease};
+      id:data['id'],
+      unit:data['unit'],
+      email:data['email'],
+      cell:data['cell'],
+      lastname:data['lastname'],
+      type:data['type'],
+      firstname:data['firstname'],
+      lease:data['lease']};
 
       this.userProfile.next(aProfile);
 
-      this.userType = data.type;
+      this.userType = data['type'];
 
       this.getUserVehicles();
 

@@ -38,7 +38,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
       MatTableModule,
       MatPaginatorModule,
       MatCardModule,
-      MatChipsModule
+      MatChipsModule,
+      MatDialogModule,
+      MatMenuModule
    ],
    exports: [
       MatButtonModule,
@@ -56,7 +58,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
       MatChipsModule,
       MatTableModule,
       MatPaginatorModule,
-      MatCardModule
+      MatCardModule,
+      MatDialogModule,
+      MatMenuModule
    ],
    providers: [
       MatDatepickerModule,

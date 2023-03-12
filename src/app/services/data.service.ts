@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 
 import { IProfile } from '../interfaces/iprofile';
 import { IVehicle } from '../interfaces/ivehicle';
-import { Globals } from '../globals';
+import { Globals } from '../interfaces/globals';
 
 @Injectable({
   providedIn: "root",
@@ -95,18 +95,6 @@ export class DataService {
 
   };
 
-  setUserTenant(dataObj: any) {
-    console.log(this.g.DATA_SERVICE + " > setUserTenant()")
-    this.userid = dataObj.id.id;
-    this.session = dataObj.session;
-    this.userRole = dataObj.id.role;
-    this.tenantAuthenticated = true;
-    this.sendData({
-      from: this.g.DATA_SERVICE, event: this.g.TENANT_AUTH,
-      to: this.g.TENANTS_COMPONENT, other: this.userid
-    });
-  };
-
   setUserType(type: string) {
     this.userType = type;
   };
@@ -134,13 +122,7 @@ export class DataService {
     return this.ownerAuthenticated;
   };
 
-  isTenantAuthenticated() {
-    return this.tenantAuthenticated;
-  };
 
-  getUserType(): string {
-    return this.userType as string;
-  };
 
   getUserID(): string | null {
     return this.userid;
