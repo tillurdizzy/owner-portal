@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service'
 import { BehaviorSubject, Observable } from 'rxjs'
 import { Subject } from 'rxjs';
 
@@ -143,10 +142,10 @@ export class DataService {
 
 //* >>>>>>>>>>>>>>> CONSTRUCTOR / SUBSCRIPTIONS <<<<<<<<<<<<<<<<<<<<
 
-  constructor(private g: Globals, private authService: AuthService) {
+  constructor(private g: Globals) {
     this.doConsole('DataService > constructor()')
 
-    this.authService.authChanges((event, sess) => {
+    /* this.authService.authChanges((event, sess) => {
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         if (sess) {
           this.userid = sess.user.id
@@ -176,7 +175,7 @@ export class DataService {
       this.doConsole('DataService > myVehicles$ Subscription # cars = ' + next.length);
       this.myVehicles = next;
     });
-
+ */
 
   }
 };

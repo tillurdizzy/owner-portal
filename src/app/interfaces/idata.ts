@@ -6,7 +6,6 @@ import { IProfileLongUpdate } from './iprofile-long-update';
 
 export interface IData {
 	event:string|null;
-	from:string|null;
 	to:string|null;
 
 	email?:string|null;
