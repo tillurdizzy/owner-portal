@@ -13,7 +13,6 @@ export class AppComponent {
   constructor(private readonly supabase: SupabaseService) {}
 
   ngOnInit() {
-    
     this.supabase.authChanges((_, session) => (this.session = session))
   }
 }

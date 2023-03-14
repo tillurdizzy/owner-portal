@@ -14,12 +14,14 @@ import { IProfileLongUpdate } from '../interfaces/iprofile-long-update';
 import { environment } from '../../environments/environment';
 import { Globals } from '../interfaces/globals';
 import { IData } from '../interfaces/idata';
+import { IUserAccount } from '../interfaces/iuser';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SupabaseService {
   private supabase: SupabaseClient;
+  private loginMode = "IN" // Development only: Production should be "IN"
   private iProfile: IProfile;
 
   private vehicle: IVehicle;
@@ -29,6 +31,15 @@ export class SupabaseService {
   private myUnit: IUnit; // fetch interface...
 
   private dataObj: IData = { to: '', event: '' };
+
+  //* Observables
+  _session: AuthSession | null = null;
+  private currentUser: BehaviorSubject < User | boolean > = new BehaviorSubject(false);
+  public currentUser$ = this.currentUser.asObservable();
+
+  //Starts out true... if a profile exists it becomes User... if no profile yet... becomes false
+  private userProfile: BehaviorSubject<IProfile | boolean> = new BehaviorSubject(true);
+  public userProfile$ = this.userProfile.asObservable();
 
   //* >>>>>>>>>>>>>> MESSENGER <<<<<<<<<<<<<<<<
 
@@ -204,7 +215,7 @@ export class SupabaseService {
 
   //*>>>>>>>>>>>>>>>>>>>>  PROFILES  <<<<<<<<<<<<<<<<<<<<
 
-  async getUserProfile(userID) {
+ /*  async getUserProfile(userID) {
     console.log('SupabaseService > getUserProfile() ');
 
     let { data, error } = await this.supabase
@@ -227,14 +238,13 @@ export class SupabaseService {
       this.ds.setUserProfile(this.iProfile);
       this.getUserVehicles(data['unit']);
     } else {
-      alert('Supabase getProfile ' + error);
+      alert('Supabase getProfile ' + JSON.stringify(error));
     }
   }
-
+ */
   async insertNewProfile(profile: IProfile) {
     console.log(
-      'SupabaseService > insertNewProfile() profile >>' +
-        JSON.stringify(profile)
+      'SupabaseService > insertNewProfile() profile >>' + JSON.stringify(profile)
     );
     const { data, error } = await this.supabase
       .from('profiles')
@@ -259,7 +269,7 @@ export class SupabaseService {
       alert(error.message);
     } else {
       alert('Your profile was successfully updated!');
-      this.getUserProfile(user);
+      //this.getUserProfile(user);
     }
   }
 
@@ -308,7 +318,7 @@ export class SupabaseService {
     if (error) {
       alert(error.message);
     } else {
-      this.getUserVehicles(this.ds.getUserUnitNumber());
+      //this.getUserVehicles(this.ds.getUserUnitNumber());
     }
   }
 
@@ -327,34 +337,21 @@ export class SupabaseService {
 
   //* >>>>>>>>>>>>>>>>>>> USER / AUTH / SESSION <<<<<<<<<<<<<<<<<<<<<<<
 
-  _session: AuthSession | null = null;
-
-  private currentUser: BehaviorSubject<User | boolean> = new BehaviorSubject(
-    false
-  );
-  public currentUser$ = this.currentUser.asObservable();
-
-  //Starts out true... if a profile exists it becomes User... if no profile yet... becomes false
-  private userProfile: BehaviorSubject<IProfile | boolean> =
-    new BehaviorSubject(true);
-  public userProfile$ = this.userProfile.asObservable();
-
   async loadUser() {
-    if (this.currentUser.value) {
-      // User is already set, no need to do anything else
+    if (this.currentUser.value) {// User is already set, no need to do anything else
       return;
     }
+    // this will create a 401 error when no user is logged it yet-- ignore it
     const user = await this.supabase.auth.getUser();
 
     if (user.data.user) {
-      // returns null
       this.currentUser.next(user.data.user);
     } else {
       this.currentUser.next(false);
     }
   }
 
-  getCurrentUser(): Observable<User | boolean> {
+  getCurrentUser(): Observable <User | boolean> {
     return this.currentUser.asObservable();
   }
 
@@ -373,19 +370,35 @@ export class SupabaseService {
     return this._session;
   }
 
-  signUp(credentials: { email: string; password: string }) {
-    console.log('Supabase > signUp()' + JSON.stringify(credentials));
-    return this.supabase.auth.signUp(credentials);
+  logIn(obj) {
+    if (this.loginMode == 'IN') {
+      this.signIn(obj);
+    } else if(this.loginMode == 'UP'){
+      this.signUp(obj);
+    }
   }
 
-  signIn(credentials: { email: string; password: string }) {
+  async signIn(credentials: { email: string; password: string }) {
     console.log('Supabase > signIn() ' + JSON.stringify(credentials));
-    return this.supabase.auth.signInWithPassword(credentials);
+    try {
+      var result = await this.supabase.auth.signInWithPassword(credentials);
+      this.ds.authenticateUser(result);
+      let uid = result.data.user.id;
+      this.getUserAccount(uid);
+    } catch (error) {
+      alert("Sign in error: "  + JSON.stringify(error))
+    }
   }
 
-  authChanges(
-    callback: (event: AuthChangeEvent, session: Session | null) => void
-  ) {
+  async signUp(credentials: { email: string; password: string }) {
+    console.log('Supabase > signUp()' + JSON.stringify(credentials));
+    try {
+      var result = await this.supabase.auth.signUp(credentials);
+    } catch (error) {}
+    return result;
+  }
+
+  authChanges(callback: (event: AuthChangeEvent, session: Session | null) => void) {
     return this.supabase.auth.onAuthStateChange(callback);
   }
 
@@ -393,49 +406,37 @@ export class SupabaseService {
     return this.supabase.auth.signOut();
   }
 
-  public getUserData(user: string) {
-    //var type: string = this.ds.getUserType();
-    console.log('SupabaseService > getUserData() user = ' + user);
-    this.getUserProfile(user);
+  private async getUserAccount(user: string) {
+    try {
+      let { data, error } = await this.supabase.from('accounts').select('*').eq('userid', user);
+      this.ds.setUserAccount(data);
+    } catch (error) {
+      alert("Sign in error: "  + JSON.stringify(error))
+    }
   }
 
   //* >>>>>>>>>>>>>>> CONSTRUCTOR / SUBSCRIPTIONS <<<<<<<<<<<<<<<<<<<<
 
-  constructor(private router: Router,private ds: DataService,private g: Globals) {
+  constructor(private router: Router,private g: Globals,private ds: DataService) {
     console.log('SupabaseService > constructor() ');
-
     try {
       this.supabase = createClient(environment.supabaseUrl,environment.supabaseKey);
-      console.log('SupabaseService > createClient() ' + environment.supabaseKey);
-    } catch (error) {
-      
-    }
-   
-    
-    this.supabase.auth.onAuthStateChange(
-      (event: AuthChangeEvent, sess: Session | null) => {
-        console.log(
-          'Begin: SupabaseService > onAuthStateChange = ' +
-            event +
-            ' > currentUser = ' +
-            (this.currentUser.value as User).id
-        );
+    } catch (error) {}
+
+    this.supabase.auth.onAuthStateChange((event: AuthChangeEvent, sess: Session | null) => {
+        console.log('Begin: SupabaseService > onAuthStateChange = ' + event + ' > currentUser = ' + (this.currentUser.value as User).id);
 
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           let s = sess;
           if (s != null) {
             var u: User = s.user;
             this.currentUser.next(u);
-            this.getUserProfile(this.getCurrentUserId());
           }
         } else {
           this.currentUser.next(false);
         }
         console.log(
-          'End: SupabaseService > onAuthStateChange = ' +
-            event +
-            ' > currentUser = ' +
-            (this.currentUser.value as User).id
+          'End: SupabaseService > onAuthStateChange:event= ' + event + ' > currentUser = ' + (this.currentUser.value as User).id
         );
       }
     );

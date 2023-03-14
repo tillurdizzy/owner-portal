@@ -5,10 +5,20 @@
         <h1 class="card-title">Home</h1>
       </mat-card-header>
       <mat-card-content>
+        <div class="centered-container">
         <app-login-form *ngIf="!userAuthenticated"></app-login-form>
         <div *ngIf="userAuthenticated">
-            MENU
+          <span>{{userDBA}}<br></span>
+          <span>{{userName}}</span>
+          <ul class="centered-container" style="list-style-type:none">
+            <li *ngFor="let item of this.userUnitList">
+              <button click="unitClickHandler(item)" mat-fab extended color="primary" style="width:60%">
+                <span class="title">Unit #{{item}}</span>
+              </button>
+            </li>
+          </ul>
         </div>
+      </div>
         <div class="spacer-10"></div>
         <mat-card-footer></mat-card-footer>
       </mat-card-content>

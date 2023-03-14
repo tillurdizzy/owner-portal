@@ -15,19 +15,22 @@ export class LoginFormComponent implements OnInit {
   dataObj = {} as IData;
 
   myForm = new FormGroup({
-    ownerEmail: new FormControl<string>('', [Validators.required,Validators.email,]),
-    ownerPassword: new FormControl<string>('', Validators.required),
+    ownerEmail: new FormControl<string>('tillurdizzy@live.com', [Validators.required,Validators.email,]),
+    ownerPassword: new FormControl<string>('wstadmin', Validators.required),
   });
+
+  
 
   ngOnInit() {}
 
-  async submitBtn() {
+  submitBtn() {
     this.ds.doConsole('Home/LoginFormComponent: submitBtn()');
     var e = this.myForm.value.ownerEmail.trim();
     var p = this.myForm.value.ownerPassword.trim();
-    let obj = {email: e,password: p};
+    //let obj = {email: e,password: p};
+    let obj = {email: 'tillurdizzy@live.com',password: 'wstadmin'};
     try {
-      await this.supabase.signIn(obj);
+      this.supabase.logIn(obj);
     } catch (error) {
       alert(error.message)
     }finally{

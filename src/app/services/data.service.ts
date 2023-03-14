@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs'
 import { Subject } from 'rxjs';
 
+import { IUserAccount} from '../interfaces/iuser';
 import { IProfile } from '../interfaces/iprofile';
 import { IVehicle } from '../interfaces/ivehicle';
 import { Globals } from '../interfaces/globals';
@@ -12,17 +13,13 @@ import { Globals } from '../interfaces/globals';
 
 export class DataService {
 
-  ////////////////////// Properties \\\\\\\\\\\\\\\\\\\\\\\
-
   private userid: string | null = null;
-  private session: string | null = null;
-  private userType: string | null = null;
-  private userRole: string;
+  private session:{} = {};
+  private currentUser:{} = {};
 
-  private ownerAuthenticated: boolean = false;
-  private tenantAuthenticated: boolean = false;
+  private userAuthenticated: boolean = false;
 
-  private userProfile: IProfile = { firstname: '', lastname: '', cell: '', lease: '', email: '', type: '', unit: 0, id: 0 };
+  private userAccount: IUserAccount = { username: '', role: '', cell: '', email: '', dba: '', units: [], street:'',csz:'', userid:'' };
   private myVehicles: IVehicle[];
 
    //* >>>>>>>>>>>>>> MESSENGER <<<<<<<<<<<<<<<<
@@ -53,26 +50,6 @@ export class DataService {
     return obj;
   };
 
-  //invoked from Auth CurrentUser subscription 
-  authenticateUser() {
-    var type = this.userProfile.type;
-    console.log(this.g.DATA_SERVICE + " >  authenticateUser() " + type);
-    if (type == "tenants") {
-      this.tenantAuthenticated = true;
-    } else if (type == "owners") {
-      this.ownerAuthenticated = true;
-    }
-  };
-
-  //! FIX THIS!!!   
-  isUserAdmin(): boolean {
-    var isAdmin = false;
-    if (this.userProfile.email == "tillurdizzy@live.com") {
-      isAdmin = true;
-    }
-    //return isAdmin;
-    return true; // dev only
-  };
 
   doConsole(message: string) {
     console.log(message);
@@ -80,27 +57,55 @@ export class DataService {
 
   //* >>>>>>>>>>>>>>>>>> SET <<<<<<<<<<<<<<<<<<<<<<<<<<<
 
+  //Set when user logs successfully in from Supa
+  authenticateUser(data: any) {
+    this.userAuthenticated = true;
+    this.currentUser = data.user;
+    this.session = data.session;
+    let dataObj = {
+      to: 'HomeComponent',
+      event: 'userAuthenticated',
+    };
+    this.sendData(dataObj);
+  };
+
   // Called from LoginComponent (Child of Owner/Tenant)
-  setUserOwner(dataObj: any) {
+  /* setUserOwner(dataObj: any) {
     console.log(this.g.DATA_SERVICE + " > setUserOwner()")
     this.userid = dataObj.id.id;
     this.userRole = dataObj.id.role;
     this.session = dataObj.session;
-    this.ownerAuthenticated = true;
+    this.userAuthenticated = true;
     this.sendData({
       from: this.g.DATA_SERVICE, event: this.g.OWNER_AUTH,
       to: this.g.OWNERS_COMPONENT, other: this.userid
     });
 
-  };
+  }; */
 
-  setUserType(type: string) {
-    this.userType = type;
-  };
+  setUserAccount(data:any) {
+    let x = data[0]
+    this.userAccount.cell = x.cell;
+    this.userAccount.csz = x.csz;
+    this.userAccount.dba = x.dba;
+    this.userAccount.email = x.email;
+    this.userAccount.street = x.street;
+    this.userAccount.userid = x.userid;
+    this.userAccount.username = x.username;
+    this.userAccount.role = x.role;
+    this.userAccount.units = x.units.units;
 
-  setUserProfile(p: IProfile) {
-    console.log(this.g.DATA_SERVICE + " > setUserProfile()");
-    this.userProfile = this.removeNull(p);
+    let dataObj = {
+      to: 'HomeComponent',
+      event: 'userUnitList',
+      unitList:[] = this.userAccount.units,
+      dba:this.userAccount.dba,
+      name:this.userAccount.username
+    };
+    this.sendData(dataObj);
+
+    console.log(this.g.DATA_SERVICE + " > setUserAccount()" + JSON.stringify(this.userAccount));
+
   };
 
   setUserVehicles(data: IVehicle[]) {
@@ -117,13 +122,11 @@ export class DataService {
 
   //* >>>>>>>>>>>>>>>>>>>  GET  <<<<<<<<<<<<<<<<<<<<<<
 
-  isOwnerAuthenticated() {
-    return this.ownerAuthenticated;
+  isUserAuthenticated() {
+    return this.userAuthenticated;
   };
 
-
-
-  getUserID(): string | null {
+  /* getUserID(): string | null {
     return this.userid;
   };
 
@@ -137,45 +140,14 @@ export class DataService {
 
   getUserVehicles(): IVehicle[] {
     return this.myVehicles;
-  };
+  }; */
 
 
 //* >>>>>>>>>>>>>>> CONSTRUCTOR / SUBSCRIPTIONS <<<<<<<<<<<<<<<<<<<<
 
-  constructor(private g: Globals) {
+  constructor(private g: Globals, ) {
     this.doConsole('DataService > constructor()')
 
-    /* this.authService.authChanges((event, sess) => {
-      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-        if (sess) {
-          this.userid = sess.user.id
-        }
-
-      } else {
-        this.userid = null;
-      };
-
-      this.doConsole('DataService > onAuthStateChange > event = '
-        + event + ' User: ' + this.userid);
-
-    });
-    // if next == true == 'pristine'... has not been set yet... after init will either be false or User
-    this.authService.userProfile$.subscribe((next) => {
-
-      if (typeof next != 'boolean') {
-        this.doConsole('DataService > userProfile$ Subscription ' + JSON.stringify(next));
-        this.userProfile = next;
-        this.authenticateUser();
-      } else {
-        this.doConsole('DataService > userProfile$ Subscription ' + next);
-      }
-    });
-
-    this.authService.myVehicles$.subscribe((next) => {
-      this.doConsole('DataService > myVehicles$ Subscription # cars = ' + next.length);
-      this.myVehicles = next;
-    });
- */
 
   }
 };
