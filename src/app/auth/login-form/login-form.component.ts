@@ -27,8 +27,8 @@ export class LoginFormComponent implements OnInit {
     this.ds.doConsole('Home/LoginFormComponent: submitBtn()');
     var e = this.myForm.value.ownerEmail.trim();
     var p = this.myForm.value.ownerPassword.trim();
-    //let obj = {email: e,password: p};
-    let obj = {email: 'tillurdizzy@live.com',password: 'wstadmin'};
+    let obj = {email: e,password: p};
+    //let obj = {email: 'tillurdizzy@live.com',password: 'wstadmin'};
     try {
       this.supabase.logIn(obj);
     } catch (error) {

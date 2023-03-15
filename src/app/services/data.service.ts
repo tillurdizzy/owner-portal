@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs'
-import { Subject } from 'rxjs';
-
+import { Subject , Subscription} from 'rxjs';
+import { SupabaseService } from 'src/app/services/supabase.service';
 import { IUserAccount} from '../interfaces/iuser';
 import { IProfile } from '../interfaces/iprofile';
 import { IVehicle } from '../interfaces/ivehicle';
@@ -16,10 +16,12 @@ export class DataService {
   private userid: string | null = null;
   private session:{} = {};
   private currentUser:{} = {};
+  supaScription: Subscription;
 
   private userAuthenticated: boolean = false;
 
   private userAccount: IUserAccount = { username: '', role: '', cell: '', email: '', dba: '', units: [], street:'',csz:'', userid:'' };
+  private myCurrentUnit: number;
   private myVehicles: IVehicle[];
 
    //* >>>>>>>>>>>>>> MESSENGER <<<<<<<<<<<<<<<<
@@ -57,97 +59,84 @@ export class DataService {
 
   //* >>>>>>>>>>>>>>>>>> SET <<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-  //Set when user logs successfully in from Supa
-  authenticateUser(data: any) {
-    this.userAuthenticated = true;
-    this.currentUser = data.user;
-    this.session = data.session;
-    let dataObj = {
-      to: 'HomeComponent',
-      event: 'userAuthenticated',
-    };
-    this.sendData(dataObj);
-  };
+ 
+  
 
-  // Called from LoginComponent (Child of Owner/Tenant)
-  /* setUserOwner(dataObj: any) {
-    console.log(this.g.DATA_SERVICE + " > setUserOwner()")
-    this.userid = dataObj.id.id;
-    this.userRole = dataObj.id.role;
-    this.session = dataObj.session;
-    this.userAuthenticated = true;
-    this.sendData({
-      from: this.g.DATA_SERVICE, event: this.g.OWNER_AUTH,
-      to: this.g.OWNERS_COMPONENT, other: this.userid
-    });
+ 
+  
+ 
 
-  }; */
+  
 
-  setUserAccount(data:any) {
-    let x = data[0]
-    this.userAccount.cell = x.cell;
-    this.userAccount.csz = x.csz;
-    this.userAccount.dba = x.dba;
-    this.userAccount.email = x.email;
-    this.userAccount.street = x.street;
-    this.userAccount.userid = x.userid;
-    this.userAccount.username = x.username;
-    this.userAccount.role = x.role;
-    this.userAccount.units = x.units.units;
-
-    let dataObj = {
-      to: 'HomeComponent',
-      event: 'userUnitList',
-      unitList:[] = this.userAccount.units,
-      dba:this.userAccount.dba,
-      name:this.userAccount.username
-    };
-    this.sendData(dataObj);
-
-    console.log(this.g.DATA_SERVICE + " > setUserAccount()" + JSON.stringify(this.userAccount));
-
-  };
-
-  setUserVehicles(data: IVehicle[]) {
-    console.log(this.g.DATA_SERVICE + " > setUserVehicles()");
-    var cars = data;
-    this.myVehicles = this.removeNull(data);
-    let dataObj = {
-      from: this.g.DATA_SERVICE, to: this.g.ADMIN_UNIT_COMPONENT,
-      event: this.g.EVENT_VEHICLES, vehicles: this.myVehicles
-    };
-    this.sendData(dataObj);
-  };
-
-
-  //* >>>>>>>>>>>>>>>>>>>  GET  <<<<<<<<<<<<<<<<<<<<<<
+  //* >>>>>>>>>>>> GETTERS / SETTERS <<<<<<<<<<<<
 
   isUserAuthenticated() {
-    return this.userAuthenticated;
+    let obj = {
+      'auth': this.userAuthenticated, 
+      'unitList':this.userAccount.units,
+      'dba':this.userAccount.dba,
+      'name':this.userAccount.username}
+    return obj;
   };
 
-  /* getUserID(): string | null {
-    return this.userid;
+  setSelectedUnit(u:string){
+    this.myCurrentUnit = parseInt(u)
+  }
+
+ get currentUnit(){
+  return this.myCurrentUnit;
+ }
+
+ //* >>>>>>>>>> SUPASCRIPTION HANDLERS >>>>>>>>>> \\
+
+ private authenticateUser(data: any) {
+  this.userAuthenticated = true;
+  this.currentUser = data.user;
+  this.session = data.session;
+
+  let dataObj = {to: 'HomeComponent',event: 'userAuthenticated'};
+  this.sendData(dataObj);
+};
+
+private setUserAccount(data:any) {
+  let x = data[0]
+  this.userAccount.cell = x.cell;
+  this.userAccount.csz = x.csz;
+  this.userAccount.dba = x.dba;
+  this.userAccount.email = x.email;
+  this.userAccount.street = x.street;
+  this.userAccount.userid = x.userid;
+  this.userAccount.username = x.username;
+  this.userAccount.role = x.role;
+  this.userAccount.units = x.units.units;
+
+  let dataObj = {
+    to: 'HomeComponent',
+    event: 'userUnitList',
+    unitList:[] = this.userAccount.units,
+    dba:this.userAccount.dba,
+    name:this.userAccount.username
   };
-
-  getUserProfile(): IProfile {
-    return this.userProfile;
-  };
-
-  getUserUnitNumber(): string | number {
-    return this.userProfile.unit;
-  };
-
-  getUserVehicles(): IVehicle[] {
-    return this.myVehicles;
-  }; */
+  this.sendData(dataObj);
+  console.log(this.g.DATA_SERVICE + " > setUserAccount()" + JSON.stringify(this.userAccount));
+};
 
 
-//* >>>>>>>>>>>>>>> CONSTRUCTOR / SUBSCRIPTIONS <<<<<<<<<<<<<<<<<<<<
+//* >>>>>>>>>>> CONSTRUCTOR / SUBSCRIPTIONS <<<<<<<<<<<<<
 
-  constructor(private g: Globals, ) {
+  constructor(private g: Globals, private supabase:SupabaseService) {
     this.doConsole('DataService > constructor()')
-
-
+    this.supaScription = this.supabase.getData().subscribe(x => {
+      if(x != null){
+        var dataPassed = x;
+        if(dataPassed.to == 'DataService'){
+          if(dataPassed.event == 'userAuthenticated' ){
+            this.authenticateUser(dataPassed.result)
+          }else if(dataPassed.event == 'getUserAccount' ){
+           this.setUserAccount(dataPassed.result)
+          }
+        }
+      }
+    })
   }
 };

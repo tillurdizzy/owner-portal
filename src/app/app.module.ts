@@ -17,10 +17,13 @@ import { DialogComponent } from './dialog/alert/dialog.component';
 import { HomeComponent } from './home/home.component';
 import { UnitsComponent } from './units/units/units.component';
 import { DetailsComponent } from './units/details/details.component';
-import { UnitListComponent } from './units/unit-list/unit-list.component';
 import { FormsComponent } from './forms/forms/forms.component';
 import { WorkOrderComponent } from './forms/work-order/work-order.component';
 import { NavErrorComponent } from './misc/nav-error/nav-error.component';
+import { EditResidentComponent } from './units/edit-resident/edit-resident.component';
+import { EditVehicleComponent } from './units/edit-vehicle/edit-vehicle.component';
+import { AddVehicleComponent } from './units/add-vehicle/add-vehicle.component';
+import { AddResidentComponent } from './units/add-resident/add-resident.component';
 
 @NgModule({
   declarations: [
@@ -31,10 +34,13 @@ import { NavErrorComponent } from './misc/nav-error/nav-error.component';
     HomeComponent,
     UnitsComponent,
     DetailsComponent,
-    UnitListComponent,
     FormsComponent,
     WorkOrderComponent,
-    NavErrorComponent
+    NavErrorComponent,
+    EditResidentComponent,
+    EditVehicleComponent,
+    AddVehicleComponent,
+    AddResidentComponent
   ],
   imports: [
     BrowserModule,

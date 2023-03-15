@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UnitListComponent } from './unit-list.component';
+import { AddResidentComponent } from './add-resident.component';
 
-describe('UnitListComponent', () => {
-  let component: UnitListComponent;
-  let fixture: ComponentFixture<UnitListComponent>;
+describe('AddResidentComponent', () => {
+  let component: AddResidentComponent;
+  let fixture: ComponentFixture<AddResidentComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UnitListComponent ]
+      declarations: [ AddResidentComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(UnitListComponent);
+    fixture = TestBed.createComponent(AddResidentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

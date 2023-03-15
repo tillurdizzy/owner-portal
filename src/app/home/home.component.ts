@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
+import { Router } from '@angular/router';
 import { DataService } from '../services/data.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -8,7 +10,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./home.component.scss']
 })
 
-export class HomeComponent {
+export class HomeComponent implements OnInit{
 
   subscription: Subscription;
   userAuthenticated:boolean = false;
@@ -16,11 +18,25 @@ export class HomeComponent {
   userName:string;
   userUnitList:[] = [];
 
-  unitClickHandler(n){
+  unitSelectorForm = new FormGroup({
+    unitNum: new FormControl('', [Validators.required]),
+  });
 
+  ngOnInit(): void {
+    let dataPassed = this.ds.isUserAuthenticated();
+    this.userAuthenticated = dataPassed.auth;
+    this.userUnitList = dataPassed.unitList;
+    this.userDBA = dataPassed.dba;
+    this.userName = dataPassed.name;
   }
 
-  constructor(private ds: DataService) {
+  unitSelectorHandler(){
+    let x = this.unitSelectorForm.value.unitNum;
+    this.ds.setSelectedUnit(x);
+    this.router.navigate(['/units']);
+  }
+
+  constructor(private ds: DataService, private router: Router) {
 
     this.subscription = this.ds.getData().subscribe(x => {
       if(x != null){

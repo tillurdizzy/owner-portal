@@ -58,36 +58,39 @@ export class SupabaseService {
     return this.subject.asObservable();
   }
 
-  publishFetchedProfiles() {
-    this.dataObj = {
-      to: this.g.ADMIN_SERVICE + ',' + this.g.ADMIN_UNIT_COMPONENT,
-      event: 'publishFetchedProfiles',
-      profiles: this.myProfiles,
+  publishData(to:string,event:string,data:any) {
+    let dataObj = {
+      to:to,
+      event: event,
+      data: data
     };
-    this.sendData(this.dataObj);
+    this.sendData(dataObj);
   }
 
   doConsole(message: string) {
     console.log(message);
   }
 
-  //* >>>>>>>>>>>>>>>>>>> ADMIN <<<<<<<<<<<<<<<<<<<<<<<
-  async fetchAdminProfiles_3(unit: string) {
-    console.log('SupabaseService > fetchAdminProfiles_3 begin');
-
-    let { data, error } = await this.supabase
-      .from('profiles')
-      .select('*')
-      .eq('unit', unit);
-    if (!error) {
-      console.log('SupabaseService > fetchAdminProfiles_3 success!');
-      //!this.myProfiles = data;
-      this.publishFetchedProfiles();
-
-      this.getUnit(unit);
-    } else {
-      alert('Supabase getProfile ' + error);
+  //* >>>>>>>>>>>>>>>>>>> FETCH RESIDENT DATA <<<<<<<<<<<<<<<<<<<<<<<
+  async fetchResidentProfiles(unit: number) {
+    console.log('SupabaseService > fetchResidentProfiles');
+    try {
+      let data = await this.supabase.from('profiles').select('*').eq('unit', unit);
+      this.publishData('DetailsComponent','fetchResidentProfiles',data.data);
+    } catch (error) {
+      alert(JSON.stringify(error))
     }
+  }
+
+  async fetchResidentVehicles(unit: number) {
+    console.log('SupabaseService > getAdminVehicles()');
+    try {
+      let data = await this.supabase.from('parking').select('*').eq('unit', unit);
+      this.publishData('DetailsComponent','fetchResidentVehicles',data.data);
+    } catch (error) {
+      alert(JSON.stringify(error))
+    }
+   
   }
 
   async getUnit(unit: string) {
@@ -101,7 +104,6 @@ export class SupabaseService {
       this.myUnit = data;
       this.publishUnitOwnerData();
 
-      this.getAdminVehicles(unit);
     }
   }
 
@@ -114,16 +116,7 @@ export class SupabaseService {
     this.sendData(this.dataObj);
   }
 
-  async getAdminVehicles(unit: string) {
-    console.log('SupabaseService > getAdminVehicles()');
-    let { data, error } = await this.supabase
-      .from('parking')
-      .select('*')
-      .eq('unit', parseInt(unit));
-    if (!error) {
-      this.publishAdminVehicles(data);
-    }
-  }
+  
 
   private publishAdminVehicles(data: any) {
     this.myVehicles.length = 0;
@@ -167,7 +160,7 @@ export class SupabaseService {
       };
       this.sendData(this.dataObj);
     } catch (error) {
-      alert(error.message);
+      alert(JSON.stringify(error))
     }
   }
 
@@ -180,7 +173,7 @@ export class SupabaseService {
       };
       this.sendData(this.dataObj);
     } catch (error) {
-      alert(error.message);
+      alert(JSON.stringify(error))
     }
   }
 
@@ -197,7 +190,7 @@ export class SupabaseService {
       };
       this.sendData(this.dataObj);
     } catch (error) {
-      alert(error.message);
+      alert(JSON.stringify(error))
     }
   }
 
@@ -215,33 +208,6 @@ export class SupabaseService {
 
   //*>>>>>>>>>>>>>>>>>>>>  PROFILES  <<<<<<<<<<<<<<<<<<<<
 
- /*  async getUserProfile(userID) {
-    console.log('SupabaseService > getUserProfile() ');
-
-    let { data, error } = await this.supabase
-      .from('profiles')
-      .select()
-      .eq('user', userID)
-      .single();
-    if (!error) {
-      let profile = data;
-      this.iProfile = {
-        unit: profile['unit'],
-        id: data['id'],
-        email: data['email'],
-        cell: data['cell'],
-        lastname: data['lastname'],
-        type: data['type'],
-        firstname: data['firstname'],
-        lease: data['lease'],
-      };
-      this.ds.setUserProfile(this.iProfile);
-      this.getUserVehicles(data['unit']);
-    } else {
-      alert('Supabase getProfile ' + JSON.stringify(error));
-    }
-  }
- */
   async insertNewProfile(profile: IProfile) {
     console.log(
       'SupabaseService > insertNewProfile() profile >>' + JSON.stringify(profile)
@@ -266,7 +232,7 @@ export class SupabaseService {
       .match({ user: user });
 
     if (error) {
-      alert(error.message);
+      alert(JSON.stringify(error))
     } else {
       alert('Your profile was successfully updated!');
       //this.getUserProfile(user);
@@ -283,22 +249,23 @@ export class SupabaseService {
       };
       this.sendData(this.dataObj);
     } catch (error) {
-      alert(error.message);
+      alert(JSON.stringify(error))
     }
   }
 
   //*>>>>>>>>>>>>>>>>>> Vehicles <<<<<<<<<<<<<<<<<<<<
 
-  async getUserVehicles(unit_number) {
+  /* async getUserVehicles(unit_number) {
     console.log('SupabaseService > getUserVehicles()');
-    let { data, error } = await this.supabase
-      .from('parking')
-      .select('*')
-      .eq('unit', parseInt(unit_number));
-    if (!error) {
+    try {
+      let data = await this.supabase.from('parking').select('*').eq('unit', parseInt(unit_number));
       this.setMyVehicle(data);
+    } catch (error) {
+      alert("getUserVehicles: Error:" + JSON.stringify(error))
+    }finally{
+
     }
-  }
+  } */
 
   private setMyVehicle(data: any) {
     this.myVehicles.length = 0;
@@ -306,7 +273,7 @@ export class SupabaseService {
       this.vehicle = data[i];
       this.myVehicles.push(this.vehicle);
     }
-    this.ds.setUserVehicles(this.myVehicles);
+    
   }
 
   async updateVehicle(obj: IVehicleTable, s: number) {
@@ -335,7 +302,7 @@ export class SupabaseService {
     return { data, error };
   }
 
-  //* >>>>>>>>>>>>>>>>>>> USER / AUTH / SESSION <<<<<<<<<<<<<<<<<<<<<<<
+  //* >>>>>>>>>>>>>>>>>>> USER / AUTH / SESSION / ACCOUNT <<<<<<<<<<<<<<<<<<<<<<<
 
   async loadUser() {
     if (this.currentUser.value) {// User is already set, no need to do anything else
@@ -343,7 +310,6 @@ export class SupabaseService {
     }
     // this will create a 401 error when no user is logged it yet-- ignore it
     const user = await this.supabase.auth.getUser();
-
     if (user.data.user) {
       this.currentUser.next(user.data.user);
     } else {
@@ -382,7 +348,14 @@ export class SupabaseService {
     console.log('Supabase > signIn() ' + JSON.stringify(credentials));
     try {
       var result = await this.supabase.auth.signInWithPassword(credentials);
-      this.ds.authenticateUser(result);
+  
+      let dataObj = {
+        to: 'DataService',
+        event: 'userAuthenticated',
+        result: result
+      };
+      this.sendData(dataObj);
+
       let uid = result.data.user.id;
       this.getUserAccount(uid);
     } catch (error) {
@@ -406,10 +379,16 @@ export class SupabaseService {
     return this.supabase.auth.signOut();
   }
 
-  private async getUserAccount(user: string) {
+  async getUserAccount(user: string) {
     try {
       let { data, error } = await this.supabase.from('accounts').select('*').eq('userid', user);
-      this.ds.setUserAccount(data);
+     
+      let dataObj = {
+        to: 'DataService',
+        event: 'getUserAccount',
+        result: data
+      };
+      this.sendData(dataObj);
     } catch (error) {
       alert("Sign in error: "  + JSON.stringify(error))
     }
@@ -417,7 +396,7 @@ export class SupabaseService {
 
   //* >>>>>>>>>>>>>>> CONSTRUCTOR / SUBSCRIPTIONS <<<<<<<<<<<<<<<<<<<<
 
-  constructor(private router: Router,private g: Globals,private ds: DataService) {
+  constructor(private router: Router,private g: Globals) {
     console.log('SupabaseService > constructor() ');
     try {
       this.supabase = createClient(environment.supabaseUrl,environment.supabaseKey);

@@ -1,7 +1,7 @@
 import { IProfile } from '../interfaces/iprofile';
 import { IVehicle } from '../interfaces/ivehicle';
 import { IUnit } from '../interfaces/iunit';
-import { IProfileLongUpdate } from './iprofile-long-update';
+
 
 
 export interface IData {
@@ -17,5 +17,4 @@ export interface IData {
 	vehicles?:IVehicle[];
 	iUnit?:IUnit;
 	iUnits?:IUnit[];
-	iProfileUpdate?:IProfileLongUpdate;
 }
