@@ -1,47 +1,33 @@
+<div class="unitLabel"><span>Unit # {{this.selectedUnit}}</span></div>
 <div class="unit-data-container">
-    <div *ngIf="unitSelected" class="label-banner-green">
+    <div class="label-banner-green">
       <span class="label-banner-font">Resident(s)</span>
     </div>
     <div class="unit-data" *ngIf="isResidentOne">
       <div class="edit-button">
-        <button
-          type="button"
+        <button type="button"
           mat-raised-button
-          color="primary"
-          color="primary"
-          (click)="onResidentClick(0)"
-        >
-          EDIT
-        </button>
+          color ="primary"
+          (click)="onResidentClick(0)">EDIT</button>
       </div>
   
       <div class="small-black-14">
-        <span>{{
-          this.myProfiles[0].firstname + " " + this.myProfiles[0].lastname
-        }}</span
-        ><br />
-        <span class="small-black-text">Email:</span> {{ this.myProfiles[0].email
-        }}<br />
-        <span class="small-black-text">Cell:</span> {{ this.myProfiles[0].cell
-        }}<br />
-        <span class="small-black-text">Type:</span> {{ this.myProfiles[0].type
-        }}<br />
+        <span>{{this.myProfiles[0].firstname + " " + this.myProfiles[0].lastname}}</span><br />
+        <span class="small-black-text">Email:</span> {{ this.myProfiles[0].email}}<br />
+        <span class="small-black-text">Cell:</span> {{ this.myProfiles[0].cell}}<br />
+        <span class="small-black-text">Type:</span> {{ this.myProfiles[0].type}}<br />
         <span class="small-black-text">Lease:</span>
         {{ this.myProfiles[0].lease }}
       </div>
     </div>
-  
+
     <div class="unit-data" *ngIf="isResidentTwo">
       <div class="edit-button">
         <button
           type="button"
           mat-raised-button
           color="primary"
-          color="primary"
-          (click)="onResidentClick(1)"
-        >
-          EDIT
-        </button>
+          (click)="onResidentClick(1)">EDIT</button>
       </div>
   
       <div class="small-black-14">
@@ -62,7 +48,7 @@
   </div>
   
   <div class="unit-data-container">
-    <div *ngIf="unitSelected" class="label-banner-purple">
+    <div class="label-banner-purple">
       <span class="label-banner-font">Vehicle(s)</span>
     </div>
     <div class="unit-data" *ngIf="isVehicleOne">
@@ -70,7 +56,6 @@
         <button
           type="button"
           mat-raised-button
-          color="primary"
           color="primary"
           (click)="onVehicleClick(0)"
         >

@@ -1,1 +1,52 @@
-<p>edit-vehicle works!</p>
+
+<div class="medium-black-16">{{currentSpace}}</div>
+<mat-divider></mat-divider>
+<div class="spacer-5"></div>
+
+<div class="col-container">
+  <form [formGroup]="vehicleForm" novalidate>
+    <div class="form-container">
+      <mat-form-field class="form-field">
+        <mat-label>Registered owner name</mat-label>
+        <input matInput placeholder="Registered owner name" formControlName="name" />
+        <mat-error *ngIf="handleError('name', 'required')">
+          <span class="tiny-text">required</span> 
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <mat-label>License Plate</mat-label>
+        <input matInput placeholder="tag" formControlName="tag" />
+        <mat-error *ngIf="handleError('tag', 'required')">
+          <span class="tiny-text">required</span> 
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <mat-label>Make</mat-label>
+        <input matInput placeholder="make" formControlName="make" />
+        <mat-error *ngIf="handleError('make', 'required')">
+          <span class="tiny-text">required</span> 
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <mat-label>Model</mat-label>
+        <input matInput placeholder="model" formControlName="model" />
+        <mat-error *ngIf="handleError('model', 'required')">
+          <span class="tiny-text">required</span> 
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <mat-label>Color</mat-label>
+        <input matInput placeholder="color" formControlName="color" />
+        <mat-error *ngIf="handleError('color', 'required')">
+          <span class="tiny-text">required</span> 
+        </mat-error>
+      </mat-form-field>
+      
+      <div class="spread-buttons" >
+        <button type="button" [disabled]="!(vehicleForm.valid && vehicleForm.dirty)" mat-raised-button color="primary" (click)="submitBtnUpdate()">UPDATE</button>
+        <button type="button" mat-raised-button color="primary" (click)="submitBtnRemove()">REMOVE</button>
+      </div>
+    </div>
+  </form>
+  <div class="form-footer"></div>
+</div>

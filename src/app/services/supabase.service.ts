@@ -3,17 +3,17 @@ import { Router } from '@angular/router';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { AuthChangeEvent, AuthSession } from '@supabase/supabase-js';
 import { Session, User } from '@supabase/supabase-js';
-import { DataService } from './data.service';
+import { UnitService } from './unit.service';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { IProfile, IProfileInsert } from '../interfaces/iprofile';
 import { IVehicle } from '../interfaces/ivehicle';
-import { IVehicleTable } from '../interfaces/ivehicle-table';
+import { IVehicleTable } from '../interfaces/ivehicle';
 import { IUnit, IUnitTable } from '../interfaces/iunit';
-import { IProfileUpdate } from '../interfaces/iprofileupdate';
-import { IProfileLongUpdate } from '../interfaces/iprofile-long-update';
+import { IProfileUpdate } from '../interfaces/iprofile';
 import { environment } from '../../environments/environment';
 import { Globals } from '../interfaces/globals';
 import { IData } from '../interfaces/idata';
+import { ISpaceUpdate } from '../interfaces/ivehicle';
 import { IUserAccount } from '../interfaces/iuser';
 
 @Injectable({
@@ -239,7 +239,7 @@ export class SupabaseService {
     }
   }
 
-  async updateAdminResidentEdits_3(p: IProfileLongUpdate, id: number) {
+  async updateAdminResidentEdits_3(p: IProfileUpdate, id: number) {
     console.log('updateAdminResidentEdits_3 - begin id = ' + id);
     try {
       await this.supabase.from('profiles').update(p).match({ id: id });
@@ -255,18 +255,48 @@ export class SupabaseService {
 
   //*>>>>>>>>>>>>>>>>>> Vehicles <<<<<<<<<<<<<<<<<<<<
 
-  /* async getUserVehicles(unit_number) {
-    console.log('SupabaseService > getUserVehicles()');
+  async removeVehicle(id: number, unit: number) {
+    let noCar = {
+      name: '-',
+      tag: '-',
+      make: '-',
+      model: '-',
+      color: '-',
+      link: '',
+      url: '',
+    };
     try {
-      let data = await this.supabase.from('parking').select('*').eq('unit', parseInt(unit_number));
-      this.setMyVehicle(data);
+      await this.supabase.from('parking').update(noCar).eq('id', id);
+      this.dataObj = {
+        to: "UnitService",
+        event: 'removeVehicleSuccess!',
+      };
+      this.sendData(this.dataObj);
+      //this.getAdminVehicles(unit);
+      //this.router.navigate([this.unitsHomePath]);
     } catch (error) {
-      alert("getUserVehicles: Error:" + JSON.stringify(error))
-    }finally{
-
+      alert(error.message);
     }
-  } */
+  };
 
+  async updateParkingSpace(
+    space: ISpaceUpdate,
+    id: string,
+    nav: string,
+    unit: number
+  ) {
+    try {
+      let { data, error } = await this.supabase
+        .from('parking')
+        .update(space)
+        .eq('id', id);
+      // await
+      //this.getAdminVehicles(unit);
+      this.router.navigate([nav]);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
   private setMyVehicle(data: any) {
     this.myVehicles.length = 0;
     for (var i = 0; i < data.length; i++) {
@@ -396,7 +426,7 @@ export class SupabaseService {
 
   //* >>>>>>>>>>>>>>> CONSTRUCTOR / SUBSCRIPTIONS <<<<<<<<<<<<<<<<<<<<
 
-  constructor(private router: Router,private g: Globals) {
+  constructor(private router: Router,private g: Globals, private us:UnitService) {
     console.log('SupabaseService > constructor() ');
     try {
       this.supabase = createClient(environment.supabaseUrl,environment.supabaseKey);
