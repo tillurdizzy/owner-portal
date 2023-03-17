@@ -29,7 +29,7 @@ export class EditVehicleComponent {
 
   ngOnInit() {
     this.us.doConsole('UpdateVehicleComponent => ngOnInit()');
-    this.aCar = this.us.getAdminUpdateVehicle();
+    this.aCar = this.us.getSelectedVehicle();
     this.spaceID = this.aCar.id;
     this.currentUnit = this.aCar.unit;
     this.currentSpace = this.aCar.space;

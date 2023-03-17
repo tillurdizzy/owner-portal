@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { AuthChangeEvent, AuthSession } from '@supabase/supabase-js';
 import { Session, User } from '@supabase/supabase-js';
-import { UnitService } from './unit.service';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { IProfile, IProfileInsert } from '../interfaces/iprofile';
 import { IVehicle } from '../interfaces/ivehicle';
@@ -177,18 +176,15 @@ export class SupabaseService {
     }
   }
 
-  async delete_adminResident(email: string) {
+  async deleteResident(id:number) {
     try {
-      let { data, error } = await this.supabase
-        .from('profiles')
-        .delete()
-        .eq('email', email);
-      this.dataObj = {
+      let { data, error } = await this.supabase.from('profiles').delete().eq('id', id);
+      let dataObj = {
         to: 'UpdateTenantProfile,' + this.g.ADMIN_SERVICE,
-        event: 'delete_adminResident',
-        email: email,
+        event: 'deleteResident',
+        id: id,
       };
-      this.sendData(this.dataObj);
+      this.sendData(dataObj);
     } catch (error) {
       alert(JSON.stringify(error))
     }
@@ -224,28 +220,15 @@ export class SupabaseService {
     }
   }
 
-  async updateProfile(p: IProfileUpdate, user: string) {
-    console.log('SupabaseService > updateProfile() ' + JSON.stringify(p));
-    const { error } = await this.supabase
-      .from('profiles')
-      .update(p)
-      .match({ user: user });
+ 
 
-    if (error) {
-      alert(JSON.stringify(error))
-    } else {
-      alert('Your profile was successfully updated!');
-      //this.getUserProfile(user);
-    }
-  }
-
-  async updateAdminResidentEdits_3(p: IProfileUpdate, id: number) {
+  async updateProfile(p: IProfileUpdate, id: number) {
     console.log('updateAdminResidentEdits_3 - begin id = ' + id);
     try {
       await this.supabase.from('profiles').update(p).match({ id: id });
       this.dataObj = {
         to: this.g.ADMIN_TENANT_COMPONENT,
-        event: 'updateAdminResidentEdits_3',
+        event: 'updateProfile',
       };
       this.sendData(this.dataObj);
     } catch (error) {
@@ -426,7 +409,7 @@ export class SupabaseService {
 
   //* >>>>>>>>>>>>>>> CONSTRUCTOR / SUBSCRIPTIONS <<<<<<<<<<<<<<<<<<<<
 
-  constructor(private router: Router,private g: Globals, private us:UnitService) {
+  constructor(private router: Router,private g: Globals, ) {
     console.log('SupabaseService > constructor() ');
     try {
       this.supabase = createClient(environment.supabaseUrl,environment.supabaseKey);

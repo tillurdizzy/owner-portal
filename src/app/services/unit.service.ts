@@ -23,15 +23,15 @@ export class UnitService {
     517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539,
     540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553]
 
-  // * Data Providers for AdminUnit Tables
-  private adminVehicles: IVehicle[] = [];
-  private adminProfiles: IProfile[] = [];
-  private adminUnit: IUnit = { name: '', unit: 0, street: '', csz: '', cell: '', email: '' };
+  
+  private unitVehicles: IVehicle[] = [];
+  private unitProfiles: IProfile[] = [];
+  private ownerInfo: IUnit = { name: '', unit: 0, street: '', csz: '', cell: '', email: '' };
 
 
-  // * Data chosen from tables to edit
-  private adminUpdateProfile: IProfile;
-  private adminUpdateVehicle: IVehicle;
+  // * Selected for any reason... most likely for editing
+  private selectedProfile: IProfile;
+  private selectedVehicle: IVehicle;
 
   private currentUnit: number;
 
@@ -41,8 +41,6 @@ export class UnitService {
   getEditModeObs(): Observable<IUnitsState> {
     return this.adminEditMode$
   }
-  //*EDIT_MODE == true == CANCEL button
-  //*EDIT_MODE == false == ADD buttons
 
   setEditMode(editMode: IUnitsState) {
     this.adminEditMode.next(editMode);
@@ -98,24 +96,23 @@ export class UnitService {
 
   // * SETTERS
   setUnitProfiles(data: IProfile[]) {
-    this.adminProfiles = data;
+    this.unitProfiles = data;
   }
 
   setUnitVehicles(data: IVehicle[]) {
-    this.adminVehicles = data;
+    this.unitVehicles = data;
   };
 
   setOwnerUnit(data: IUnit) {
-    this.adminUnit = data;
+    this.ownerInfo = data;
   };
 
-  setUnitUpdateProfile(p: IProfile) {
-    // This will match one of the records in adminProfiles
-    this.adminUpdateProfile = p;
+  setSelectedProfile(p: IProfile) {
+    this.selectedProfile = p;
   };
 
-  setAdminUpdateVehicle(car: IVehicle) {
-    this.adminUpdateVehicle = car;
+  setSelectedVehicle(car: IVehicle) {
+    this.selectedVehicle = car;
   };
 
   // Gets Set from UnitHomeComponent in unitSelectionHandler
@@ -125,50 +122,50 @@ export class UnitService {
 
   // Called ngDestroy in  AdminComponent
   resetUnitData() {
-    this.adminVehicles = [];
-    this.adminProfiles = [];
+    this.unitVehicles = [];
+    this.unitProfiles = [];
     this.currentUnit = 0;
-    this.adminUnit = { name: '', unit: 0, street: '', csz: '', cell: '', email: '' };
+    this.ownerInfo = { name: '', unit: 0, street: '', csz: '', cell: '', email: '' };
   }
 
 
   //* GETTERS
 
   getAdminProfiles(): IProfile[] {
-    return this.adminProfiles;
+    return this.unitProfiles;
   };
 
   getSelectedUnitOwner(): IUnit{
-    return this.adminUnit
+    return this.ownerInfo
   }
 
   getUserVehicles(): IVehicle[] {
-    return this.adminVehicles;
+    return this.unitVehicles;
   };
 
-  getAdminUpdateProfile(): IProfile {
-    return this.adminUpdateProfile;
+  getSelectedProfile(): IProfile {
+    return this.selectedProfile;
   };
 
   getUpdateProfileID():number{
-    let x = this.adminUpdateProfile.id;
+    let x = this.selectedProfile.id;
     return x;
   }
 
-  getAdminUpdateVehicle(): IVehicle {
-    return this.adminUpdateVehicle;
+  getSelectedVehicle(): IVehicle {
+    return this.selectedVehicle;
   };
 
   getAdminUpdateUnit(): IUnit {
-    return this.adminUnit;
+    return this.ownerInfo;
   };
 
   getCurrentUnit() {
-    return this.adminUnit.unit;
+    return this.ownerInfo.unit;
   };
 
   getResidentID(): number {
-    var id: number = this.adminUpdateProfile.id;
+    var id: number = this.selectedProfile.id;
     return id;
   };
 
@@ -200,13 +197,13 @@ export class UnitService {
           this.setUnitVehicles(dataPassed.vehicles);
          //* Residents / Profiles  
         }else if(dataPassed.from == 'SupabaseService' && dataPassed.event == 'publishFetchedProfiles'){
-          this.adminProfiles = dataPassed.profiles;
+          this.unitProfiles = dataPassed.profiles;
         //* Residents / Delete Profile
         }else if ((dataPassed.from == 'SupabaseService') && (dataPassed.event == 'updateResidentProfile success!')) {
-         this.adminUpdateProfile = undefined;
+         this.selectedProfile = undefined;
           
         }else if ((dataPassed.from == 'SupabaseService') && (dataPassed.event == 'removeVehicleSuccess!')) {
-          this.adminUpdateVehicle = undefined;
+          this.selectedVehicle = undefined;
          
         }
 

@@ -30,7 +30,7 @@ export class DetailsComponent implements OnInit{
   isVehicleThree = false;
 
   dialog: any;
-  canEdit = { owner: false, resident: false, vehicles: false };
+
  
   //* Raw data: includes ALL columns from supabase... 
   myProfiles: IProfile[] = [{ firstname: '', lastname: '', email: '', cell: '', type: '', lease: '', unit: 0, id: 0 }];
@@ -59,24 +59,19 @@ export class DetailsComponent implements OnInit{
   // >>>>>>>>>>>  TABLE EDIT HANDLERS <<<<<<<<<<<<<
 
   onVehicleClick(n: number) {
-    //this.ds.setEditMode({isEditMode:true,isMenuActive:true});
     this.editVehicle = this.myVehicles[n];
-    //this.ds.setAdminUpdateVehicle(this.editVehicle);
+    this.us.setSelectedVehicle(this.editVehicle);
     this.router.navigate(['/units/edit-vehicle']);
-    //this.clearUnitForm();
   };
 
   onResidentClick(n: number) {
-    //this.ds.setEditMode({isEditMode:true,isMenuActive:true});
     this.editProfile = this.myProfiles[n];
-    //this.ds.setUnitUpdateProfile(this.editProfile);
+    this.us.setSelectedProfile(this.editProfile);
     this.router.navigate(['/units/edit-resident']);
-    //this.clearUnitForm();
   };
 
   resetTableData() {
-    this.canEdit.resident = false;
-    this.canEdit.vehicles = false;
+
 
     this.isResidentOne = false;
     this.isResidentTwo = false;
@@ -110,9 +105,7 @@ export class DetailsComponent implements OnInit{
       this.isResidentTwo = false;
       this.isResidentThree = false;
     }
-    if (x > 0) {
-      this.canEdit.resident = true;
-    }
+   
 
   }
 
@@ -137,10 +130,7 @@ export class DetailsComponent implements OnInit{
       this.isVehicleTwo = false;
       this.isVehicleThree = false;
     }
-    if (x > 0) {
-      this.canEdit.vehicles = true;
-    }
-
+   
     this.showSpinner = false;
   }
 
