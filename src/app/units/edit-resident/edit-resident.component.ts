@@ -14,7 +14,7 @@ import { IProfileUpdate } from 'src/app/interfaces/iprofile';
   styleUrls: ['./edit-resident.component.scss']
 })
 export class EditResidentComponent {
-  me = "UpdateResidentComponent";
+  me = "EditResidentComponent";
 
   supaSubscription: Subscription
 

@@ -1,10 +1,10 @@
-<div class="card-wrapper">
+
   <mat-card>
-    <mat-card-header>
-      <h1 class="card-title">Home</h1>
-    </mat-card-header>
+    <div class="card-content">
+    <div class="card-header">
+      <div class="card-header-text">Home</div>
+    </div>
     <mat-card-content>
-      <div class="centered-container">
         <app-login-form *ngIf="!userAuthenticated"></app-login-form>
 
         <div *ngIf="userAuthenticated">
@@ -28,10 +28,8 @@
             </form>
           </div>
         </div>
-      </div>
-
       <div class="spacer-10"></div>
       <mat-card-footer></mat-card-footer>
     </mat-card-content>
+  </div>
   </mat-card>
-</div>

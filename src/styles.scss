@@ -8,12 +8,6 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-table {
-    font-size: 14px;
-    width: 100%;
-    margin-top: 6px;
-}
-
 // .center and .overlay are for the mat-spinner
 .center {
     position: absolute;
@@ -34,50 +28,18 @@ table {
     position: fixed;
 }
 
-
-
 // menu buttons at top of "home" pages
 .btn-margins {
     margin: 3px 10px 3px 0;
 }
 
-// mat card
-.card-wrapper {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.content-container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-}
-
-
-
-// forms
 
 .col-container {
     display: block;
     max-width: 300px;
 }
 
-.centered-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 100%;
-    margin: 0 auto;
 
-    button {
-        margin: 0 auto;
-        margin-bottom: 10px;
-        width: 100%;
-    }
-}
 
 .inner-wrapper {
     height: 100%;
@@ -114,187 +76,30 @@ table {
     width: 100%;
 }
 
-.dialog-menu {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    width: 100%;
-    height: 34px;
-    padding: 5px;
-
-    button {
-        margin-right: 10px;
-    }
-
-}
-
-.dialog-image {
-    width: 300px;
-    height: auto;
-}
-
-/* .mat-dialog-container {
-  overflow: hidden !important;
-  border-radius: 5px !important;
-  padding: 5px !important;
-} */
 
 .button-container {
     margin: 10px 0 10px 0;
     height: 36px;
     margin-bottom: 20px;
-    width: 268px;
 }
-
-
 
 .form-header {
     height: 20px;
-}
-
-.position-fixed {
-    position: fixed;
-    z-index: 100;
-}
-
-.form-container {
-    display: block;
-    width: 100%;
-}
-
-.form-field {
-    width: 100%;
-}
-
-mat-form-field {
-    width: 268px;
-}
-
-mat-card {
-    width: 100%;
-}
-
-form {
-    width: 100%
-}
-
-input matInput {
-    width: 100px;
-}
-
-input {
-    width: 100px;
-    padding: 8px 20px;
-    //margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: large;
-    margin: 0 10px 5px 0;
-}
-
-.card-title {
-    font-weight: 500 !important;
-    color: #3F51B5 !important;
-    font-size: 1.6em;
-    height: 45px;
-    line-height: 45px;
-    margin-left: 16px;
-}
-
-.card-title-sub-centered {
-    font-weight: 550 !important;
-    color: #b53f49 !important;
-    font-size: 1.3em;
-    height: 45px;
-    line-height: 45px;
-    margin-left: 16px;
-}
-
-.position-fixed {
-    position: fixed;
-    z-index: 100;
 }
 
 .hidden {
     display: none;
 }
 
-
-
-
-
 [hidden] {
     display: none !important;
 }
 
 
-table {
-    border-collapse: collapse;
-    font-family: Tahoma, Geneva, sans-serif;
+.hidden {
+    display: none;
 }
 
-table td {
-    padding: 15px;
-}
-
-table thead tr th {
-    background-color: #54585d;
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 13px;
-    border: 1px solid #54585d;
-}
-
-table tbody td {
-    color: #000000;
-    border: 1px solid #dddfe1;
-}
-
-table tbody tr {
-    background-color: #f9fafb;
-}
-
-.label-banner-red {
-    width: 100%;
-    height: 24px;
-    display: block;
-	background-color: #FF8080;
-	line-height: 24px;
-}
-
-.label-banner-green {
-    width: 100%;
-    height: 24px;
-    display: block;
-	background-color: #80BBFF;
-	line-height: 24px;
-    margin-top:10px;
-}
-
-.label-banner-purple {
-    width: 100%;
-    height: 24px;
-    display: block;
-	background-color:#8BB982;
-	line-height: 24px;
-    margin-top:10px;
-}
-
-
-
-.label-banner-font {
-    color: black;
-    margin-left: 4px;
-    font-size: 16px;
-    font-weight: 450;
-	padding: 6px 0;
-}
-
-
-.label-banner h3 {
-    font-size: 18px;
-    font-weight: 620;
-    margin: 0;
+[hidden] {
+    display: none !important;
 }
