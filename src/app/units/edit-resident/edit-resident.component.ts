@@ -40,6 +40,10 @@ export class EditResidentComponent {
     this.setFormValues();
   };
 
+  cancelBackBtn(){
+    this.router.navigate(['/units/units-detail']);
+  }
+
   setFormValues() {
     if (this.myProfile != undefined) {
       var p: IProfileUpdate =
@@ -82,6 +86,7 @@ export class EditResidentComponent {
   //* >>>>>>>>>>>  UTILITIES  <<<<<<<<<<<<
 
   removeNull(obj) {
+    if(obj == undefined){return}
     Object.keys(obj).forEach(k => {
       if (obj[k] === null || obj[k] === undefined) {
         obj[k] = '';

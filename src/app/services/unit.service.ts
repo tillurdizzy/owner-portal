@@ -148,7 +148,10 @@ export class UnitService {
   };
 
   getUpdateProfileID():number{
-    let x = this.selectedProfile.id;
+    var x = 0;
+    if(this.selectedProfile != undefined){
+      x = this.selectedProfile.id;
+    }
     return x;
   }
 

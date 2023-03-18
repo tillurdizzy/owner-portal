@@ -1,35 +1,36 @@
 
-  <mat-card>
-    <div class="card-content">
+  <div class="card-content">
     <div class="card-header">
       <div class="card-header-text">Home</div>
     </div>
-    <mat-card-content>
-        <app-login-form *ngIf="!userAuthenticated"></app-login-form>
 
-        <div *ngIf="userAuthenticated">
-          <span>{{ userDBA }}<br /></span>
-          <span>{{ userName }}</span>
-          <div class="label-banner-red">
-            <span class="label-banner-font">My Units</span>
-          </div>
-          <div>
-            <form [formGroup]="unitSelectorForm" novalidate>
-              <mat-form-field class="form-field">
-                <mat-label>Choose a unit</mat-label>
-                <mat-select
-                  formControlName="unitNum"
-                  (selectionChange)="unitSelectorHandler()">
-                  <mat-option *ngFor="let u of userUnitList" [value]="u">
-                    {{ u }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </form>
-          </div>
+      <app-login-form *ngIf="!userAuthenticated"></app-login-form>
+
+      <div *ngIf="userAuthenticated">
+        <span class="black-16-550">{{ userDBA }}<br /></span>
+        <span>{{ userName }}</span>
+        <div class="label-banner-red">
+          <span class="label-banner-font">My Units</span>
         </div>
+        <div class="spacer-10"></div>
+        <div>
+          <form [formGroup]="unitSelectorForm" novalidate>
+            <mat-form-field class="form-field">
+              <mat-label>Choose a unit</mat-label>
+              <mat-select
+                formControlName="unitNum"
+                (selectionChange)="unitSelectorHandler()"
+              >
+                <mat-option *ngFor="let u of userUnitList" [value]="u">
+                  {{ u }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </form>
+        </div>
+      </div>
       <div class="spacer-10"></div>
       <mat-card-footer></mat-card-footer>
-    </mat-card-content>
+
   </div>
-  </mat-card>
+

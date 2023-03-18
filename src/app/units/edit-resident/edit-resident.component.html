@@ -1,58 +1,75 @@
+
+<button type="button" mat-raised-button color="primary" (click)="cancelBackBtn()">Cancel</button>
+<div class="spacer-10"></div>
+<mat-divider></mat-divider>
+<div class="spacer-10"></div>
+
 <div class="child-title">
-    <h2>Update Tenant Profile</h2>
-  </div>
-  <div class="col-container">
-    <form [formGroup]="myForm" novalidate>
-      <div class="form-container">
-       
-        <mat-form-field class="form-field">
-          <input matInput placeholder="first*" formControlName="firstname" />
-          <mat-error *ngIf="handleError('firstname', 'required')">
-            required
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field class="form-field">
-          <input matInput placeholder="last*" formControlName="lastname" />
-          <mat-error *ngIf="handleError('lastname', 'required')">
-            required
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field class="form-field">
-          <input matInput placeholder="cell*" formControlName="cell" />
-          <mat-error *ngIf="handleError('cell', 'required')">
-            required
-          </mat-error>
-        </mat-form-field>
+  <h2>Update Tenant Profile</h2>
+</div>
+<div>
+  <form [formGroup]="myForm" novalidate>
+    <div>
+      <mat-form-field class="form-field">
+        <input matInput placeholder="first*" formControlName="firstname" />
+        <mat-error *ngIf="handleError('firstname', 'required')">
+          required
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <input matInput placeholder="last*" formControlName="lastname" />
+        <mat-error *ngIf="handleError('lastname', 'required')">
+          required
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <input matInput placeholder="cell*" formControlName="cell" />
+        <mat-error *ngIf="handleError('cell', 'required')">
+          required
+        </mat-error>
+      </mat-form-field>
 
-        <mat-form-field class="form-field">
-          <input matInput placeholder="email" formControlName="email"/>
-          <mat-error *ngIf="handleError('email', 'required')">
-            required
-          </mat-error>
-        </mat-form-field>
+      <mat-form-field class="form-field">
+        <input matInput placeholder="email" formControlName="email" />
+        <mat-error *ngIf="handleError('email', 'required')">
+          required
+        </mat-error>
+      </mat-form-field>
 
-        <mat-form-field class="form-field">
-            <input matInput placeholder="type" formControlName="type" />
-            <mat-error *ngIf="handleError('type', 'required')">
-              required
-            </mat-error>
-          </mat-form-field>
+      <mat-form-field class="form-field">
+        <input matInput placeholder="type" formControlName="type" />
+        <mat-error *ngIf="handleError('type', 'required')">
+          required
+        </mat-error>
+      </mat-form-field>
 
-          <mat-form-field class="form-field">
-            <input matInput placeholder="lease" formControlName="lease" />
-            <mat-error *ngIf="handleError('lease', 'required')">
-              required
-            </mat-error>
-          </mat-form-field>
+      <mat-form-field class="form-field">
+        <input matInput placeholder="lease" formControlName="lease" />
+        <mat-error *ngIf="handleError('lease', 'required')">
+          required
+        </mat-error>
+      </mat-form-field>
 
-          <div class="spread-buttons" >
-            <button type="button" [disabled]="!(myForm.valid && myForm.dirty)" mat-raised-button color="primary" (click)="submitBtn()">UPDATE</button>
-            <button type="button" mat-raised-button color="primary" (click)="submitBtnDelete()">DELETE</button>
-          </div>
-
-        
+      <div class="spread-buttons">
+        <button
+          type="button"
+          [disabled]="!(myForm.valid && myForm.dirty)"
+          mat-raised-button
+          color="primary"
+          (click)="submitBtn()"
+        >
+          UPDATE
+        </button>
+        <button
+          type="button"
+          mat-raised-button
+          color="primary"
+          (click)="submitBtnDelete()"
+        >
+          DELETE
+        </button>
       </div>
-    </form>
-    <div class="form-footer"></div>
-  </div>
-
+    </div>
+  </form>
+  <div class="form-footer"></div>
+</div>

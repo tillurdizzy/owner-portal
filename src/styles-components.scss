@@ -19,31 +19,12 @@
     height: auto;
 }
 
-/* .mat-dialog-container {
-  overflow: hidden !important;
-  border-radius: 5px !important;
-  padding: 5px !important;
-} */
-
 .form-header {
     height: 20px;
 }
 
-
 .form-container {
     display: block;
-    width: 100%;
-}
-
-.form-field {
-    width: 100%;
-}
-
-mat-form-field {
-    width: 268px;
-}
-
-mat-card {
     width: 100%;
 }
 
@@ -51,13 +32,13 @@ mat-card {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    max-width: 300x;
+    max-width: 380px;
     margin: 0 auto;
+    padding:0 16px 0 16px;
 }
 
 .card-header {
     height:45px;
-    padding: 8px 0 8px 16px;
 
     .card-header-text {
         font-weight: 500 !important;
@@ -67,14 +48,6 @@ mat-card {
         line-height: 45px;
         margin-left: 0px;
     }
-}
-
-form {
-    width: 100%
-}
-
-input matInput {
-    width: 100px;
 }
 
 input {
@@ -89,8 +62,6 @@ input {
     margin: 0 10px 5px 0;
 }
 
-
-
 .card-title-sub-centered {
     font-weight: 550 !important;
     color: #b53f49 !important;
@@ -99,8 +70,6 @@ input {
     line-height: 45px;
     margin-left: 16px;
 }
-
-
 
 table {
     font-size: 14px;
@@ -156,7 +125,6 @@ table tbody tr {
 	line-height: 24px;
     margin-top:10px;
 }
-
 
 
 .label-banner-font {

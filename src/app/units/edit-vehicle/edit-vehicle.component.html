@@ -1,11 +1,16 @@
 
-<div class="medium-black-16">{{currentSpace}}</div>
+
+
+<button type="button" mat-raised-button color="primary" (click)="cancelBackBtn()">CANCEL</button>
+<div class="spacer-10"></div>
 <mat-divider></mat-divider>
+<div class="spacer-10"></div>
+<div class="black-16-550">Space #{{currentSpace}}</div>
 <div class="spacer-5"></div>
 
-<div class="col-container">
+<div>
   <form [formGroup]="vehicleForm" novalidate>
-    <div class="form-container">
+    <div>
       <mat-form-field class="form-field">
         <mat-label>Registered owner name</mat-label>
         <input matInput placeholder="Registered owner name" formControlName="name" />
@@ -41,7 +46,7 @@
           <span class="tiny-text">required</span> 
         </mat-error>
       </mat-form-field>
-      
+
       <div class="spread-buttons" >
         <button type="button" [disabled]="!(vehicleForm.valid && vehicleForm.dirty)" mat-raised-button color="primary" (click)="submitBtnUpdate()">UPDATE</button>
         <button type="button" mat-raised-button color="primary" (click)="submitBtnRemove()">REMOVE</button>

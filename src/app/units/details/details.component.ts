@@ -51,6 +51,10 @@ export class DetailsComponent implements OnInit{
     
   }
 
+  cancelBackBtn(){
+    this.router.navigate(['/home']);
+  }
+
   ngOnDestroy() {
     this.us.clearData();
     this.supaScription.unsubscribe();
@@ -85,6 +89,7 @@ export class DetailsComponent implements OnInit{
   //* >>>>>>>>>>>>  SUBSCRIPTION HANDLERS  >>>>>>>>>>>>\\
 
   private processProfiles(data:any){
+    if(data == null){return}
     this.myProfiles = data;
     this.us.setUnitProfiles(this.myProfiles);
     let x = this.myProfiles.length;
@@ -110,6 +115,7 @@ export class DetailsComponent implements OnInit{
   }
 
   private processVehicles(data:any){
+    if(data == null){return}
     this.myVehicles = data;
     this.us.setUnitVehicles(this.myVehicles);
     let x = this.myVehicles.length;

@@ -1,152 +1,167 @@
-<div class="unitLabel"><span>Unit # {{this.selectedUnit}}</span></div>
+<button type="button" mat-raised-button color="primary" (click)="cancelBackBtn()">Home</button>
+<div class="spacer-10"></div>
+<mat-divider></mat-divider>
+<div class="spacer-10"></div>
+
+<span class="black-16-550">Unit #{{ this.selectedUnit }}</span>
+
 <div class="unit-data-container">
-    <div class="label-banner-green">
-      <span class="label-banner-font">Resident(s)</span>
-    </div>
-    <div class="unit-data" *ngIf="isResidentOne">
-      <div class="edit-button">
-        <button type="button"
-          mat-raised-button
-          color ="primary"
-          (click)="onResidentClick(0)">EDIT</button>
-      </div>
-  
-      <div class="small-black-14">
-        <span>{{this.myProfiles[0].firstname + " " + this.myProfiles[0].lastname}}</span><br />
-        <span class="small-black-text">Email:</span> {{ this.myProfiles[0].email}}<br />
-        <span class="small-black-text">Cell:</span> {{ this.myProfiles[0].cell}}<br />
-        <span class="small-black-text">Type:</span> {{ this.myProfiles[0].type}}<br />
-        <span class="small-black-text">Lease:</span>
-        {{ this.myProfiles[0].lease }}
-      </div>
+  <div class="label-banner-green">
+    <span class="label-banner-font">Resident(s)</span>
+  </div>
+  <div class="unit-data" *ngIf="isResidentOne">
+    <div class="edit-button">
+      <button type="button"
+        mat-raised-button
+        color="primary"
+        (click)="onResidentClick(0)">EDIT</button>
     </div>
 
-    <div class="unit-data" *ngIf="isResidentTwo">
-      <div class="edit-button">
-        <button
-          type="button"
-          mat-raised-button
-          color="primary"
-          (click)="onResidentClick(1)">EDIT</button>
-      </div>
-  
-      <div class="small-black-14">
-        <span>{{
-          this.myProfiles[1].firstname + " " + this.myProfiles[1].lastname
-        }}</span
-        ><br />
-        <span class="small-black-text">Email:</span> {{ this.myProfiles[1].email
-        }}<br />
-        <span class="small-black-text">Cell:</span> {{ this.myProfiles[1].cell
-        }}<br />
-        <span class="small-black-text">Type:</span> {{ this.myProfiles[1].type
-        }}<br />
-        <span class="small-black-text">Lease:</span>
-        {{ this.myProfiles[1].lease }}
-      </div>
+    <div class="small-black-14">
+      <span>{{
+        this.myProfiles[0].firstname + " " + this.myProfiles[0].lastname
+      }}</span
+      ><br />
+      <span class="small-black-text">Email:</span> {{ this.myProfiles[0].email
+      }}<br />
+      <span class="small-black-text">Cell:</span> {{ this.myProfiles[0].cell
+      }}<br />
+      <span class="small-black-text">Type:</span> {{ this.myProfiles[0].type
+      }}<br />
+      <span class="small-black-text">Lease:</span>
+      {{ this.myProfiles[0].lease }}
     </div>
   </div>
-  
-  <div class="unit-data-container">
-    <div class="label-banner-purple">
-      <span class="label-banner-font">Vehicle(s)</span>
-    </div>
-    <div class="unit-data" *ngIf="isVehicleOne">
-      <div class="edit-button">
-        <button
-          type="button"
-          mat-raised-button
-          color="primary"
-          (click)="onVehicleClick(0)"
-        >
-          EDIT
-        </button>
-      </div>
-  
-      <div class="small-black-14">
-        <span>{{ this.myVehicles[0].space }}</span
-        ><br />
-        <span class="small-black-text">Name:</span> {{ this.myVehicles[0].name
-        }}<br />
-        <span class="small-black-text">License:</span> {{ this.myVehicles[0].tag
-        }}<br />
-        <span class="small-black-text">Make:</span> {{ this.myVehicles[0].make
-        }}<br />
-        <span class="small-black-text">Model:</span> {{ this.myVehicles[0].model
-        }}<br />
-        <span class="small-black-text">Color:</span>
-        {{ this.myVehicles[0].color }}
-      </div>
-    </div>
-  
-    <div class="unit-data" *ngIf="isVehicleTwo">
-      <div class="edit-button">
-        <button
-          type="button"
-          mat-raised-button
-          color="primary"
-          color="primary"
-          (click)="onVehicleClick(1)"
-        >
-          EDIT
-        </button>
-      </div>
-  
-      <div class="small-black-14">
-        <span>{{ this.myVehicles[1].space }}</span
-        ><br />
-        <span class="small-black-text">Name:</span> {{ this.myVehicles[1].name
-        }}<br />
-        <span class="small-black-text">License:</span> {{ this.myVehicles[1].tag
-        }}<br />
-        <span class="small-black-text">Make:</span> {{ this.myVehicles[1].make
-        }}<br />
-        <span class="small-black-text">Model:</span> {{ this.myVehicles[1].model
-        }}<br />
-        <span class="small-black-text">Color:</span> {{ this.myVehicles[1].color
-        }}<br />
-      </div>
-    </div>
-  
-    <div class="unit-data" *ngIf="isVehicleThree">
-      <div class="edit-button">
-        <button
-          type="button"
-          mat-raised-button
-          color="primary"
-          color="primary"
-          (click)="onVehicleClick(2)"
-        >
-          EDIT
-        </button>
-      </div>
-  
-      <div class="small-black-14">
-        <span>{{ this.myVehicles[2].space }}</span
-        ><br />
-        <span class="small-black-text">Name:</span> {{ this.myVehicles[2].name
-        }}<br />
-        <span class="small-black-text">License:</span> {{ this.myVehicles[2].tag
-        }}<br />
-        <span class="small-black-text">Make:</span> {{ this.myVehicles[2].make
-        }}<br />
-        <span class="small-black-text">Model:</span> {{ this.myVehicles[2].model
-        }}<br />
-        <span class="small-black-text">Color:</span>
-        {{ this.myVehicles[2].color }}
-      </div>
-    </div>
-  </div>
-  <div class="overlay" *ngIf="showSpinner">
-    <div class="center">
-      <mat-progress-spinner
-        color="warn"
-        diameter="50"
-        strokeWidth="5"
-        mode="indeterminate"
+
+  <div class="unit-data" *ngIf="isResidentTwo">
+    <div class="edit-button">
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        (click)="onResidentClick(1)"
       >
-      </mat-progress-spinner>
+        EDIT
+      </button>
+    </div>
+
+    <div class="small-black-14">
+      <span>{{
+        this.myProfiles[1].firstname + " " + this.myProfiles[1].lastname
+      }}</span
+      ><br />
+      <span class="small-black-text">Email:</span> {{ this.myProfiles[1].email
+      }}<br />
+      <span class="small-black-text">Cell:</span> {{ this.myProfiles[1].cell
+      }}<br />
+      <span class="small-black-text">Type:</span> {{ this.myProfiles[1].type
+      }}<br />
+      <span class="small-black-text">Lease:</span>
+      {{ this.myProfiles[1].lease }}
     </div>
   </div>
-  
-  <div class="form-footer"></div>
+</div>
+
+<div class="unit-data-container">
+  <div class="label-banner-purple">
+    <span class="label-banner-font">Vehicle(s)</span>
+  </div>
+  <div class="unit-data" *ngIf="isVehicleOne">
+    <div class="edit-button">
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        (click)="onVehicleClick(0)"
+      >
+        EDIT
+      </button>
+    </div>
+
+    <div class="small-black-14">
+      <span>{{ this.myVehicles[0].space }}</span
+      ><br />
+      <span class="small-black-text">Name:</span> {{ this.myVehicles[0].name
+      }}<br />
+      <span class="small-black-text">License:</span> {{ this.myVehicles[0].tag
+      }}<br />
+      <span class="small-black-text">Make:</span> {{ this.myVehicles[0].make
+      }}<br />
+      <span class="small-black-text">Model:</span> {{ this.myVehicles[0].model
+      }}<br />
+      <span class="small-black-text">Color:</span>
+      {{ this.myVehicles[0].color }}
+    </div>
+  </div>
+
+  <div class="unit-data" *ngIf="isVehicleTwo">
+    <div class="edit-button">
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        color="primary"
+        (click)="onVehicleClick(1)"
+      >
+        EDIT
+      </button>
+    </div>
+
+    <div class="small-black-14">
+      <span>{{ this.myVehicles[1].space }}</span
+      ><br />
+      <span class="small-black-text">Name:</span> {{ this.myVehicles[1].name
+      }}<br />
+      <span class="small-black-text">License:</span> {{ this.myVehicles[1].tag
+      }}<br />
+      <span class="small-black-text">Make:</span> {{ this.myVehicles[1].make
+      }}<br />
+      <span class="small-black-text">Model:</span> {{ this.myVehicles[1].model
+      }}<br />
+      <span class="small-black-text">Color:</span> {{ this.myVehicles[1].color
+      }}<br />
+    </div>
+  </div>
+
+  <div class="unit-data" *ngIf="isVehicleThree">
+    <div class="edit-button">
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        color="primary"
+        (click)="onVehicleClick(2)"
+      >
+        EDIT
+      </button>
+    </div>
+
+    <div class="small-black-14">
+      <span>{{ this.myVehicles[2].space }}</span
+      ><br />
+      <span class="small-black-text">Name:</span> {{ this.myVehicles[2].name
+      }}<br />
+      <span class="small-black-text">License:</span> {{ this.myVehicles[2].tag
+      }}<br />
+      <span class="small-black-text">Make:</span> {{ this.myVehicles[2].make
+      }}<br />
+      <span class="small-black-text">Model:</span> {{ this.myVehicles[2].model
+      }}<br />
+      <span class="small-black-text">Color:</span>
+      {{ this.myVehicles[2].color }}
+    </div>
+  </div>
+</div>
+<div class="overlay" *ngIf="showSpinner">
+  <div class="center">
+    <mat-progress-spinner
+      color="warn"
+      diameter="50"
+      strokeWidth="5"
+      mode="indeterminate"
+    >
+    </mat-progress-spinner>
+  </div>
+</div>
+
+<div class="form-footer"></div>

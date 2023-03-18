@@ -28,7 +28,7 @@ export class EditVehicleComponent {
   });
 
   ngOnInit() {
-    this.us.doConsole('UpdateVehicleComponent => ngOnInit()');
+    this.us.doConsole('EditVehicleComponent => ngOnInit()');
     this.aCar = this.us.getSelectedVehicle();
     this.spaceID = this.aCar.id;
     this.currentUnit = this.aCar.unit;
@@ -78,13 +78,13 @@ export class EditVehicleComponent {
 
     let idstring = this.spaceID.toString();
     this.us.setEditMode({ isEditMode: false, isMenuActive: true });
-    this.supabase.updateParkingSpace(
-      aCar,
-      idstring,
-      '/watch/watch-units/home',
-      this.currentUnit
+    this.supabase.updateParkingSpace(aCar,idstring,'/units/units-home',this.currentUnit
     );
   };
+
+  cancelBackBtn(){
+    this.router.navigate(['/units/units-detail']);
+  }
 
  
   submitBtnRemove() {
