@@ -48,7 +48,6 @@ export class DetailsComponent implements OnInit{
     this.selectedUnit = this.ds.currentUnit;
     this.supabase.fetchResidentProfiles(this.selectedUnit);
     this.supabase.fetchResidentVehicles(this.selectedUnit);
-    
   }
 
   cancelBackBtn(){

@@ -1,4 +1,4 @@
-// Less unit
+// All with ?
 export interface IProfile {
   id?: number;
   unit?: number;
@@ -22,16 +22,6 @@ export interface IProfileFetch {
   lease: string;
 };
 
-// Less id
-export interface IProfileInsert {
-  unit: number;
-  type: string;
-  email: string;
-  firstname: string;
-  lastname: string;
-  cell: string;
-  lease: string;
-};
 
 // less id and unit
 export interface IProfileUpdate{

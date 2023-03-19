@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatDialog, MatDialogRef, MatDialogConfig} from '@angular/material/dialog';
+import { DialogComponent } from '../dialog/alert/dialog.component';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { AuthChangeEvent, AuthSession } from '@supabase/supabase-js';
 import { Session, User } from '@supabase/supabase-js';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
-import { IProfile, IProfileInsert } from '../interfaces/iprofile';
+import { IProfile, IProfileFetch } from '../interfaces/iprofile';
 import { IVehicle } from '../interfaces/ivehicle';
 import { IVehicleTable } from '../interfaces/ivehicle';
-import { IUnit, IUnitTable } from '../interfaces/iunit';
+import { IUnit  } from '../interfaces/iunit';
 import { IProfileUpdate } from '../interfaces/iprofile';
 import { environment } from '../../environments/environment';
 import { Globals } from '../interfaces/globals';
@@ -40,6 +42,8 @@ export class SupabaseService {
   private userProfile: BehaviorSubject<IProfile | boolean> = new BehaviorSubject(true);
   public userProfile$ = this.userProfile.asObservable();
 
+  dialogRef: any;
+
   //* >>>>>>>>>>>>>> MESSENGER <<<<<<<<<<<<<<<<
 
   private subject = new Subject<any>();
@@ -70,6 +74,21 @@ export class SupabaseService {
     console.log(message);
   }
 
+  showResultDialog(message:string){
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.autoFocus = true;
+      dialogConfig.hasBackdrop = false;
+      dialogConfig.data = {
+        title: 'Result',
+        message: message,
+      };
+      this.dialogRef = this.dialog.open(DialogComponent, dialogConfig);
+  
+      setTimeout(() => {
+        this.dialogRef.close();
+      }, 3000);
+  }
+
   //* >>>>>>>>>>>>>>>>>>> FETCH RESIDENT DATA <<<<<<<<<<<<<<<<<<<<<<<
   async fetchResidentProfiles(unit: number) {
     console.log('SupabaseService > fetchResidentProfiles');
@@ -77,7 +96,7 @@ export class SupabaseService {
       let data = await this.supabase.from('profiles').select('*').eq('unit', unit);
       this.publishData('DetailsComponent','fetchResidentProfiles',data.data);
     } catch (error) {
-      alert(JSON.stringify(error))
+      this.showResultDialog('ERROR: ' + JSON.stringify(error))
     }
   }
 
@@ -87,7 +106,7 @@ export class SupabaseService {
       let data = await this.supabase.from('parking').select('*').eq('unit', unit);
       this.publishData('DetailsComponent','fetchResidentVehicles',data.data);
     } catch (error) {
-      alert(JSON.stringify(error))
+      this.showResultDialog('ERROR: ' + JSON.stringify(error))
     }
    
   }
@@ -102,7 +121,6 @@ export class SupabaseService {
     if (!error) {
       this.myUnit = data;
       this.publishUnitOwnerData();
-
     }
   }
 
@@ -117,7 +135,7 @@ export class SupabaseService {
 
   
 
-  private publishAdminVehicles(data: any) {
+  /* private publishAdminVehicles(data: any) {
     this.myVehicles.length = 0;
     for (var i = 0; i < data.length; i++) {
       this.vehicle = data[i];
@@ -130,9 +148,9 @@ export class SupabaseService {
       vehicles: this.myVehicles,
     };
     this.sendData(this.dataObj);
-  }
+  } */
 
-  async updateAdminVehicle(obj: IVehicleTable, s: number) {
+/*   async updateAdminVehicle(obj: IVehicleTable, s: number) {
     let { data, error } = await this.supabase
       .from('parking')
       .update(obj)
@@ -144,9 +162,9 @@ export class SupabaseService {
       return data;
     }
     return data;
-  }
+  } */
 
-  async updateAdminUnitOwner(obj: IUnitTable, uNum: number) {
+/*   async updateAdminUnitOwner(obj: IUnitTable, uNum: number) {
     //! Change eq from unit to id??
     try {
       let { data, error } = await this.supabase
@@ -161,9 +179,9 @@ export class SupabaseService {
     } catch (error) {
       alert(JSON.stringify(error))
     }
-  }
+  } */
 
-  async add_AdminNewResident_2(p: IProfileInsert) {
+/*   async add_AdminNewResident_2(p: IProfileFetch) {
     try {
       let { data, error } = await this.supabase.from('profiles').insert(p);
       this.dataObj = {
@@ -174,7 +192,7 @@ export class SupabaseService {
     } catch (error) {
       alert(JSON.stringify(error))
     }
-  }
+  } */
 
   async deleteResident(id:number) {
     try {
@@ -186,41 +204,26 @@ export class SupabaseService {
       };
       this.sendData(dataObj);
     } catch (error) {
-      alert(JSON.stringify(error))
+      this.showResultDialog('ERROR: ' + JSON.stringify(error))
     }
-  }
-
-  // TRUE shows CANCEL button... FALSE hides CANCEL and shows Add Buttons
-  setAdminEditMode(b: boolean) {
-    this.doConsole('AdminService > setAdminEditMode() setTo: = ' + b);
-    let dataObj = {
-      from: this.g.SUPABASE_SERVICE,
-      to: this.g.ADMIN_COMPONENT + ',' + this.g.ADMIN_SERVICE,
-      event: this.g.ADMIN_EDIT_MODE,
-      bool: b,
-    };
-    this.sendData(dataObj);
   }
 
   //*>>>>>>>>>>>>>>>>>>>>  PROFILES  <<<<<<<<<<<<<<<<<<<<
+  
 
-  async insertNewProfile(profile: IProfile) {
+  async insertNewProfile(profile: IProfileFetch) {
     console.log(
       'SupabaseService > insertNewProfile() profile >>' + JSON.stringify(profile)
     );
-    const { data, error } = await this.supabase
-      .from('profiles')
-      .insert(profile);
-    if (error) {
-      console.log(
-        'SupabaseService > insertNewProfile() error >>' + JSON.stringify(error)
-      );
-    } else {
-      console.log('SupabaseService > insertNewProfile() data >>' + data);
-    }
-  }
 
- 
+    try {
+      const { data, error } = await this.supabase.from('profiles').insert(profile);
+      this.showResultDialog('New resident profile added.')
+    } catch (error) {
+      this.showResultDialog('ERROR: ' + JSON.stringify(error))
+    }
+    
+  }
 
   async updateProfile(p: IProfileUpdate, id: number) {
     console.log('updateAdminResidentEdits_3 - begin id = ' + id);
@@ -232,7 +235,7 @@ export class SupabaseService {
       };
       this.sendData(this.dataObj);
     } catch (error) {
-      alert(JSON.stringify(error))
+      this.showResultDialog('ERROR: ' + JSON.stringify(error))
     }
   }
 
@@ -258,7 +261,7 @@ export class SupabaseService {
       //this.getAdminVehicles(unit);
       //this.router.navigate([this.unitsHomePath]);
     } catch (error) {
-      alert(error.message);
+      this.showResultDialog('ERROR: ' + JSON.stringify(error))
     }
   };
 
@@ -277,7 +280,7 @@ export class SupabaseService {
       //this.getAdminVehicles(unit);
       this.router.navigate([nav]);
     } catch (error) {
-      alert(error.message);
+      this.showResultDialog('ERROR: ' + JSON.stringify(error))
     }
   };
   private setMyVehicle(data: any) {
@@ -296,7 +299,7 @@ export class SupabaseService {
       .match({ space: s });
 
     if (error) {
-      alert(error.message);
+      this.showResultDialog('ERROR: ' + JSON.stringify(error))
     } else {
       //this.getUserVehicles(this.ds.getUserUnitNumber());
     }
@@ -409,7 +412,7 @@ export class SupabaseService {
 
   //* >>>>>>>>>>>>>>> CONSTRUCTOR / SUBSCRIPTIONS <<<<<<<<<<<<<<<<<<<<
 
-  constructor(private router: Router,private g: Globals, ) {
+  constructor(private router: Router,private g: Globals,private dialog: MatDialog ) {
     console.log('SupabaseService > constructor() ');
     try {
       this.supabase = createClient(environment.supabaseUrl,environment.supabaseKey);
@@ -437,3 +440,4 @@ export class SupabaseService {
     this.loadUser();
   }
 }
+

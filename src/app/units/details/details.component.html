@@ -1,4 +1,23 @@
-<button type="button" mat-raised-button color="primary" (click)="cancelBackBtn()">Home</button>
+<div class="flex-row-space-between">
+  <button
+    type="button"
+    mat-raised-button
+    color="primary"
+    (click)="cancelBackBtn()"
+  >
+    Home
+  </button>
+  <button
+    type="button"
+    mat-raised-button
+    color="primary"
+    routerLink="/units/add-resident"
+  >
+    Add Resident
+  </button>
+
+</div>
+
 <div class="spacer-10"></div>
 <mat-divider></mat-divider>
 <div class="spacer-10"></div>
@@ -11,10 +30,7 @@
   </div>
   <div class="unit-data" *ngIf="isResidentOne">
     <div class="edit-button">
-      <button type="button"
-        mat-raised-button
-        color="primary"
-        (click)="onResidentClick(0)">EDIT</button>
+      <button type="button" mat-raised-button color="primary" (click)="onResidentClick(0)">EDIT</button>
     </div>
 
     <div class="small-black-14">
