@@ -86,7 +86,7 @@ export class SupabaseService {
   
       setTimeout(() => {
         this.dialogRef.close();
-      }, 3000);
+      }, 2000);
   }
 
   //* >>>>>>>>>>>>>>>>>>> FETCH RESIDENT DATA <<<<<<<<<<<<<<<<<<<<<<<
@@ -194,21 +194,26 @@ export class SupabaseService {
     }
   } */
 
-  async deleteResident(id:number) {
+
+    //*>>>>>>>>>>>>>>>>>>>>  PROFILES  <<<<<<<<<<<<<<<<<<<<
+  async deleteProfile(id:number) {
     try {
       let { data, error } = await this.supabase.from('profiles').delete().eq('id', id);
-      let dataObj = {
+      /* let dataObj = {
         to: 'UpdateTenantProfile,' + this.g.ADMIN_SERVICE,
         event: 'deleteResident',
         id: id,
       };
-      this.sendData(dataObj);
+      this.sendData(dataObj); */
+      this.showResultDialog('Resident deleted.')
     } catch (error) {
       this.showResultDialog('ERROR: ' + JSON.stringify(error))
+    }finally{
+      this.router.navigate(['units/units-detail']);
     }
   }
 
-  //*>>>>>>>>>>>>>>>>>>>>  PROFILES  <<<<<<<<<<<<<<<<<<<<
+
   
 
   async insertNewProfile(profile: IProfileFetch) {
@@ -221,8 +226,9 @@ export class SupabaseService {
       this.showResultDialog('New resident profile added.')
     } catch (error) {
       this.showResultDialog('ERROR: ' + JSON.stringify(error))
+    }finally{
+      this.router.navigate(['units/units-detail']);
     }
-    
   }
 
   async updateProfile(p: IProfileUpdate, id: number) {

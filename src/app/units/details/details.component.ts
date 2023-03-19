@@ -25,6 +25,7 @@ export class DetailsComponent implements OnInit{
   isResidentOne = false;
   isResidentTwo = false;
   isResidentThree = false;
+  maxResidents = false;
   isVehicleOne = false;
   isVehicleTwo = false;
   isVehicleThree = false;
@@ -74,8 +75,6 @@ export class DetailsComponent implements OnInit{
   };
 
   resetTableData() {
-
-
     this.isResidentOne = false;
     this.isResidentTwo = false;
     this.isResidentThree = false;
@@ -90,12 +89,15 @@ export class DetailsComponent implements OnInit{
   private processProfiles(data:any){
     if(data == null){return}
     this.myProfiles = data;
+    this.maxResidents = false;
     this.us.setUnitProfiles(this.myProfiles);
     let x = this.myProfiles.length;
+    if(x > 3) {x = 3} //! Change to take any number of residents
     if (x == 3) {
       this.isResidentOne = true;
       this.isResidentTwo = true;
       this.isResidentThree = true;
+      this.maxResidents = true;
     } else if (x == 2) {
       this.isResidentOne = true;
       this.isResidentTwo = true;
@@ -109,8 +111,6 @@ export class DetailsComponent implements OnInit{
       this.isResidentTwo = false;
       this.isResidentThree = false;
     }
-   
-
   }
 
   private processVehicles(data:any){

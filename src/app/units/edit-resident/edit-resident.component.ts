@@ -73,7 +73,7 @@ export class EditResidentComponent {
 
   submitBtnDelete(){
     let unitNumber = this.us.getCurrentUnit();
-    this.supabase.deleteResident(this.profileID);
+    this.supabase.deleteProfile(this.profileID);
   }
 
   updateResidentProfile() {
