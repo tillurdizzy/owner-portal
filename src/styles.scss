@@ -33,8 +33,7 @@ body {
 }
 
 .col-container {
-    display: block;
-   
+    display: block; 
 }
 
 .unit-data-container {
@@ -104,6 +103,12 @@ body {
 .form-header {
     height: 20px;
 }
+
+.divider-red{
+    border-top: 2px solid#FF8080;
+}
+
+
 
 .hidden {
     display: none;

@@ -6,6 +6,7 @@ import { IUserAccount} from '../interfaces/iuser';
 import { IProfile } from '../interfaces/iprofile';
 import { IVehicle } from '../interfaces/ivehicle';
 import { Globals } from '../interfaces/globals';
+import { IOwnerAccount } from '../interfaces/iunit';
 
 @Injectable({
   providedIn: "root",
@@ -20,7 +21,8 @@ export class DataService {
 
   private userAuthenticated: boolean = false;
 
-  private userAccount: IUserAccount = { username: '', role: '', cell: '', email: '', dba: '', units: [], street:'',csz:'', userid:'' };
+  private userAccount: IUserAccount = { id:0, username: '', role: '', cell: '', email: '', units: [], userid:'' };
+  private ownerAccount: IOwnerAccount = { name: '', cell: '', email: '', street:'',csz:'' };
   private myCurrentUnit: number;
   private myVehicles: IVehicle[];
 
@@ -58,29 +60,21 @@ export class DataService {
   };
 
   //* >>>>>>>>>>>>>>>>>> SET <<<<<<<<<<<<<<<<<<<<<<<<<<<
-
- 
-  
-
- 
-  
- 
-
-  
-
+  setSelectedUnit(u:string){
+    this.myCurrentUnit = parseInt(u)
+  }
   //* >>>>>>>>>>>> GETTERS / SETTERS <<<<<<<<<<<<
 
   isUserAuthenticated() {
     let obj = {
       'auth': this.userAuthenticated, 
-      'unitList':this.userAccount.units,
-      'dba':this.userAccount.dba,
-      'name':this.userAccount.username}
+      'account':this.userAccount,
+    }
     return obj;
   };
 
-  setSelectedUnit(u:string){
-    this.myCurrentUnit = parseInt(u)
+  getOwnerAccount(){
+    return this.ownerAccount;
   }
 
  get currentUnit(){
@@ -93,18 +87,15 @@ export class DataService {
   this.userAuthenticated = true;
   this.currentUser = data.user;
   this.session = data.session;
-
   let dataObj = {to: 'HomeComponent',event: 'userAuthenticated'};
   this.sendData(dataObj);
 };
 
-private setUserAccount(data:any) {
+private processUserAccount(data:any) {
   let x = data[0]
   this.userAccount.cell = x.cell;
-  this.userAccount.csz = x.csz;
-  this.userAccount.dba = x.dba;
   this.userAccount.email = x.email;
-  this.userAccount.street = x.street;
+  this.userAccount.id = x.id;
   this.userAccount.userid = x.userid;
   this.userAccount.username = x.username;
   this.userAccount.role = x.role;
@@ -112,14 +103,36 @@ private setUserAccount(data:any) {
 
   let dataObj = {
     to: 'HomeComponent',
-    event: 'userUnitList',
-    unitList:[] = this.userAccount.units,
-    dba:this.userAccount.dba,
-    name:this.userAccount.username
+    event: 'userAccount',
+    account: this.userAccount
   };
   this.sendData(dataObj);
-  console.log(this.g.DATA_SERVICE + " > setUserAccount()" + JSON.stringify(this.userAccount));
+  let allUnits:number[] = this.userAccount.units;
+  let oneUnit = allUnits[0]
+  this.supabase.getOwnerAccount(oneUnit);
+  console.log(this.g.DATA_SERVICE + " > processUserAccount()" + JSON.stringify(this.userAccount));
 };
+
+processOwnerAccount(data:any){
+  this.ownerAccount.cell = data.cell;
+  this.ownerAccount.csz = data.csz;
+  this.ownerAccount.email = data.email;
+  this.ownerAccount.name = data.name;
+  this.ownerAccount.street = data.street;
+
+  let dataObj = {
+    to: 'HomeComponent',
+    event: 'ownerAccount',
+    account: this.ownerAccount
+  };
+  this.sendData(dataObj);
+}
+
+
+
+ngOnDestroy(): void {
+  this.supaScription.unsubscribe();
+}
 
 
 //* >>>>>>>>>>> CONSTRUCTOR / SUBSCRIPTIONS <<<<<<<<<<<<<
@@ -133,7 +146,9 @@ private setUserAccount(data:any) {
           if(dataPassed.event == 'userAuthenticated' ){
             this.authenticateUser(dataPassed.result)
           }else if(dataPassed.event == 'getUserAccount' ){
-           this.setUserAccount(dataPassed.result)
+           this.processUserAccount(dataPassed.result)
+          }else if(dataPassed.event == 'getOwnerAccount' ){
+            this.processOwnerAccount(dataPassed.result)
           }
         }
       }

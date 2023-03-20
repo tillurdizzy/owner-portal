@@ -7,12 +7,27 @@
       <app-login-form *ngIf="!userAuthenticated"></app-login-form>
 
       <div *ngIf="userAuthenticated">
-        <span class="black-16-550">{{ userDBA }}<br /></span>
-        <span>{{ userName }}</span>
-        <div class="label-banner-red">
-          <span class="label-banner-font">My Units</span>
-        </div>
+
+        <span class="black-16-550">User<br /></span>
+        <div class="divider-red"></div>
+        <span>{{ userAccount.username }}</span><br>
+        <span>Cell: {{ userAccount.cell }}</span><br>
+        <span>Email: {{ userAccount.email }}</span>
         <div class="spacer-10"></div>
+        <span class="black-16-550">Owner<br /></span>
+        <div class="divider-red"></div>
+        <span>{{ ownerAccount.name }}</span><br>
+        <span>Street: {{ ownerAccount.street }}</span><br>
+        <span>CSZ: {{ ownerAccount.csz }}</span><br>
+        <span>Email: {{ ownerAccount.email }}</span><br>
+        <span>Cell: {{ ownerAccount.cell }}</span>
+
+        <div class="spacer-10"></div>
+        <span class="black-16-550">Units<br /></span>
+        <div class="divider-red"></div>
+
+        <div class="spacer-10"></div>
+
         <div>
           <form [formGroup]="unitSelectorForm" novalidate>
             <mat-form-field class="form-field">
@@ -21,7 +36,7 @@
                 formControlName="unitNum"
                 (selectionChange)="unitSelectorHandler()"
               >
-                <mat-option *ngFor="let u of userUnitList" [value]="u">
+                <mat-option *ngFor="let u of userAccount.units" [value]="u">
                   {{ u }}
                 </mat-option>
               </mat-select>

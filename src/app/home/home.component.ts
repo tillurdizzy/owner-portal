@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { DataService } from '../services/data.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { IUserAccount} from '../interfaces/iuser';
+import { IOwnerAccount } from '../interfaces/iunit';
 
 @Component({
   selector: 'app-home',
@@ -14,9 +16,9 @@ export class HomeComponent implements OnInit{
 
   subscription: Subscription;
   userAuthenticated:boolean = false;
-  userDBA:string;
-  userName:string;
-  userUnitList:[] = [];
+  userAccount:IUserAccount = { id:0, username: '', role: '', cell: '', email: '', units: [], userid:'' };
+  ownerAccount: IOwnerAccount = { name: '', cell: '', email: '', street:'',csz:'' };
+
 
   unitSelectorForm = new FormGroup({
     unitNum: new FormControl('', [Validators.required]),
@@ -25,9 +27,8 @@ export class HomeComponent implements OnInit{
   ngOnInit(): void {
     let dataPassed = this.ds.isUserAuthenticated();
     this.userAuthenticated = dataPassed.auth;
-    this.userUnitList = dataPassed.unitList;
-    this.userDBA = dataPassed.dba;
-    this.userName = dataPassed.name;
+    this.userAccount = dataPassed.account;
+    this.ownerAccount = this.ds.getOwnerAccount();
   }
 
   unitSelectorHandler(){
@@ -35,6 +36,8 @@ export class HomeComponent implements OnInit{
     this.ds.setSelectedUnit(x);
     this.router.navigate(['/units']);
   }
+
+  
 
   constructor(private ds: DataService, private router: Router) {
 
@@ -44,10 +47,10 @@ export class HomeComponent implements OnInit{
         if(dataPassed.to == 'HomeComponent'){
           if(dataPassed.event == 'userAuthenticated' ){
             this.userAuthenticated = true;
-          }else if(dataPassed.event == 'userUnitList' ){
-            this.userUnitList = dataPassed.unitList;
-            this.userDBA = dataPassed.dba;
-            this.userName = dataPassed.name;
+          }else if(dataPassed.event == 'userAccount' ){
+            this.userAccount = dataPassed.account;
+          }else if(dataPassed.event == 'ownerAccount' ){
+            this.ownerAccount = dataPassed.account;
           }
         }
       }

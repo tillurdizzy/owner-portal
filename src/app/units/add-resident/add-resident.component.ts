@@ -63,7 +63,7 @@ export class AddResidentComponent implements OnInit{
   };
 
   ngOnDestroy(): void {
-    this.us.setEditMode({ isEditMode: false, isMenuActive: true });
+    this.supaScription.unsubscribe();
   }
 
   cancelBackBtn(){

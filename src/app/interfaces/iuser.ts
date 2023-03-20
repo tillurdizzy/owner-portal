@@ -1,13 +1,12 @@
 export interface IUserAccount {
+  id:number,
+  created_at?:string
   username: string;
   role: string;
   email: string;
   cell: string;
-  dba: string;
-  street: string;
-  csz: string;
   userid:string;
-  units:[];
+  units:number[];
 };
 
 

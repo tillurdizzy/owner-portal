@@ -28,9 +28,9 @@ export class LoginFormComponent implements OnInit {
     var e = this.myForm.value.ownerEmail.trim();
     var p = this.myForm.value.ownerPassword.trim();
     let obj = {email: e,password: p};
-    //let obj = {email: 'tillurdizzy@live.com',password: 'wstadmin'};
     try {
       this.supabase.logIn(obj);
+      
     } catch (error) {
       alert(error.message)
     }finally{

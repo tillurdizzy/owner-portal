@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject, Subscription, BehaviorSubject } from 'rxjs'
-import { IUnit, IUnitsState  } from '../interfaces/iunit';
+import { IUnit } from '../interfaces/iunit';
 import { Globals } from '../interfaces/globals';
 import { IProfile  } from '../interfaces/iprofile';
 import { IVehicle } from '../interfaces/ivehicle';
@@ -26,7 +26,8 @@ export class UnitService {
   
   private unitVehicles: IVehicle[] = [];
   private unitProfiles: IProfile[] = [];
-  private ownerInfo: IUnit = { name: '', unit: 0, street: '', csz: '', cell: '', email: '' };
+  //private ownerInfo: IUnit = { name: '', unit: 0, street: '', csz: '', cell: '', email: '' };
+  private selectedUnit: IUnit = { unit:100, name: '', cell: '', email: '', street:'',csz:'', sqft:0, bdrms:1 };
 
 
   // * Selected for any reason... most likely for editing
@@ -36,17 +37,7 @@ export class UnitService {
   private currentUnit: number;
 
   //* >>>>>>>>>>> OBSERVABLES  <<<<<<<<<<<<
-  private adminEditMode: BehaviorSubject<IUnitsState> = new BehaviorSubject({isEditMode:false,isMenuActive:false});
-  public adminEditMode$ = this.adminEditMode.asObservable();
-  getEditModeObs(): Observable<IUnitsState> {
-    return this.adminEditMode$
-  }
-
-  setEditMode(editMode: IUnitsState) {
-    this.adminEditMode.next(editMode);
-    console.log('UnitService > setEditMode ' + JSON.stringify(editMode))
-  }
-
+  
   // * >>>>>>>>>>>>>>>> Data Service <<<<<<<<<<<<<<<<<<
 
   private subject = new Subject<any>();
@@ -103,9 +94,7 @@ export class UnitService {
     this.unitVehicles = data;
   };
 
-  setOwnerUnit(data: IUnit) {
-    this.ownerInfo = data;
-  };
+  
 
   setSelectedProfile(p: IProfile) {
     this.selectedProfile = p;
@@ -125,9 +114,8 @@ export class UnitService {
     this.unitVehicles = [];
     this.unitProfiles = [];
     this.currentUnit = 0;
-    this.ownerInfo = { name: '', unit: 0, street: '', csz: '', cell: '', email: '' };
+    this.selectedUnit ={ unit:100, name: '', cell: '', email: '', street:'',csz:'', sqft:0, bdrms:1 };
   }
-
 
   //* GETTERS
 
@@ -135,8 +123,8 @@ export class UnitService {
     return this.unitProfiles;
   };
 
-  getSelectedUnitOwner(): IUnit{
-    return this.ownerInfo
+  getSelectedUnit(): IUnit{
+    return this.selectedUnit
   }
 
   getUserVehicles(): IVehicle[] {
@@ -159,12 +147,8 @@ export class UnitService {
     return this.selectedVehicle;
   };
 
-  getAdminUpdateUnit(): IUnit {
-    return this.ownerInfo;
-  };
-
   getCurrentUnit() {
-    return this.ownerInfo.unit;
+    return this.selectedUnit.unit;
   };
 
   getResidentID(): number {
@@ -180,6 +164,10 @@ export class UnitService {
     return true;
   };
 
+  ngOnDestroy(): void {
+    this.supaSubscription.unsubscribe();
+  }
+
   //* >>>>>>>>>>>>>>> CONSTRUCTOR / SUBSCRIPTIONS <<<<<<<<<<<<<<<<<<<<
 
   constructor(private g: Globals, private supabase: SupabaseService) {
@@ -193,21 +181,23 @@ export class UnitService {
       this.doConsole('UnitService > supaSubscription = ' + dataPassed.event);
       if(ar.indexOf("UnitService") > -1){
         //* Unit/Owner
-        if((dataPassed.from == 'SupabaseService') && (dataPassed.event == 'publishUnitOwnerData')){
-          this.setOwnerUnit(dataPassed.iUnit);
+        if(dataPassed.event == 'publishUnitData'){
+          this.selectedUnit = dataPassed.iUnit;
         //* Vehicles
-        }else if((dataPassed.from == 'SupabaseService') && (dataPassed.event == 'publishAdminVehicles')){
+        }else if(dataPassed.event == 'publishAdminVehicles'){
           this.setUnitVehicles(dataPassed.vehicles);
          //* Residents / Profiles  
-        }else if(dataPassed.from == 'SupabaseService' && dataPassed.event == 'publishFetchedProfiles'){
+        }else if(dataPassed.event == 'publishFetchedProfiles'){
           this.unitProfiles = dataPassed.profiles;
         //* Residents / Delete Profile
-        }else if ((dataPassed.from == 'SupabaseService') && (dataPassed.event == 'updateResidentProfile success!')) {
+        }else if (dataPassed.event == 'updateResidentProfile success!') {
          this.selectedProfile = undefined;
-          
-        }else if ((dataPassed.from == 'SupabaseService') && (dataPassed.event == 'removeVehicleSuccess!')) {
+
+        }else if (dataPassed.event == 'removeVehicleSuccess!') {
           this.selectedVehicle = undefined;
          
+        }else if(dataPassed.event == ''){
+          
         }
 
       }

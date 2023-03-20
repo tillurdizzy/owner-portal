@@ -36,7 +36,7 @@ export class DetailsComponent implements OnInit{
   //* Raw data: includes ALL columns from supabase... 
   myProfiles: IProfile[] = [{ firstname: '', lastname: '', email: '', cell: '', type: '', lease: '', unit: 0, id: 0 }];
   myVehicles: IVehicle[] = [{ name: '', tag: '', space: '', make: '', model: '', color: '', unit: 0, link: '', url: '', id: 0, sort: '' }];
-  myUnit: IUnit = { name: '', unit: 0, street: '', csz: '', cell: '', email: '' };
+  myUnit: IUnit = { unit:100, name: '', cell: '', email: '', street:'',csz:'', sqft:0, bdrms:1 };
 
   //* Single objects chosen from table to edit
   editProfile: IProfile = { firstname: 'x', lastname: 'x', email: '', cell: 'x', type: '', lease: '', unit: 0, id: 0 };
@@ -49,6 +49,7 @@ export class DetailsComponent implements OnInit{
     this.selectedUnit = this.ds.currentUnit;
     this.supabase.fetchResidentProfiles(this.selectedUnit);
     this.supabase.fetchResidentVehicles(this.selectedUnit);
+    this.supabase.fetchUnit(this.selectedUnit);
   }
 
   cancelBackBtn(){
@@ -150,8 +151,8 @@ export class DetailsComponent implements OnInit{
             this.processProfiles(dataPassed.data);
           }else if(dataPassed.event == 'fetchResidentVehicles' ){
             this.processVehicles(dataPassed.data)
-          }else if(dataPassed.event == 'xx' ){
-            //this.set
+          }else if(dataPassed.event == 'publishUnitData' ){
+            this.myUnit = dataPassed.iUnit;
           }else if(dataPassed.event == 'xx' ){
             //this.set
           }

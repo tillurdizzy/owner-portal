@@ -77,7 +77,6 @@ export class EditVehicleComponent {
     };
 
     let idstring = this.spaceID.toString();
-    this.us.setEditMode({ isEditMode: false, isMenuActive: true });
     this.supabase.updateParkingSpace(aCar,idstring,'/units/units-home',this.currentUnit
     );
   };

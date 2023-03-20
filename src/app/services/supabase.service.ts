@@ -29,7 +29,6 @@ export class SupabaseService {
   private myVehicles: IVehicle[] = [];
   private myProfiles: IProfile[] = [];
 
-  private myUnit: IUnit; // fetch interface...
 
   private dataObj: IData = { to: '', event: '' };
 
@@ -91,7 +90,7 @@ export class SupabaseService {
 
   //* >>>>>>>>>>>>>>>>>>> FETCH RESIDENT DATA <<<<<<<<<<<<<<<<<<<<<<<
   async fetchResidentProfiles(unit: number) {
-    console.log('SupabaseService > fetchResidentProfiles');
+    this.doConsole('SupabaseService > fetchResidentProfiles');
     try {
       let data = await this.supabase.from('profiles').select('*').eq('unit', unit);
       this.publishData('DetailsComponent','fetchResidentProfiles',data.data);
@@ -101,7 +100,7 @@ export class SupabaseService {
   }
 
   async fetchResidentVehicles(unit: number) {
-    console.log('SupabaseService > getAdminVehicles()');
+    this.doConsole('SupabaseService > getAdminVehicles()');
     try {
       let data = await this.supabase.from('parking').select('*').eq('unit', unit);
       this.publishData('DetailsComponent','fetchResidentVehicles',data.data);
@@ -111,100 +110,42 @@ export class SupabaseService {
    
   }
 
-  async getUnit(unit: string) {
-    console.log('SupabaseService > getUnit()');
-    let { data, error } = await this.supabase
-      .from('units')
-      .select('unit,name,street,cell,email,csz')
-      .eq('unit', parseInt(unit))
-      .single();
-    if (!error) {
-      this.myUnit = data;
-      this.publishUnitOwnerData();
-    }
-  }
-
-  publishUnitOwnerData() {
-    this.dataObj = {
-      to: this.g.ADMIN_SERVICE + ',' + this.g.ADMIN_UNIT_COMPONENT,
-      event: 'publishUnitOwnerData',
-      iUnit: this.myUnit,
-    };
-    this.sendData(this.dataObj);
-  }
-
-  
-
-  /* private publishAdminVehicles(data: any) {
-    this.myVehicles.length = 0;
-    for (var i = 0; i < data.length; i++) {
-      this.vehicle = data[i];
-      this.myVehicles.push(this.vehicle);
-    }
-
-    this.dataObj = {
-      to: this.g.ADMIN_SERVICE + ',' + this.g.ADMIN_UNIT_COMPONENT,
-      event: 'publishAdminVehicles',
-      vehicles: this.myVehicles,
-    };
-    this.sendData(this.dataObj);
-  } */
-
-/*   async updateAdminVehicle(obj: IVehicleTable, s: number) {
-    let { data, error } = await this.supabase
-      .from('parking')
-      .update(obj)
-      .eq('space', s);
-
-    if (error) {
-      return error;
-    } else {
-      return data;
-    }
-    return data;
-  } */
-
-/*   async updateAdminUnitOwner(obj: IUnitTable, uNum: number) {
-    //! Change eq from unit to id??
+  async fetchUnit(unit: number) {
+    this.doConsole('SupabaseService > fetchUnit()');
     try {
       let { data, error } = await this.supabase
-        .from('units')
-        .update(obj)
-        .eq('unit', uNum);
-      this.dataObj = {
-        to: 'UpdateOwnerProfile',
-        event: 'updateAdminUnitOwner',
-      };
-      this.sendData(this.dataObj);
-    } catch (error) {
-      alert(JSON.stringify(error))
-    }
-  } */
+      .from('units').select('unit,name,street,cell,email,csz,sqft,bdrms')
+      .eq('unit', unit).single();
 
-/*   async add_AdminNewResident_2(p: IProfileFetch) {
-    try {
-      let { data, error } = await this.supabase.from('profiles').insert(p);
-      this.dataObj = {
-        to: this.g.ADMIN_UNIT_COMPONENT,
-        event: 'add_AdminNewResident_!',
-      };
-      this.sendData(this.dataObj);
+      this.publishUnitData(data); 
     } catch (error) {
-      alert(JSON.stringify(error))
+      this.showResultDialog('ERROR: ' + JSON.stringify(error))
     }
-  } */
+  }
+
+  publishUnitData(data) {
+
+    this.dataObj = {
+      to: 'DataServices',
+      event: 'publishUnitData',
+      iUnit: data,
+    };
+    this.sendData(this.dataObj);
+
+    this.dataObj = {
+      to: 'DetailsComponent',
+      event: 'publishUnitData',
+      iUnit: data,
+    };
+    this.sendData(this.dataObj);
+  }
+
 
 
     //*>>>>>>>>>>>>>>>>>>>>  PROFILES  <<<<<<<<<<<<<<<<<<<<
   async deleteProfile(id:number) {
     try {
       let { data, error } = await this.supabase.from('profiles').delete().eq('id', id);
-      /* let dataObj = {
-        to: 'UpdateTenantProfile,' + this.g.ADMIN_SERVICE,
-        event: 'deleteResident',
-        id: id,
-      };
-      this.sendData(dataObj); */
       this.showResultDialog('Resident deleted.')
     } catch (error) {
       this.showResultDialog('ERROR: ' + JSON.stringify(error))
@@ -217,10 +158,7 @@ export class SupabaseService {
   
 
   async insertNewProfile(profile: IProfileFetch) {
-    console.log(
-      'SupabaseService > insertNewProfile() profile >>' + JSON.stringify(profile)
-    );
-
+    this.doConsole('SupabaseService > insertNewProfile() profile >>' + JSON.stringify(profile));
     try {
       const { data, error } = await this.supabase.from('profiles').insert(profile);
       this.showResultDialog('New resident profile added.')
@@ -232,7 +170,7 @@ export class SupabaseService {
   }
 
   async updateProfile(p: IProfileUpdate, id: number) {
-    console.log('updateAdminResidentEdits_3 - begin id = ' + id);
+    this.doConsole('updateAdminResidentEdits_3 - begin id = ' + id);
     try {
       await this.supabase.from('profiles').update(p).match({ id: id });
       this.dataObj = {
@@ -282,20 +220,19 @@ export class SupabaseService {
         .from('parking')
         .update(space)
         .eq('id', id);
-      // await
-      //this.getAdminVehicles(unit);
+     
       this.router.navigate([nav]);
     } catch (error) {
       this.showResultDialog('ERROR: ' + JSON.stringify(error))
     }
   };
+
   private setMyVehicle(data: any) {
     this.myVehicles.length = 0;
     for (var i = 0; i < data.length; i++) {
       this.vehicle = data[i];
       this.myVehicles.push(this.vehicle);
     }
-    
   }
 
   async updateVehicle(obj: IVehicleTable, s: number) {
@@ -366,8 +303,9 @@ export class SupabaseService {
     }
   }
 
+  // Chain of Calls... signIn >> getUserAccount >> ds.getOwner
   async signIn(credentials: { email: string; password: string }) {
-    console.log('Supabase > signIn() ' + JSON.stringify(credentials));
+    this.doConsole('Supabase > signIn() ' + JSON.stringify(credentials));
     try {
       var result = await this.supabase.auth.signInWithPassword(credentials);
   
@@ -386,7 +324,7 @@ export class SupabaseService {
   }
 
   async signUp(credentials: { email: string; password: string }) {
-    console.log('Supabase > signUp()' + JSON.stringify(credentials));
+    this.doConsole('Supabase > signUp()' + JSON.stringify(credentials));
     try {
       var result = await this.supabase.auth.signUp(credentials);
     } catch (error) {}
@@ -411,21 +349,36 @@ export class SupabaseService {
         result: data
       };
       this.sendData(dataObj);
+     
     } catch (error) {
-      alert("Sign in error: "  + JSON.stringify(error))
+      alert("Sign in error: getUserAccount "  + JSON.stringify(error))
+    }
+  }
+
+  async getOwnerAccount(unit:number){
+    try {
+      let { data, error } = await this.supabase.from('units').select('*').eq('unit', unit);
+      let dataObj = {
+        to: 'DataService',
+        event: 'getOwnerAccount',
+        result: data[0]
+      };
+      this.sendData(dataObj);
+    } catch (error) {
+      alert("Sign in error: getOwner "  + JSON.stringify(error))
     }
   }
 
   //* >>>>>>>>>>>>>>> CONSTRUCTOR / SUBSCRIPTIONS <<<<<<<<<<<<<<<<<<<<
 
   constructor(private router: Router,private g: Globals,private dialog: MatDialog ) {
-    console.log('SupabaseService > constructor() ');
+    this.doConsole('SupabaseService > constructor() ');
     try {
       this.supabase = createClient(environment.supabaseUrl,environment.supabaseKey);
-    } catch (error) {}
+    } catch (error) {alert("Create Client error: "  + JSON.stringify(error))}
 
     this.supabase.auth.onAuthStateChange((event: AuthChangeEvent, sess: Session | null) => {
-        console.log('Begin: SupabaseService > onAuthStateChange = ' + event + ' > currentUser = ' + (this.currentUser.value as User).id);
+      this.doConsole('Begin: SupabaseService > onAuthStateChange = ' + event + ' > currentUser = ' + (this.currentUser.value as User).id);
 
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           let s = sess;
@@ -436,7 +389,7 @@ export class SupabaseService {
         } else {
           this.currentUser.next(false);
         }
-        console.log(
+        this.doConsole(
           'End: SupabaseService > onAuthStateChange:event= ' + event + ' > currentUser = ' + (this.currentUser.value as User).id
         );
       }
