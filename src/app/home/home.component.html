@@ -10,18 +10,19 @@
 
         <span class="black-16-550">User<br /></span>
         <div class="divider-red"></div>
-        <span>{{ userAccount.username }}</span><br>
-        <span>Cell: {{ userAccount.cell }}</span><br>
-        <span>Email: {{ userAccount.email }}</span>
-        <div class="spacer-10"></div>
-        <span class="black-16-550">Owner<br /></span>
-        <div class="divider-red"></div>
-        <span>{{ ownerAccount.name }}</span><br>
-        <span>Street: {{ ownerAccount.street }}</span><br>
-        <span>CSZ: {{ ownerAccount.csz }}</span><br>
-        <span>Email: {{ ownerAccount.email }}</span><br>
-        <span>Cell: {{ ownerAccount.cell }}</span>
-
+        <div class="small-black-14">
+          <span class="small-black-text"></span>{{ userAccount.username }}<br>
+          <span class="small-black-text">Cell: </span>{{ userAccount.cell }}<br>
+          <span class="small-black-text">Email: </span>{{ userAccount.email }}
+          <div class="spacer-10"></div>
+          <span class="black-16-550">Owner<br /></span>
+          <div class="divider-red"></div>
+          <span>{{ ownerAccount.name }}</span><br>
+          <span class="small-black-text">Street: </span>{{ ownerAccount.street }}<br>
+          <span class="small-black-text">City: </span>{{ ownerAccount.csz }}<br>
+          <span class="small-black-text">Email: </span>{{ ownerAccount.email }}<br>
+          <span class="small-black-text">Cell: </span>{{ ownerAccount.cell }}
+      </div>
         <div class="spacer-10"></div>
         <span class="black-16-550">Units<br /></span>
         <div class="divider-red"></div>
