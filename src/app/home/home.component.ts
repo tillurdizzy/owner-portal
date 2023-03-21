@@ -18,23 +18,52 @@ export class HomeComponent implements OnInit{
   userAuthenticated:boolean = false;
   userAccount:IUserAccount = { id:0, username: '', role: '', cell: '', email: '', units: [], userid:'' };
   ownerAccount: IOwnerAccount = { name: '', cell: '', email: '', street:'',csz:'' };
-
+  formList = [];
 
   unitSelectorForm = new FormGroup({
-    unitNum: new FormControl('', [Validators.required]),
+    unitNum: new FormControl(''),
+  });
+
+  formSelectorForm = new FormGroup({
+    form: new FormControl(''),
   });
 
   ngOnInit(): void {
-    let dataPassed = this.ds.isUserAuthenticated();
-    this.userAuthenticated = dataPassed.auth;
-    this.userAccount = dataPassed.account;
+    let storedData = this.ds.isUserAuthenticated();
+    
+    this.userAuthenticated = storedData.auth;
+    this.userAccount = storedData.account;
+
     this.ownerAccount = this.ds.getOwnerAccount();
+    this.formList = this.ds.getFormList();
   }
 
   unitSelectorHandler(){
     let x = this.unitSelectorForm.value.unitNum;
     this.ds.setSelectedUnit(x);
     this.router.navigate(['/units']);
+  }
+
+  formSelectorHandler(){
+    let x = this.formSelectorForm.value.form;
+    this.ds.setSelectedForm(x);
+    let navRoute = '';
+    switch (x) {
+      case 'Work Order': navRoute = '/forms/work-order';break;
+      case 'Architectural Request': navRoute = '/forms/arch-request';break;
+      case 'Crime Report': navRoute = '/forms/crime-report';break;
+      case 'Violation Report': navRoute = '/forms/violation-report';break;
+      case 'Message the Board': navRoute = '/forms/message-board';break;
+    }
+    this.router.navigate([navRoute]);
+  }
+
+  onEditUserAccount(){
+
+  }
+
+  onEditOwnerAccount(){
+
   }
 
   

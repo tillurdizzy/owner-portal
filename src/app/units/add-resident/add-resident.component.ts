@@ -46,8 +46,6 @@ export class AddResidentComponent implements OnInit{
       cell: f.cell,
       firstname: f.firstname,
       lastname: f.lastname,
-      lease: '',
-      type: 'Tenant',
     };
     this.supabase.insertNewProfile(p);
   }

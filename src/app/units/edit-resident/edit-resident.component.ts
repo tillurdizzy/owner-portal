@@ -26,8 +26,6 @@ export class EditResidentComponent {
     firstname: new FormControl('', Validators.required),
     lastname: new FormControl('', Validators.required),
     cell: new FormControl('', Validators.required),
-    lease: new FormControl(''),
-    type: new FormControl(''),
   });
 
 
@@ -52,8 +50,7 @@ export class EditResidentComponent {
         firstname: this.myProfile.firstname,
         lastname: this.myProfile.lastname,
         cell: this.myProfile.cell,
-        lease: this.myProfile.lease,
-        type: this.myProfile.type
+       
       };
       this.myForm.setValue(p);
     }
@@ -64,8 +61,10 @@ export class EditResidentComponent {
   submitBtn() {
     var f = this.myForm.value;
     this.myProfile = {
-      email: f.email, cell: f.cell, firstname: f.firstname,
-      lastname: f.lastname, lease: f.lease, type: f.type
+      email: f.email, 
+      cell: f.cell, 
+      firstname: f.firstname,
+      lastname: f.lastname
     };
    
     this.updateResidentProfile()

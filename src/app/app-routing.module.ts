@@ -11,6 +11,10 @@ import { AddResidentComponent } from './units/add-resident/add-resident.componen
 
 import { FormsComponent } from './forms/forms/forms.component';
 import { WorkOrderComponent } from './forms/work-order/work-order.component';
+import { ArchRequestComponent } from './forms/arch-request/arch-request.component';
+import { CrimeReportComponent } from './forms/crime-report/crime-report.component';
+import { ViolationReportComponent } from './forms/violation-report/violation-report.component';
+import { MessageBoardComponent } from './forms/message-board/message-board.component';
 import { NavErrorComponent } from './misc/nav-error/nav-error.component';
 
 
@@ -36,6 +40,10 @@ const routes: Routes = [
           {path:'', redirectTo:'forms-home', pathMatch: 'full'},
           {path:'forms-home', component: FormsComponent,title:'Forms'},
           {path:'work-order', component: WorkOrderComponent,title:'Work Order'},
+          {path:'arch-request', component: ArchRequestComponent,title:'Architectural Request'},
+          {path:'crime-report', component: CrimeReportComponent,title:'Crime Report'},
+          {path:'violation-report', component: ViolationReportComponent,title:'Violation Report'},
+          {path:'message-board', component: MessageBoardComponent,title:'Message Board'},
           ]},
       {path:'404', component: NavErrorComponent },
       {path:'**', redirectTo: '404',outlet:"app"},

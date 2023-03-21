@@ -34,12 +34,12 @@ export class DetailsComponent implements OnInit{
 
  
   //* Raw data: includes ALL columns from supabase... 
-  myProfiles: IProfile[] = [{ firstname: '', lastname: '', email: '', cell: '', type: '', lease: '', unit: 0, id: 0 }];
+  myProfiles: IProfile[] = [{ firstname: '', lastname: '', email: '', cell: '', unit: 0, id: 0 }];
   myVehicles: IVehicle[] = [{ name: '', tag: '', space: '', make: '', model: '', color: '', unit: 0, link: '', url: '', id: 0, sort: '' }];
   myUnit: IUnit = { unit:100, name: '', cell: '', email: '', street:'',csz:'', sqft:0, bdrms:1 };
 
   //* Single objects chosen from table to edit
-  editProfile: IProfile = { firstname: 'x', lastname: 'x', email: '', cell: 'x', type: '', lease: '', unit: 0, id: 0 };
+  editProfile: IProfile = { firstname: 'x', lastname: 'x', email: '', cell: 'x', unit: 0, id: 0 };
   editVehicle: IVehicle = { name: '', tag: '', space: '', make: '', model: '', color: '', unit: 0, link: '', url: '', id: 0, sort: '' };
 
 

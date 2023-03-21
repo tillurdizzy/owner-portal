@@ -40,58 +40,32 @@
       <span>{{this.myProfiles[0].firstname + " " + this.myProfiles[0].lastname}}</span><br />
       <span class="small-black-text">Email:</span> {{ this.myProfiles[0].email}}<br />
       <span class="small-black-text">Cell:</span> {{ this.myProfiles[0].cell}}<br />
-      <span class="small-black-text">Type:</span> {{ this.myProfiles[0].type}}<br />
-      <span class="small-black-text">Lease:</span>{{ this.myProfiles[0].lease }}
     </div>
   </div>
 
   <div class="unit-data" *ngIf="isResidentTwo">
     <div class="edit-button">
-      <button type="button"
-        mat-raised-button color="primary"
-        (click)="onResidentClick(1)">EDIT
-      </button>
+      <button type="button" mat-raised-button color="primary" 
+      (click)="onResidentClick(1)">EDIT</button>
     </div>
 
     <div class="small-black-14">
-      <span>{{
-        this.myProfiles[1].firstname + " " + this.myProfiles[1].lastname}}</span><br />
-      <span class="small-black-text">Email:</span> {{ this.myProfiles[1].email
-      }}<br />
-      <span class="small-black-text">Cell:</span> {{ this.myProfiles[1].cell
-      }}<br />
-      <span class="small-black-text">Type:</span> {{ this.myProfiles[1].type
-      }}<br />
-      <span class="small-black-text">Lease:</span>
-      {{ this.myProfiles[1].lease }}
+      <span>{{this.myProfiles[1].firstname + " " + this.myProfiles[1].lastname}}</span><br />
+      <span class="small-black-text">Email:</span> {{ this.myProfiles[1].email}}<br />
+      <span class="small-black-text">Cell:</span> {{ this.myProfiles[1].cell}}<br />
     </div>
   </div>
 
   <div class="unit-data" *ngIf="isResidentThree">
     <div class="edit-button">
-      <button
-        type="button"
-        mat-raised-button
-        color="primary"
-        (click)="onResidentClick(2)"
-      >
-        EDIT
-      </button>
+      <button type="button" mat-raised-button color="primary" 
+      (click)="onResidentClick(2)">EDIT</button>
     </div>
 
     <div class="small-black-14">
-      <span>{{
-        this.myProfiles[2].firstname + " " + this.myProfiles[2].lastname
-      }}</span
-      ><br />
-      <span class="small-black-text">Email:</span> {{ this.myProfiles[2].email
-      }}<br />
-      <span class="small-black-text">Cell:</span> {{ this.myProfiles[2].cell
-      }}<br />
-      <span class="small-black-text">Type:</span> {{ this.myProfiles[2].type
-      }}<br />
-      <span class="small-black-text">Lease:</span>
-      {{ this.myProfiles[2].lease }}
+      <span>{{this.myProfiles[2].firstname + " " + this.myProfiles[2].lastname}}</span><br />
+      <span class="small-black-text">Email:</span> {{ this.myProfiles[2].email}}<br />
+      <span class="small-black-text">Cell:</span> {{ this.myProfiles[2].cell}}<br />
     </div>
   </div>
 </div>

@@ -24,6 +24,10 @@ import { EditResidentComponent } from './units/edit-resident/edit-resident.compo
 import { EditVehicleComponent } from './units/edit-vehicle/edit-vehicle.component';
 import { AddVehicleComponent } from './units/add-vehicle/add-vehicle.component';
 import { AddResidentComponent } from './units/add-resident/add-resident.component';
+import { ArchRequestComponent } from './forms/arch-request/arch-request.component';
+import { CrimeReportComponent } from './forms/crime-report/crime-report.component';
+import { ViolationReportComponent } from './forms/violation-report/violation-report.component';
+import { MessageBoardComponent } from './forms/message-board/message-board.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +44,11 @@ import { AddResidentComponent } from './units/add-resident/add-resident.componen
     EditResidentComponent,
     EditVehicleComponent,
     AddVehicleComponent,
-    AddResidentComponent
+    AddResidentComponent,
+    ArchRequestComponent,
+    CrimeReportComponent,
+    ViolationReportComponent,
+    MessageBoardComponent
   ],
   imports: [
     BrowserModule,

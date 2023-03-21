@@ -25,6 +25,8 @@ export class DataService {
   private ownerAccount: IOwnerAccount = { name: '', cell: '', email: '', street:'',csz:'' };
   private myCurrentUnit: number;
   private myVehicles: IVehicle[];
+  private formList = ['Work Order','Architectural Request','Crime Report','Violation Report','Message the Board']
+  private selectedForm:string;
 
    //* >>>>>>>>>>>>>> MESSENGER <<<<<<<<<<<<<<<<
 
@@ -63,6 +65,10 @@ export class DataService {
   setSelectedUnit(u:string){
     this.myCurrentUnit = parseInt(u)
   }
+
+  setSelectedForm(f:string){
+    this.selectedForm = f;
+  }
   //* >>>>>>>>>>>> GETTERS / SETTERS <<<<<<<<<<<<
 
   isUserAuthenticated() {
@@ -79,6 +85,10 @@ export class DataService {
 
  get currentUnit(){
   return this.myCurrentUnit;
+ }
+
+ getFormList(){
+  return this.formList;
  }
 
  //* >>>>>>>>>> SUPASCRIPTION HANDLERS >>>>>>>>>> \\

@@ -6,8 +6,7 @@ export interface IProfile {
   lastname: string;
   cell: string;
   email: string;
-  type?: string;
-  lease?: string;
+
 }
 
 // All columns
@@ -18,8 +17,7 @@ export interface IProfileFetch {
   lastname: string;
   cell: string;
   email: string;
-  type: string;
-  lease: string;
+
 };
 
 
@@ -29,6 +27,5 @@ export interface IProfileUpdate{
   lastname: string;
   cell: string;
   email: string;
-  type: string;
-  lease: string
+
 }
