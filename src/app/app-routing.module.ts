@@ -37,8 +37,7 @@ const routes: Routes = [
           ]},
       {path:'forms', component: FormsComponent,
       children:[
-          {path:'', redirectTo:'forms-home', pathMatch: 'full'},
-          {path:'forms-home', component: FormsComponent,title:'Forms'},
+          {path:'', redirectTo:'work-order', pathMatch: 'full'},
           {path:'work-order', component: WorkOrderComponent,title:'Work Order'},
           {path:'arch-request', component: ArchRequestComponent,title:'Architectural Request'},
           {path:'crime-report', component: CrimeReportComponent,title:'Crime Report'},

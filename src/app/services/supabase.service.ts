@@ -16,6 +16,7 @@ import { Globals } from '../interfaces/globals';
 import { IData } from '../interfaces/idata';
 import { ISpaceUpdate } from '../interfaces/ivehicle';
 import { IUserAccount } from '../interfaces/iuser';
+import { IWorkOrder } from '../interfaces/iforms';
 
 @Injectable({
   providedIn: 'root',
@@ -165,7 +166,7 @@ export class SupabaseService {
     } catch (error) {
       this.showResultDialog('ERROR: ' + JSON.stringify(error))
     }finally{
-      this.router.navigate(['units/units-detail']);
+      this.router.navigate(['/units/units-detail']);
     }
   }
 
@@ -366,6 +367,18 @@ export class SupabaseService {
       this.sendData(dataObj);
     } catch (error) {
       alert("Sign in error: getOwner "  + JSON.stringify(error))
+    }
+  }
+
+  //* >>>>>>>>>>>>  FORMS  <<<<<<<<<<<<\\
+  async insertWorkOrder(wo:IWorkOrder){
+    try {
+      const { data, error } = await this.supabase.from('work-orders').insert(wo);
+      this.showResultDialog('Work Order submitted.')
+    } catch (error) {
+      this.showResultDialog('ERROR: ' + JSON.stringify(error))
+    }finally{
+      this.router.navigate(['/home']);
     }
   }
 
