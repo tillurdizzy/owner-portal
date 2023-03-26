@@ -18,6 +18,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatNativeDateModule } from '@angular/material/core';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
       MatCardModule,
       MatChipsModule,
       MatDialogModule,
-      MatMenuModule
+      MatMenuModule,
+      MatNativeDateModule
    ],
    exports: [
       MatButtonModule,
@@ -60,7 +62,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
       MatPaginatorModule,
       MatCardModule,
       MatDialogModule,
-      MatMenuModule
+      MatMenuModule,
+      MatNativeDateModule
    ],
    providers: [
       MatDatepickerModule,

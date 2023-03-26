@@ -16,7 +16,7 @@ import { Globals } from '../interfaces/globals';
 import { IData } from '../interfaces/idata';
 import { ISpaceUpdate } from '../interfaces/ivehicle';
 import { IUserAccount } from '../interfaces/iuser';
-import { IWorkOrder } from '../interfaces/iforms';
+import { IWorkOrder, IBasicForm } from '../interfaces/iforms';
 
 @Injectable({
   providedIn: 'root',
@@ -380,6 +380,10 @@ export class SupabaseService {
     }finally{
       this.router.navigate(['/home']);
     }
+  }
+
+  insertBasicForm(frm:IBasicForm){
+
   }
 
   //* >>>>>>>>>>>>>>> CONSTRUCTOR / SUBSCRIPTIONS <<<<<<<<<<<<<<<<<<<<

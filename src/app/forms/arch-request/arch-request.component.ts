@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs'
 import { Router } from '@angular/router'
 import { IUserAccount } from '../../interfaces/iuser';
 import { IOwnerAccount } from '../../interfaces/iunit';
-import { IWorkOrder } from 'src/app/interfaces/iforms';
+import { IBasicForm } from 'src/app/interfaces/iforms';
 
 @Component({
   selector: 'app-arch-request',
@@ -19,25 +19,31 @@ export class ArchRequestComponent {
   supaScription: Subscription;
   userAccount:IUserAccount = { id:0, username: '', role: '', cell: '', email: '', units: [], userid:'' };
   ownerAccount: IOwnerAccount = { name: '', cell: '', email: '', street:'',csz:'' };
-  workOrder: IWorkOrder = {unit:0, cell:'', name:'', email:'',category:'',photo:'',description:''}
-  categories = ['Building-General','Building-Roof','Lighting/Electrical','Landscape','Plumbing','Pests','Parking/Driveways','Walkways/Patio','Other'];
+
+  locations = ['Front','Garage/carport','Balcony','Roof','Patio','Back','Side','Other'];
+
+  formData: IBasicForm = {userid:'', date:'',location:'',cell:'', name:'', email:'',category:'',photo:'',type:'',text:''}
+ 
 
   myForm = new FormGroup({
     unitNum: new FormControl('', Validators.required),
+    location: new FormControl('', Validators.required),
     category: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
   });
 
   submitBtn() {
     let form = this.myForm.value;
-    this.workOrder.unit = parseInt(form.unitNum);
-    this.workOrder.cell = this.userAccount.cell;
-    this.workOrder.email =  this.userAccount.email;
-    this.workOrder.name = this.userAccount.username;
-    this.workOrder.category = form.category;
-    this.workOrder.description = form.description;
+    this.formData.type = 'crime'
+    this.formData.userid = this.userAccount.userid;
+    this.formData.cell = this.userAccount.cell;
+    this.formData.email =  this.userAccount.email;
+    this.formData.name = this.userAccount.username;
+    this.formData.text = form.description;
+    this.formData.location = form.location;
+    this.formData.category = form.category;
     
-    this.supabase.insertWorkOrder(this.workOrder);
+    this.supabase.insertBasicForm(this.formData);
   }
 
   unitSelectionHandler(){

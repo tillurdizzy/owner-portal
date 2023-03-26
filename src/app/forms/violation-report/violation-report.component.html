@@ -5,28 +5,27 @@
   <form [formGroup]="myForm" novalidate>
     <div class="form-container">
       <mat-form-field class="form-field">
-        <mat-label>unit</mat-label>
-        <mat-select
-          formControlName="unitNum"
-          (selectionChange)="unitSelectionHandler()"
-        >
-          <mat-option *ngFor="let item of userAccount.units" [value]="item">
-            {{ item }}
-          </mat-option>
-        </mat-select>
+        <mat-label>date of incident</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="date"/>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker [touchUi]="true"></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field class="form-field">
-        <mat-label>category</mat-label>
-        <mat-select
-          formControlName="category"
-          (selectionChange)="catSelectionHandler()"
-        >
-          <mat-option *ngFor="let item of categories" [value]="item">
-            {{ item }}
-          </mat-option>
-        </mat-select>
+        <mat-label>location</mat-label>
+        <textarea
+          matInput
+          formControlName="location"
+          style="height: 80px"
+        ></textarea>
+        <mat-error *ngIf="handleError('location', 'required')">
+          required
+        </mat-error>
       </mat-form-field>
+
       <mat-form-field class="form-field">
         <mat-label>description</mat-label>
         <textarea

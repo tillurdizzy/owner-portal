@@ -1,35 +1,24 @@
 <div class="spacer-10"></div>
 <span class="black-16-550">Message to the Board</span><br />
 
-
 <div class="col-container">
   <form [formGroup]="myForm" novalidate>
     <div class="form-container">
+
+
       <mat-form-field class="form-field">
-        <mat-label>unit</mat-label>
-        <mat-select
-          formControlName="unitNum"
-          (selectionChange)="unitSelectionHandler()"
-        >
-          <mat-option *ngFor="let item of userAccount.units" [value]="item">
-            {{ item }}
-          </mat-option>
-        </mat-select>
+        <mat-label>subject</mat-label>
+        <textarea
+          matInput
+          formControlName="category"
+        ></textarea>
+        <mat-error *ngIf="handleError('category', 'required')">
+          required
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field class="form-field">
-        <mat-label>category</mat-label>
-        <mat-select
-          formControlName="category"
-          (selectionChange)="catSelectionHandler()"
-        >
-          <mat-option *ngFor="let item of categories" [value]="item">
-            {{ item }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field class="form-field">
-        <mat-label>description</mat-label>
+        <mat-label>message</mat-label>
         <textarea
           matInput
           formControlName="description"
