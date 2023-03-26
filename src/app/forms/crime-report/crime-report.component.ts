@@ -38,7 +38,7 @@ export class CrimeReportComponent {
     this.formData.location = form.location;
     this.formData.date = form.date;
     
-    this.supabase.insertBasicForm(this.formData);
+    this.supabase.insertBasicForm(this.formData,'Crime Report Submitted.');
   }
 
  

@@ -43,7 +43,7 @@ export class ArchRequestComponent {
     this.formData.location = form.location;
     this.formData.category = form.category;
     
-    this.supabase.insertBasicForm(this.formData);
+    this.supabase.insertBasicForm(this.formData,'Request Submitted');
   }
 
   unitSelectionHandler(){

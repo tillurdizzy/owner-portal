@@ -382,8 +382,15 @@ export class SupabaseService {
     }
   }
 
-  insertBasicForm(frm:IBasicForm){
-
+  async insertBasicForm(frm:IBasicForm,message:string){
+    try {
+      const { data, error } = await this.supabase.from('forms').insert(frm);
+      this.showResultDialog(message)
+    } catch (error) {
+      this.showResultDialog('ERROR: ' + JSON.stringify(error))
+    }finally{
+      this.router.navigate(['/home']);
+    }
   }
 
   //* >>>>>>>>>>>>>>> CONSTRUCTOR / SUBSCRIPTIONS <<<<<<<<<<<<<<<<<<<<
