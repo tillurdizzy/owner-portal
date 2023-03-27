@@ -351,7 +351,10 @@ export class SupabaseService {
     this.doConsole('Supabase > signIn() ' + JSON.stringify(credentials));
     try {
       var result = await this.supabase.auth.signInWithPassword(credentials);
-  
+      if(result.data.user == null){
+        alert(JSON.stringify(result.error.message))
+        return;
+      }
       let dataObj = {
         to: 'DataService',
         event: 'userAuthenticated',
@@ -361,6 +364,7 @@ export class SupabaseService {
 
       let uid = result.data.user.id;
       this.getUserAccount(uid);
+
     } catch (error) {
       alert("Sign in error: "  + JSON.stringify(error))
     }
