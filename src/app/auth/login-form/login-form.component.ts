@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DataService } from '../../services/data.service';
 import { IData } from '../../interfaces/idata';
-import { Globals } from '../../interfaces/globals';
 import { SupabaseService } from 'src/app/services/supabase.service';
 
 @Component({
@@ -14,12 +13,11 @@ import { SupabaseService } from 'src/app/services/supabase.service';
 export class LoginFormComponent implements OnInit {
   dataObj = {} as IData;
 
+  //! Default password : 'wstadmin'
   myForm = new FormGroup({
-    ownerEmail: new FormControl<string>('tillurdizzy@live.com', [Validators.required,Validators.email,]),
-    ownerPassword: new FormControl<string>('wstadmin', Validators.required),
+    ownerEmail: new FormControl<string>('', [Validators.required,Validators.email,]),
+    ownerPassword: new FormControl<string>('', Validators.required),
   });
-
-  
 
   ngOnInit() {}
 
@@ -30,7 +28,6 @@ export class LoginFormComponent implements OnInit {
     let obj = {email: e,password: p};
     try {
       this.supabase.logIn(obj);
-      
     } catch (error) {
       alert(error.message)
     }finally{
@@ -46,6 +43,5 @@ export class LoginFormComponent implements OnInit {
     private router: Router,
     private ds: DataService,
     private supabase: SupabaseService,
-    private g: Globals
   ) {}
 }

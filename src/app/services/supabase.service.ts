@@ -23,7 +23,8 @@ import { IWorkOrder, IBasicForm } from '../interfaces/iforms';
 })
 export class SupabaseService {
   private supabase: SupabaseClient;
-  private loginMode = "IN" // Development only: Production should be "IN"
+  //private loginMode = "UP" // Development only to sign up users: Production should be "IN"
+  private loginMode = "IN"
   private iProfile: IProfile;
 
   private vehicle: IVehicle;
