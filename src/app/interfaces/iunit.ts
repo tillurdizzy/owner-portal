@@ -19,6 +19,15 @@ export interface IOwnerAccount{
   email: string;
 }
 
+export interface IOwnerInsert{
+  name: string;
+  street: string;
+  csz: string;
+  cell: string;
+  email: string;
+  updated: string;
+}
+
 export interface IUnitInsert {
   name: string;
   street: string;

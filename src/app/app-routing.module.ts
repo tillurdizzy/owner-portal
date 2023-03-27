@@ -15,6 +15,8 @@ import { ArchRequestComponent } from './forms/arch-request/arch-request.componen
 import { CrimeReportComponent } from './forms/crime-report/crime-report.component';
 import { ViolationReportComponent } from './forms/violation-report/violation-report.component';
 import { MessageBoardComponent } from './forms/message-board/message-board.component';
+import { OwnerUpdateComponent } from './forms/owner-update/owner-update.component';
+import { UserUpdateComponent } from './forms/user-update/user-update.component';
 import { NavErrorComponent } from './misc/nav-error/nav-error.component';
 
 
@@ -43,6 +45,8 @@ const routes: Routes = [
           {path:'crime-report', component: CrimeReportComponent,title:'Crime Report'},
           {path:'violation-report', component: ViolationReportComponent,title:'Violation Report'},
           {path:'message-board', component: MessageBoardComponent,title:'Message Board'},
+          {path:'owner-update', component: OwnerUpdateComponent,title:'Owner Update'},
+          {path:'user-update', component: UserUpdateComponent,title:'User Update'},
           ]},
       {path:'404', component: NavErrorComponent },
       {path:'**', redirectTo: '404',outlet:"app"},

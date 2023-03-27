@@ -28,6 +28,8 @@ import { ArchRequestComponent } from './forms/arch-request/arch-request.componen
 import { CrimeReportComponent } from './forms/crime-report/crime-report.component';
 import { ViolationReportComponent } from './forms/violation-report/violation-report.component';
 import { MessageBoardComponent } from './forms/message-board/message-board.component';
+import { OwnerUpdateComponent } from './forms/owner-update/owner-update.component';
+import { UserUpdateComponent } from './forms/user-update/user-update.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +50,9 @@ import { MessageBoardComponent } from './forms/message-board/message-board.compo
     ArchRequestComponent,
     CrimeReportComponent,
     ViolationReportComponent,
-    MessageBoardComponent
+    MessageBoardComponent,
+    OwnerUpdateComponent,
+    UserUpdateComponent
   ],
   imports: [
     BrowserModule,

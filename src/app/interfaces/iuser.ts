@@ -9,4 +9,13 @@ export interface IUserAccount {
   units:number[];
 };
 
+export interface IOwner{
+  email: string;
+  cell: string;
+  firstname: string;
+  lastname: string;
+  street:string;
+  csz:string;
+}
+
 

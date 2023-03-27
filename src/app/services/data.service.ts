@@ -6,7 +6,7 @@ import { IUserAccount} from '../interfaces/iuser';
 import { IProfile } from '../interfaces/iprofile';
 import { IVehicle } from '../interfaces/ivehicle';
 import { Globals } from '../interfaces/globals';
-import { IOwnerAccount } from '../interfaces/iunit';
+import { IOwnerAccount, IOwnerInsert } from '../interfaces/iunit';
 
 @Injectable({
   providedIn: "root",
@@ -22,6 +22,7 @@ export class DataService {
   private userAuthenticated: boolean = false;
 
   private userAccount: IUserAccount = { id:0, username: '', role: '', cell: '', email: '', units: [], userid:'' };
+  //* ownerAccount data is taken from first item in units array from userAccount
   private ownerAccount: IOwnerAccount = { name: '', cell: '', email: '', street:'',csz:'' };
   private myCurrentUnit: number;
   private myVehicles: IVehicle[];
@@ -89,6 +90,18 @@ export class DataService {
 
  getFormList(){
   return this.formList;
+ }
+
+ updateOwnerAccount(data:IOwnerInsert){
+    this.ownerAccount.name = data.name;
+    this.ownerAccount.cell = data.cell;
+    this.ownerAccount.email = data.email;
+    this.ownerAccount.street = data.street;
+    this.ownerAccount.csz = data.csz;
+ }
+
+ get ownerUnitsList(){
+  return this.userAccount.units;
  }
 
  //* >>>>>>>>>> SUPASCRIPTION HANDLERS >>>>>>>>>> \\

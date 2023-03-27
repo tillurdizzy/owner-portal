@@ -9,7 +9,7 @@ import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { IProfile, IProfileFetch } from '../interfaces/iprofile';
 import { IVehicle } from '../interfaces/ivehicle';
 import { IVehicleTable } from '../interfaces/ivehicle';
-import { IUnit  } from '../interfaces/iunit';
+import { IOwnerInsert, IUnit  } from '../interfaces/iunit';
 import { IProfileUpdate } from '../interfaces/iprofile';
 import { environment } from '../../environments/environment';
 import { Globals } from '../interfaces/globals';
@@ -143,7 +143,7 @@ export class SupabaseService {
 
 
 
-    //*>>>>>>>>>>>>>>>>>>>>  PROFILES  <<<<<<<<<<<<<<<<<<<<
+    //*>>>>>>>>>>>>>>>>>>>>  PROFILES / OWNER  <<<<<<<<<<<<<<<<<<<<
   async deleteProfile(id:number) {
     try {
       let { data, error } = await this.supabase.from('profiles').delete().eq('id', id);
@@ -154,9 +154,6 @@ export class SupabaseService {
       this.router.navigate(['units/units-detail']);
     }
   }
-
-
-  
 
   async insertNewProfile(profile: IProfileFetch) {
     this.doConsole('SupabaseService > insertNewProfile() profile >>' + JSON.stringify(profile));
@@ -181,6 +178,50 @@ export class SupabaseService {
       this.sendData(this.dataObj);
     } catch (error) {
       this.showResultDialog('ERROR: ' + JSON.stringify(error))
+    }
+  }
+
+  async getUserAccount(user: string) {
+    try {
+      let { data, error } = await this.supabase.from('accounts').select('*').eq('userid', user);
+     
+      let dataObj = {
+        to: 'DataService',
+        event: 'getUserAccount',
+        result: data
+      };
+      this.sendData(dataObj);
+     
+    } catch (error) {
+      alert("Sign in error: getUserAccount "  + JSON.stringify(error))
+    }
+  }
+
+  async getOwnerAccount(unit:number){
+    try {
+      let { data, error } = await this.supabase.from('units').select('*').eq('unit', unit);
+      let dataObj = {
+        to: 'DataService',
+        event: 'getOwnerAccount',
+        result: data[0]
+      };
+      this.sendData(dataObj);
+    } catch (error) {
+      alert("Sign in error: getOwner "  + JSON.stringify(error))
+    }
+  }
+
+  async updateOwnerAccount(a:IOwnerInsert,units){
+    this.doConsole('SupabaseService > updateOwnerAccount() data >>' + JSON.stringify(a));
+    try {
+      const { data, error } = await this.supabase.from('units')
+      .update(a)
+      .in('unit', units);
+      if(error == null){this.showResultDialog('Owner account updated.')}
+    } catch (error) {
+      this.showResultDialog('ERROR: ' + JSON.stringify(error))
+    }finally{
+      this.router.navigate(['/home']);
     }
   }
 
@@ -340,35 +381,7 @@ export class SupabaseService {
     return this.supabase.auth.signOut();
   }
 
-  async getUserAccount(user: string) {
-    try {
-      let { data, error } = await this.supabase.from('accounts').select('*').eq('userid', user);
-     
-      let dataObj = {
-        to: 'DataService',
-        event: 'getUserAccount',
-        result: data
-      };
-      this.sendData(dataObj);
-     
-    } catch (error) {
-      alert("Sign in error: getUserAccount "  + JSON.stringify(error))
-    }
-  }
-
-  async getOwnerAccount(unit:number){
-    try {
-      let { data, error } = await this.supabase.from('units').select('*').eq('unit', unit);
-      let dataObj = {
-        to: 'DataService',
-        event: 'getOwnerAccount',
-        result: data[0]
-      };
-      this.sendData(dataObj);
-    } catch (error) {
-      alert("Sign in error: getOwner "  + JSON.stringify(error))
-    }
-  }
+  
 
   //* >>>>>>>>>>>>  FORMS  <<<<<<<<<<<<\\
   async insertWorkOrder(wo:IWorkOrder){

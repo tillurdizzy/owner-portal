@@ -58,12 +58,12 @@ export class HomeComponent implements OnInit{
     this.router.navigate([navRoute]);
   }
 
-  onEditUserAccount(){
-
+  updateOwnerAccount(){
+    this.router.navigate(['/forms/owner-update']);
   }
 
-  onEditOwnerAccount(){
-
+  updateUserAccount(){
+    this.router.navigate(['/forms/user-update']);
   }
 
   
