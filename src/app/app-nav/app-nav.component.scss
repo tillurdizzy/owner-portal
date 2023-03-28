@@ -1,13 +1,8 @@
-.router-outlet {
-  display: block;
-  margin-right: auto;
-  margin-left: auto;
- 
-  max-width: 1000px;
-}
+
 
 .sidenav-container {
   height: 100%;
+
 }
 
 .sidenav {
@@ -31,31 +26,5 @@
 .active-link{
   color:  #8f9ef1 !important;
   font-weight: 500;
-}
-
-/* Extra small devices (phones, 600px and down) */
-@media only screen and (max-width: 600px) {
-  .router-outlet{max-width: 600px;}
-}
-
-/* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (min-width: 600px) {
-  .router-outlet{min-width: 600px;}
-}
-
-/* Medium devices (landscape tablets, 768px and up) */
-@media only screen and (min-width: 768px) {
-  .router-outlet{min-width: 768px;}
-
-}
-
-/* Large devices (laptops/desktops, 992px and up) */
-@media only screen and (min-width: 992px) {
-  .router-outlet{max-width: 1000px;}
-}
-
-/* Extra large devices (large laptops and desktops, 1200px and up) */
-@media only screen and (min-width: 1200px) {
-  .router-outlet{max-width: 1000px;}
 }
 
