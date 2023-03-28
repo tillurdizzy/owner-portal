@@ -15,8 +15,8 @@ export class LoginFormComponent implements OnInit {
 
   //! Default password : 'wstadmin'
   myForm = new FormGroup({
-    ownerEmail: new FormControl<string>('', [Validators.required,Validators.email,]),
-    ownerPassword: new FormControl<string>('', Validators.required),
+    ownerEmail: new FormControl<string>('toddneal@rpmhoustonassociates.com', [Validators.required,Validators.email,]),
+    ownerPassword: new FormControl<string>('wstadmin', Validators.required),
   });
 
   ngOnInit() {}

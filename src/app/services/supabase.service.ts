@@ -15,7 +15,7 @@ import { environment } from '../../environments/environment';
 import { Globals } from '../interfaces/globals';
 import { IData } from '../interfaces/idata';
 import { ISpaceUpdate } from '../interfaces/ivehicle';
-import { IUserAccount } from '../interfaces/iuser';
+import { IUserAccount, IUserUpdate } from '../interfaces/iuser';
 import { IWorkOrder, IBasicForm } from '../interfaces/iforms';
 
 @Injectable({
@@ -195,6 +195,20 @@ export class SupabaseService {
      
     } catch (error) {
       alert("Sign in error: getUserAccount "  + JSON.stringify(error))
+    }
+  }
+
+  async updateUserAccount(updateObj: IUserUpdate,id:string){
+    
+    try {
+      const { data, error } = await this.supabase.from('accounts')
+      .update(updateObj)
+      .eq('userid', id);
+      if(error == null){this.showResultDialog('User account updated.')}
+    } catch (error) {
+      this.showResultDialog('ERROR: ' + JSON.stringify(error))
+    }finally{
+      this.router.navigate(['/home']);
     }
   }
 

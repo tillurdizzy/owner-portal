@@ -1,1 +1,39 @@
-<p>user-update works!</p>
+<div class="child-title">
+    <h2>Update User Account</h2>
+  </div>
+  
+  <div class="col-container">
+    <form [formGroup]="accountForm" novalidate>
+      <div class="form-container">
+        <mat-form-field class="form-field">
+  
+          <input matInput placeholder="name" formControlName="username" />
+          <mat-error *ngIf="handleError('username', 'required')">
+            required
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field class="form-field">
+          <input matInput placeholder="email" formControlName="email" />
+          <mat-error *ngIf="handleError('email', 'required')">
+            required
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field class="form-field">
+          <input matInput placeholder="cell" formControlName="cell" />
+          <mat-error *ngIf="handleError('cell', 'required')">
+            required
+          </mat-error>
+        </mat-form-field>
+  
+        <div class="button-container">
+          <button type="button" [disabled]="!(accountForm.valid && accountForm.dirty)" mat-raised-button color="primary" (click)="submitBtn()">UPDATE</button>
+        </div>
+      </div>
+    </form>
+    <div class="form-footer"></div>
+  </div>
+  
+  
+

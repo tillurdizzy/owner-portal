@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs'
 import { Subject , Subscription} from 'rxjs';
 import { SupabaseService } from 'src/app/services/supabase.service';
-import { IUserAccount} from '../interfaces/iuser';
+import { IUserAccount,IUserUpdate} from '../interfaces/iuser';
 import { IProfile } from '../interfaces/iprofile';
 import { IVehicle } from '../interfaces/ivehicle';
 import { Globals } from '../interfaces/globals';
@@ -80,6 +80,10 @@ export class DataService {
     return obj;
   };
 
+  getUserAccount(){
+    return this.userAccount;
+  }
+
   getOwnerAccount(){
     return this.ownerAccount;
   }
@@ -99,6 +103,12 @@ export class DataService {
     this.ownerAccount.street = data.street;
     this.ownerAccount.csz = data.csz;
  }
+
+ updateUserAccount(data:IUserUpdate){
+  this.userAccount.username = data.username;
+  this.userAccount.cell = data.cell;
+  this.userAccount.email = data.email;
+}
 
  get ownerUnitsList(){
   return this.userAccount.units;

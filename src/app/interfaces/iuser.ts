@@ -9,6 +9,12 @@ export interface IUserAccount {
   units:number[];
 };
 
+export interface IUserUpdate{
+  username: string;
+  email: string;
+  cell: string;
+}
+
 export interface IOwner{
   email: string;
   cell: string;
