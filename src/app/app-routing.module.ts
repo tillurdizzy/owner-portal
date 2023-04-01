@@ -16,6 +16,7 @@ import { CrimeReportComponent } from './forms/crime-report/crime-report.componen
 import { ViolationReportComponent } from './forms/violation-report/violation-report.component';
 import { MessageBoardComponent } from './forms/message-board/message-board.component';
 import { OwnerUpdateComponent } from './forms/owner-update/owner-update.component';
+import { PasswordResetComponent } from './auth/password-reset/password-reset.component';
 import { UserUpdateComponent } from './forms/user-update/user-update.component';
 import { NavErrorComponent } from './misc/nav-error/nav-error.component';
 
@@ -27,6 +28,7 @@ const routes: Routes = [
     children: [
       {path:'', redirectTo:'home', pathMatch:'full'},
       {path:'home', component: HomeComponent},
+      {path:'password-reset', component: PasswordResetComponent},
       {path:'units', component: UnitsComponent,
         children:
           [

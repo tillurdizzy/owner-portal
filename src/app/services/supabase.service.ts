@@ -23,8 +23,7 @@ import { IWorkOrder, IBasicForm } from '../interfaces/iforms';
 })
 export class SupabaseService {
   private supabase: SupabaseClient;
-  //private loginMode = "UP" // Development only to sign up users: Production should be "IN"
-  private loginMode = "IN"
+
   private iProfile: IProfile;
 
   private vehicle: IVehicle;
@@ -352,13 +351,7 @@ export class SupabaseService {
     return this._session;
   }
 
-  logIn(obj) {
-    if (this.loginMode == 'IN') {
-      this.signIn(obj);
-    } else if(this.loginMode == 'UP'){
-      this.signUp(obj);
-    }
-  }
+  
 
   // Chain of Calls... signIn >> getUserAccount >> ds.getOwner
   async signIn(credentials: { email: string; password: string }) {
@@ -393,11 +386,42 @@ export class SupabaseService {
   }
 
   authChanges(callback: (event: AuthChangeEvent, session: Session | null) => void) {
+    this.doConsole('SupabaseService > authChanges() ');
     return this.supabase.auth.onAuthStateChange(callback);
   }
 
   signOut() {
     return this.supabase.auth.signOut();
+  }
+
+  // Password Reset... this called first with only Email to initiate change
+  async resetPassword(email: string ){
+    try {
+      const { data, error } = await this.supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: 'http://localhost:4200/password-reset'})
+      if(error == null){
+        this.showResultDialog('Check your email for Password Reset link.')
+      }
+    } catch (error) {
+      this.showResultDialog('ERROR: ' + JSON.stringify(error))
+    }finally{
+      this.router.navigate(['/home']);
+    }
+  }
+
+// Actual Password Update
+  async updatePassword(new_password:string){
+    try {
+      const { data, error } = await this.supabase.auth.updateUser({password: new_password})
+      if(error == null){
+        this.showResultDialog('Password reset.  Please log in.')
+      }
+    } catch (error) {
+      
+    }finally{
+      this.router.navigate(['/home']);
+    }
+    
   }
 
   
@@ -442,9 +466,12 @@ export class SupabaseService {
             var u: User = s.user;
             this.currentUser.next(u);
           }
+        } else if(event === 'PASSWORD_RECOVERY'){
+
         } else {
           this.currentUser.next(false);
         }
+
         this.doConsole(
           'End: SupabaseService > onAuthStateChange:event= ' + event + ' > currentUser = ' + (this.currentUser.value as User).id
         );

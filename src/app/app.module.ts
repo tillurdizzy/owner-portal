@@ -30,6 +30,7 @@ import { ViolationReportComponent } from './forms/violation-report/violation-rep
 import { MessageBoardComponent } from './forms/message-board/message-board.component';
 import { OwnerUpdateComponent } from './forms/owner-update/owner-update.component';
 import { UserUpdateComponent } from './forms/user-update/user-update.component';
+import { PasswordResetComponent } from './auth/password-reset/password-reset.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { UserUpdateComponent } from './forms/user-update/user-update.component';
     ViolationReportComponent,
     MessageBoardComponent,
     OwnerUpdateComponent,
-    UserUpdateComponent
+    UserUpdateComponent,
+    PasswordResetComponent
   ],
   imports: [
     BrowserModule,

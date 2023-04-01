@@ -12,28 +12,55 @@ import { SupabaseService } from 'src/app/services/supabase.service';
 })
 export class LoginFormComponent implements OnInit {
   dataObj = {} as IData;
+  //loginMode = "UP" // Development only to sign up users: Production should be "IN"
+  loginMode = "IN"
+  pageTitle:string = "Sign In"
+  buttonLabel = "Sign In"
 
   //! Default password : 'wstadmin'
   myForm = new FormGroup({
-    ownerEmail: new FormControl<string>('toddneal@rpmhoustonassociates.com', [Validators.required,Validators.email,]),
-    ownerPassword: new FormControl<string>('wstadmin', Validators.required),
+    ownerEmail: new FormControl<string>('toddneal@rpmhoustonassociates.com'),
+    ownerPassword: new FormControl<string>('wstadmin')
   });
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.myForm.reset();
+    if(this.loginMode == "IN"){
+      this.pageTitle = "Sign In"
+      this.buttonLabel = "Sign In"
+    }else if (this.loginMode == "UP"){
+      this.pageTitle = "Sign UP!!"
+      this.buttonLabel = "Register"
+    }
+  }
 
   submitBtn() {
     this.ds.doConsole('Home/LoginFormComponent: submitBtn()');
     var e = this.myForm.value.ownerEmail.trim();
-    var p = this.myForm.value.ownerPassword.trim();
-    let obj = {email: e,password: p};
-    try {
-      this.supabase.logIn(obj);
-    } catch (error) {
-      alert(error.message)
-    }finally{
-      this.myForm.reset();
+    var p = "";
+    if(this.loginMode != "PW"){
+      p = this.myForm.value.ownerPassword.trim();
     }
+    
+    let obj = {email: e,password: p};
+    this.callSupabase(obj)
   };
+
+  callSupabase(obj) {
+    if (this.loginMode == 'IN') {
+      this.supabase.signIn(obj);
+    } else if(this.loginMode == 'UP'){
+      this.supabase.signUp(obj);
+    }else if(this.loginMode == 'PW'){
+      this.supabase.resetPassword(obj.email);
+    }
+  }
+
+  changePassword(){
+    this.loginMode = "PW"
+    this.pageTitle = "Reset Password"
+    this.buttonLabel = "Submit"
+  }
 
   public handleError = (control: string, error: string) => {
     return this.myForm.controls[control].hasError(error);
