@@ -1,4 +1,4 @@
-import { IProfile } from '../interfaces/iprofile';
+import { IProfile,IProfileUpdate } from '../interfaces/iprofile';
 import { IVehicle } from '../interfaces/ivehicle';
 import { IUnit } from '../interfaces/iunit';
 
@@ -14,6 +14,7 @@ export interface IData {
 	other?:string|null;
 	bool?: boolean;
 	profiles?:IProfile[];
+	residentUpdate?:IProfile;
 	vehicles?:IVehicle[];
 	iUnit?:IUnit;
 	iUnits?:IUnit[];

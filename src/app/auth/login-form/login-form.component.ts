@@ -10,6 +10,7 @@ import { SupabaseService } from 'src/app/services/supabase.service';
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.scss'],
 })
+
 export class LoginFormComponent implements OnInit {
   dataObj = {} as IData;
   //loginMode = "UP" // Development only to sign up users: Production should be "IN"
@@ -18,13 +19,14 @@ export class LoginFormComponent implements OnInit {
   buttonLabel = "Sign In"
 
   //! Default password : 'wstadmin'
+  //! foe ME personallu wstadmin9954
   myForm = new FormGroup({
-    ownerEmail: new FormControl<string>('toddneal@rpmhoustonassociates.com'),
-    ownerPassword: new FormControl<string>('wstadmin')
+    ownerEmail: new FormControl<string>('tillurdizzy@gmail.com'),
+    ownerPassword: new FormControl<string>('wstadmin9954')
   });
 
   ngOnInit() {
-    this.myForm.reset();
+    //this.myForm.reset();
     if(this.loginMode == "IN"){
       this.pageTitle = "Sign In"
       this.buttonLabel = "Sign In"
@@ -35,13 +37,13 @@ export class LoginFormComponent implements OnInit {
   }
 
   submitBtn() {
-    this.ds.doConsole('Home/LoginFormComponent: submitBtn()');
+    this.ds.doConsole('Home/LoginForm >> submitBtn()');
     var e = this.myForm.value.ownerEmail.trim();
     var p = "";
-    if(this.loginMode != "PW"){
+    // "PW" = Password Reset
+    if(this.loginMode != "PW"){ 
       p = this.myForm.value.ownerPassword.trim();
     }
-    
     let obj = {email: e,password: p};
     this.callSupabase(obj)
   };
@@ -54,6 +56,7 @@ export class LoginFormComponent implements OnInit {
     }else if(this.loginMode == 'PW'){
       this.supabase.resetPassword(obj.email);
     }
+    //this.myForm.reset();
   }
 
   changePassword(){

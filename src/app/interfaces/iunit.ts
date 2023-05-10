@@ -1,43 +1,30 @@
 
 export interface IUnit {
   unit: number;
-  name: string;
   street: string;
-  csz: string;
-  cell: string;
-  email: string;
+  bldg:string;
   sqft:number;
   bdrms:number;
-
 };
 
-export interface IOwnerAccount{
-  name: string;
-  street: string;
-  csz: string;
+export interface IResidentAccount{
+  id:number;
+  firstname: string;
+  lastname: string;
+  cell: string;
+  email: string;
+  alerts:string;
+  uuid:string;
+}
+
+export interface IResidentInsert{
+  firstname: string;
+  lastname: string;
   cell: string;
   email: string;
 }
 
-export interface IOwnerInsert{
-  name: string;
-  street: string;
-  csz: string;
-  cell: string;
-  email: string;
-  updated: string;
-}
 
-export interface IUnitInsert {
-  name: string;
-  street: string;
-  csz: string;
-  cell: string;
-  email: string;
-  first:string;
-  last:string;
-  updated:string;
-};
 
 export interface ISelect{
   value:string;

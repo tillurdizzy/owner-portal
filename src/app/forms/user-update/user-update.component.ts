@@ -13,22 +13,25 @@ import { IUserUpdate, IUserAccount } from 'src/app/interfaces/iuser';
 })
 export class UserUpdateComponent {
 
-  userAccount: IUserUpdate = { email: '', username: '', cell: ''};
+  userAccount: IUserUpdate = { cell: '', email: '', firstname:'',lastname:'',csz:'',street:''};
   userID:string;
 
   accountForm = new FormGroup({
     email: new FormControl('', Validators.required),
     cell: new FormControl('', Validators.required),
-    username: new FormControl('', Validators.required)
+    firstname: new FormControl('', Validators.required),
+    lastname: new FormControl('', Validators.required),
+    street: new FormControl('', Validators.required),
+    csz: new FormControl('', Validators.required),
   });
 
   ngOnInit() {
     this.ds.doConsole("UserUpdateComponent => ngOnInit()");
     this.accountForm.reset();
     let user =  this.ds.getUserAccount();
-    this.userID = user.userid;
+    this.userID = user.uuid;
     this.userAccount.cell = user.cell;
-    this.userAccount.username = user.username;
+    this.userAccount.firstname = user.firstname;
     this.userAccount.email = user.email;
     this.setFormValues();
   };
@@ -39,14 +42,14 @@ export class UserUpdateComponent {
 
   setFormBlank() {
     this.accountForm.reset();
-    this.userAccount = { email: '', username: '', cell: ''};
+    this.userAccount = { cell: '', email: '', firstname:'',lastname:'',csz:'',street:''};
   }
 
   submitBtn() {
     let f = this.accountForm.value;
     //let d = new Date();
     //et str = d.getFullYear()+"/"+(d.getMonth()+1)+"/"+d.getDate()
-    let data: IUserUpdate = { cell: f.cell, username: f.username, email: f.email };
+    let data: IUserUpdate = { cell: f.cell, firstname: f.firstname,lastname:f.lastname, email: f.email ,street:f.street,csz:f.csz};
     this.ds.updateUserAccount(data);
     this.supabase.updateUserAccount(data, this.userID);
   };

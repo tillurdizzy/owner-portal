@@ -9,7 +9,7 @@ import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { IProfile, IProfileFetch } from '../interfaces/iprofile';
 import { IVehicle } from '../interfaces/ivehicle';
 import { IVehicleTable } from '../interfaces/ivehicle';
-import { IOwnerInsert, IUnit  } from '../interfaces/iunit';
+import { IResidentInsert, IUnit  } from '../interfaces/iunit';
 import { IProfileUpdate } from '../interfaces/iprofile';
 import { environment } from '../../environments/environment';
 import { Globals } from '../interfaces/globals';
@@ -21,6 +21,7 @@ import { IWorkOrder, IBasicForm } from '../interfaces/iforms';
 @Injectable({
   providedIn: 'root',
 })
+
 export class SupabaseService {
   private supabase: SupabaseClient;
 
@@ -28,8 +29,6 @@ export class SupabaseService {
 
   private vehicle: IVehicle;
   private myVehicles: IVehicle[] = [];
-  private myProfiles: IProfile[] = [];
-
 
   private dataObj: IData = { to: '', event: '' };
 
@@ -39,8 +38,8 @@ export class SupabaseService {
   public currentUser$ = this.currentUser.asObservable();
 
   //Starts out true... if a profile exists it becomes User... if no profile yet... becomes false
-  private userProfile: BehaviorSubject<IProfile | boolean> = new BehaviorSubject(true);
-  public userProfile$ = this.userProfile.asObservable();
+  //private userProfile: BehaviorSubject<IProfile | boolean> = new BehaviorSubject(true);
+  //public userProfile$ = this.userProfile.asObservable();
 
   dialogRef: any;
 
@@ -49,7 +48,7 @@ export class SupabaseService {
   private subject = new Subject<any>();
 
   public sendData(message: any) {
-    console.log('SupabaseService > sendData > event = ' + message.event);
+    console.log('SupabaseService > sendData >  to:' + message.to + ' event:' + message.event);
     this.subject.next(message);
   }
 
@@ -94,7 +93,7 @@ export class SupabaseService {
     this.doConsole('SupabaseService > fetchResidentProfiles');
     try {
       let data = await this.supabase.from('profiles').select('*').eq('unit', unit);
-      this.publishData('DetailsComponent','fetchResidentProfiles',data.data);
+      this.publishData('UnitService','fetchResidentProfiles',data.data);
     } catch (error) {
       this.showResultDialog('ERROR: ' + JSON.stringify(error))
     }
@@ -104,21 +103,24 @@ export class SupabaseService {
     this.doConsole('SupabaseService > getAdminVehicles()');
     try {
       let data = await this.supabase.from('parking').select('*').eq('unit', unit);
-      this.publishData('DetailsComponent','fetchResidentVehicles',data.data);
+      if(data != null && data!=undefined){
+        this.publishData('UnitService','fetchResidentVehicles',data.data);
+      }
     } catch (error) {
       this.showResultDialog('ERROR: ' + JSON.stringify(error))
     }
-   
   }
 
   async fetchUnit(unit: number) {
     this.doConsole('SupabaseService > fetchUnit()');
     try {
-      let { data, error } = await this.supabase
-      .from('units').select('unit,name,street,cell,email,csz,sqft,bdrms')
-      .eq('unit', unit).single();
-
-      this.publishUnitData(data); 
+      let { data, error } = await this.supabase.from('units').select('*').eq('unit', unit).single();
+      if(data != null){
+        this.publishUnitData(data); 
+      }else{
+        this.showResultDialog('ERROR: ' + JSON.stringify(error))
+      }
+     
     } catch (error) {
       this.showResultDialog('ERROR: ' + JSON.stringify(error))
     }
@@ -168,30 +170,39 @@ export class SupabaseService {
   }
 
   async updateProfile(p: IProfileUpdate, id: number) {
-    this.doConsole('updateAdminResidentEdits_3 - begin id = ' + id);
+    this.doConsole('updateProfile id = ' + id);
     try {
-      await this.supabase.from('profiles').update(p).match({ id: id });
-      this.dataObj = {
-        to: this.g.ADMIN_TENANT_COMPONENT,
-        event: 'updateProfile',
-      };
-      this.sendData(this.dataObj);
+      const { data, error } = await this.supabase.from('profiles').update(p).match({ id: id }).select();
+      if(data != null){
+        let d = data[0] as IProfile;
+
+        this.dataObj = {
+          to: "UnitService",
+          event: 'updateResident',
+          residentUpdate:d
+        };
+        this.sendData(this.dataObj);
+      }
+      
     } catch (error) {
       this.showResultDialog('ERROR: ' + JSON.stringify(error))
+    }finally{
+      this.router.navigate(['/home']);
     }
   }
-
+  
   async getUserAccount(user: string) {
+    console.log('Supabase >> getUserAccount()');
     try {
-      let { data, error } = await this.supabase.from('accounts').select('*').eq('userid', user);
-     
-      let dataObj = {
-        to: 'DataService',
-        event: 'getUserAccount',
-        result: data
-      };
-      this.sendData(dataObj);
-     
+      let { data, error } = await this.supabase.from('accounts').select('*').eq('uuid', user);
+      if(data != null){
+        let dataObj = {
+          to: 'DataService',
+          event: 'getUserAccount',
+          result: data
+        };
+        this.sendData(dataObj);
+      }
     } catch (error) {
       alert("Sign in error: getUserAccount "  + JSON.stringify(error))
     }
@@ -225,7 +236,7 @@ export class SupabaseService {
     }
   }
 
-  async updateOwnerAccount(a:IOwnerInsert,units){
+  async updateOwnerAccount(a:IResidentInsert,units){
     this.doConsole('SupabaseService > updateOwnerAccount() data >>' + JSON.stringify(a));
     try {
       const { data, error } = await this.supabase.from('units')
@@ -359,8 +370,7 @@ export class SupabaseService {
     try {
       var result = await this.supabase.auth.signInWithPassword(credentials);
       if(result.data.user == null){
-        alert(JSON.stringify(result.error.message))
-        return;
+        throw result.error.message
       }
       let dataObj = {
         to: 'DataService',
@@ -369,11 +379,8 @@ export class SupabaseService {
       };
       this.sendData(dataObj);
 
-      let uid = result.data.user.id;
-      this.getUserAccount(uid);
-
     } catch (error) {
-      alert("Sign in error: "  + JSON.stringify(error))
+      alert("Error: "  + JSON.stringify(error))
     }
   }
 
@@ -381,8 +388,14 @@ export class SupabaseService {
     this.doConsole('Supabase > signUp()' + JSON.stringify(credentials));
     try {
       var result = await this.supabase.auth.signUp(credentials);
-    } catch (error) {}
-    return result;
+      if(result.data.user == null) {
+        throw result.error.message
+      }else {
+        this.showResultDialog('User created: ' + result.data.user.id)
+      }
+    } catch (error) {
+      this.showResultDialog('Error: ' + error)
+    };
   }
 
   authChanges(callback: (event: AuthChangeEvent, session: Session | null) => void) {
@@ -421,11 +434,9 @@ export class SupabaseService {
     }finally{
       this.router.navigate(['/home']);
     }
-    
   }
 
   
-
   //* >>>>>>>>>>>>  FORMS  <<<<<<<<<<<<\\
   async insertWorkOrder(wo:IWorkOrder){
     try {

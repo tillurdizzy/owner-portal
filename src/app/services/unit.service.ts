@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject, Subscription, BehaviorSubject } from 'rxjs'
 import { IUnit } from '../interfaces/iunit';
 import { Globals } from '../interfaces/globals';
-import { IProfile  } from '../interfaces/iprofile';
+import { IProfile, IProfileUpdate  } from '../interfaces/iprofile';
 import { IVehicle } from '../interfaces/ivehicle';
 import { SupabaseService } from '../services/supabase.service';
+import { IResidentAccount, IResidentInsert } from '../interfaces/iunit';
+import { IUserAccount,IUserUpdate} from '../interfaces/iuser';
 
 @Injectable({
   providedIn: 'root'
@@ -26,9 +28,13 @@ export class UnitService {
   
   private unitVehicles: IVehicle[] = [];
   private unitProfiles: IProfile[] = [];
-  //private ownerInfo: IUnit = { name: '', unit: 0, street: '', csz: '', cell: '', email: '' };
-  private selectedUnit: IUnit = { unit:100, name: '', cell: '', email: '', street:'',csz:'', sqft:0, bdrms:1 };
 
+ 
+  //private ownerInfo: IUnit = { name: '', unit: 0, street: '', csz: '', cell: '', email: '' };
+  private selectedUnit: IUnit = { unit:100, street:'',sqft:0, bdrms:1 , bldg:''};
+  private userAccount: IUserAccount = { id:0, username: '', role: '', cell: '', email: '', units: [], uuid:'' ,firstname:'',lastname:'',csz:'',street:'',alerts:''};
+  private emptyResidentAccount: IResidentAccount= { firstname:'', lastname:'', cell: '', email: '',uuid:'', id:0, alerts:''};
+  
 
   // * Selected for any reason... most likely for editing
   private selectedProfile: IProfile;
@@ -37,6 +43,87 @@ export class UnitService {
   private currentUnit: number;
 
   //* >>>>>>>>>>> OBSERVABLES  <<<<<<<<<<<<
+  
+  //^residents$
+  private residentsBS: BehaviorSubject<IResidentAccount[]> = new BehaviorSubject([]);
+  public residents$ = this.residentsBS.asObservable();
+
+  getResidentsObs(): Observable<IResidentAccount[]> {
+    return this.residents$
+  }
+  setResidentObs(n:IResidentAccount[]){
+     //Sort descending order... larger number is "Primary" resident - i.e. Owner
+    n.sort((e1, e2) => e1.id > e2.id ? -1 : e1.id < e2.id ? 1 : 0);
+
+    let role = this.userAccount.role;
+    var ownerUuid = this.userAccount.uuid;
+    var clone = structuredClone(this.emptyResidentAccount);
+    var residentAccountArray = [];
+    if (role == 'resident' && ownerUuid != null) {
+
+      clone.firstname = this.userAccount.firstname;
+      clone.lastname = this.userAccount.lastname;
+      clone.cell = this.userAccount.cell;
+      clone.email = this.userAccount.email;
+      clone.id = this.userAccount.id;
+      clone.alerts = this.userAccount.alerts;
+      clone.uuid = this.userAccount.uuid;
+      residentAccountArray.push(clone)
+      residentAccountArray.push(n[1])
+      
+    } else if (role == 'resident +') {
+      // If owner is 'resident +', get Primary Resident info from Accounts table IF!
+      // currentUnitselected == ResidesAt
+      let u = this.userAccount.units;
+      let v = this.parseObj(u, 'residesAt');
+      if (v == this.currentUnit  && ownerUuid != null)  {
+        clone.firstname = this.userAccount.firstname;
+        clone.lastname = this.userAccount.lastname;
+        clone.cell = this.userAccount.cell;
+        clone.email = this.userAccount.email;
+        clone.id = this.userAccount.id;
+        clone.alerts = this.userAccount.alerts;
+        clone.uuid = this.userAccount.uuid;
+        residentAccountArray.push(clone)
+        residentAccountArray.push(n[1])
+      } 
+    }
+    this.residentsBS.next(residentAccountArray);
+  }
+
+  //^vehicles$
+  private vehiclesBS: BehaviorSubject<IVehicle[]> = new BehaviorSubject([]);
+  public vehicles$ = this.vehiclesBS.asObservable();
+
+  getVehiclesObs(): Observable<IVehicle[]> {
+    return this.vehicles$
+  }
+
+  setVehiclesObs(n:IVehicle[]){
+    n.sort((e1, e2) => e1.space > e2.space ? 1 : e1.space < e2.space ? -1 : 0);
+    this.vehiclesBS.next(n);
+  }
+
+  updateResidentProfile(updatedProfile:IProfile){
+    console.log("UnitService  > updateResidentProfile()")
+    var subData:IResidentAccount[] = undefined;
+    var newData:IResidentAccount[] = [];
+    const sub = this.residentsBS.subscribe(p => subData = p);
+    sub.unsubscribe();
+    let updateID =  updatedProfile.id;
+    for (let index = 0; index < subData.length; index++) {
+      const element = subData[index];
+      let thisID = element.id;
+      if (thisID = updateID) {
+        subData[index].email = updatedProfile.email
+        subData[index].firstname = updatedProfile.firstname
+        subData[index].lastname = updatedProfile.lastname
+        subData[index].cell = updatedProfile.cell
+      }
+      newData.push(subData[index])
+    }
+    this.residentsBS.next(subData);
+  }
   
   // * >>>>>>>>>>>>>>>> Data Service <<<<<<<<<<<<<<<<<<
 
@@ -57,6 +144,16 @@ export class UnitService {
   };
 
   //* >>>>>>>>>>>>>>>  UTILITIES <<<<<<<<<<<<<<<<<<<<<<<>
+
+  parseObj(obj, key) {
+    var x;
+    Object.keys(obj).forEach((k) => {
+      if (k == key) {
+        x = obj[k];
+      }
+    });
+    return x;
+  }
 
   removeNull(obj) {
     Object.keys(obj).forEach(k => {
@@ -94,6 +191,9 @@ export class UnitService {
     this.unitVehicles = data;
   };
 
+  setUserAccount(account:IUserAccount){
+    this.userAccount = account;
+  };
   
 
   setSelectedProfile(p: IProfile) {
@@ -114,7 +214,7 @@ export class UnitService {
     this.unitVehicles = [];
     this.unitProfiles = [];
     this.currentUnit = 0;
-    this.selectedUnit ={ unit:100, name: '', cell: '', email: '', street:'',csz:'', sqft:0, bdrms:1 };
+    this.selectedUnit = { unit:100, street:'',sqft:0, bdrms:1 , bldg:''};
   }
 
   //* GETTERS
@@ -184,11 +284,13 @@ export class UnitService {
         if(dataPassed.event == 'publishUnitData'){
           this.selectedUnit = dataPassed.iUnit;
         //* Vehicles
-        }else if(dataPassed.event == 'publishAdminVehicles'){
-          this.setUnitVehicles(dataPassed.vehicles);
+        }else if(dataPassed.event == 'fetchResidentVehicles'){
+          this.setVehiclesObs(dataPassed.data)
+          //this.setUnitVehicles(dataPassed.vehicles);
          //* Residents / Profiles  
-        }else if(dataPassed.event == 'publishFetchedProfiles'){
-          this.unitProfiles = dataPassed.profiles;
+        }else if(dataPassed.event == 'fetchResidentProfiles'){
+          //this.unitProfiles = dataPassed.profiles;
+          this.setResidentObs(dataPassed.data);
         //* Residents / Delete Profile
         }else if (dataPassed.event == 'updateResidentProfile success!') {
          this.selectedProfile = undefined;
@@ -196,11 +298,14 @@ export class UnitService {
         }else if (dataPassed.event == 'removeVehicleSuccess!') {
           this.selectedVehicle = undefined;
          
-        }else if(dataPassed.event == ''){
-          
+        }else if(dataPassed.event == 'updateResident'){
+          let residentProfile:IProfileUpdate = dataPassed.residentUpdate;
+          this.updateResidentProfile(residentProfile);
+          //! Insert into Subject
         }
 
       }
     }); //! End Of supaSubscription
   }
 };
+

@@ -4,7 +4,7 @@ import { DataService } from '../services/data.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { IUserAccount} from '../interfaces/iuser';
-import { IOwnerAccount } from '../interfaces/iunit';
+import { IResidentAccount } from '../interfaces/iunit';
 
 @Component({
   selector: 'app-home',
@@ -16,8 +16,10 @@ export class HomeComponent implements OnInit{
 
   subscription: Subscription;
   userAuthenticated:boolean = false;
-  userAccount:IUserAccount = { id:0, username: '', role: '', cell: '', email: '', units: [], userid:'' };
-  ownerAccount: IOwnerAccount = { name: '', cell: '', email: '', street:'',csz:'' };
+  userAccount:IUserAccount = { id:0, username: '', role: '', cell: '', email: '', units: [], uuid:'' ,firstname:'',lastname:'',csz:'',street:'',alerts:''};
+  //residentAccounts: IResidentAccount[]=this.ds.initResidentAccount();
+  unitCount:number = 0;
+
   formList = [];
 
   unitSelectorForm = new FormGroup({
@@ -30,12 +32,26 @@ export class HomeComponent implements OnInit{
 
   ngOnInit(): void {
     let storedData = this.ds.isUserAuthenticated();
-    
+    // Before LogIn these will be filled with empty "init" data
+    // Auth will be false and unitCount 0
     this.userAuthenticated = storedData.auth;
     this.userAccount = storedData.account;
-
-    this.ownerAccount = this.ds.getOwnerAccount();
+    this.unitCount = this.userAccount.units.length;
+    //!this.residentAccounts = this.us.getOwnerAccount();
     this.formList = this.ds.getFormList();
+  }
+
+  getStoredData(){
+    
+  }
+
+  onAccountReceived(dataPassed){
+    this.userAccount = dataPassed;
+    this.unitCount = this.userAccount.units.length;
+  }
+
+  resetlogIn(){
+    this.userAuthenticated = false;
   }
 
   unitSelectorHandler(){
@@ -74,12 +90,14 @@ export class HomeComponent implements OnInit{
       if(x != null){
         let dataPassed = x;
         if(dataPassed.to == 'HomeComponent'){
+          console.log('Home >> receiveData >> ' + dataPassed.event);
           if(dataPassed.event == 'userAuthenticated' ){
             this.userAuthenticated = true;
           }else if(dataPassed.event == 'userAccount' ){
             this.userAccount = dataPassed.account;
+            this.onAccountReceived(dataPassed.account);
           }else if(dataPassed.event == 'ownerAccount' ){
-            this.ownerAccount = dataPassed.account;
+            //this.residentAccounts = dataPassed.account;
           }
         }
       }

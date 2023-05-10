@@ -5,7 +5,7 @@ import { DataService } from '../../services/data.service';
 import { Subscription } from 'rxjs'
 import { Router } from '@angular/router'
 import { IUserAccount } from '../../interfaces/iuser';
-import { IOwnerAccount } from '../../interfaces/iunit';
+import { IResidentAccount } from '../../interfaces/iunit';
 import { IBasicForm } from 'src/app/interfaces/iforms';
 
 @Component({
@@ -17,8 +17,8 @@ export class ArchRequestComponent {
 
   me = 'ArchRequestComponent';
   supaScription: Subscription;
-  userAccount:IUserAccount = { id:0, username: '', role: '', cell: '', email: '', units: [], userid:'' };
-  ownerAccount: IOwnerAccount = { name: '', cell: '', email: '', street:'',csz:'' };
+  userAccount:IUserAccount = { id:0, username: '', role: '', cell: '', email: '', units: [], uuid:'' ,firstname:'',lastname:'',csz:'',street:'',alerts:''};
+  ownerAccount: IResidentAccount[]= [{ firstname:'', lastname:'', cell: '', email: '',uuid:'', id:0, alerts:''}];
 
   locations = ['Front','Garage/carport','Balcony','Roof','Patio','Back','Side','Other'];
 
@@ -35,7 +35,7 @@ export class ArchRequestComponent {
   submitBtn() {
     let form = this.myForm.value;
     this.formData.type = 'crime'
-    this.formData.userid = this.userAccount.userid;
+    this.formData.userid = this.userAccount.uuid;
     this.formData.cell = this.userAccount.cell;
     this.formData.email =  this.userAccount.email;
     this.formData.name = this.userAccount.username;

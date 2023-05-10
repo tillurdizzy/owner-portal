@@ -39,7 +39,7 @@ export class EditResidentComponent {
   };
 
   cancelBackBtn(){
-    this.router.navigate(['/units/units-detail']);
+    this.router.navigate(['/home']);
   }
 
   setFormValues() {
@@ -78,7 +78,7 @@ export class EditResidentComponent {
   updateResidentProfile() {
     this.us.doConsole(this.me + " > updateResidentProfile")
     let id = this.us.getResidentID();
-    let unitNum = this.us.getCurrentUnit();
+    //let unitNum = this.us.getCurrentUnit();
     this.supabase.updateProfile(this.myProfile, id);
   };
 

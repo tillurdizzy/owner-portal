@@ -12,11 +12,14 @@ export interface IProfile {
 // All columns
 export interface IProfileFetch {
   id: number;
-  unit: number;
-  firstname: string;
-  lastname: string;
-  cell: string;
-  email: string;
+    unit: number;
+    firstname: string;
+    lastname: string;
+    cell: string;
+    email: string;
+    uuid?:string;
+    description?:string;
+    alerts?:string;
 
 };
 

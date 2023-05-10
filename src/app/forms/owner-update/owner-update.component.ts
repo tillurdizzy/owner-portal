@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { SupabaseService } from '../../services/supabase.service';
 import { Router } from '@angular/router'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { IOwnerAccount, IOwnerInsert } from '../../interfaces/iunit';
+import { IResidentAccount, IResidentInsert } from '../../interfaces/iunit';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -12,43 +12,40 @@ import { DataService } from 'src/app/services/data.service';
 })
 
 export class OwnerUpdateComponent {
-  ownerAccount: IOwnerAccount = { email: '', name: '', cell: '', street: '', csz: ''};
+  residentAccount: IResidentAccount[]= this.ds.initResidentAccount();
 
   profileForm = new FormGroup({
     email: new FormControl('', Validators.required),
     cell: new FormControl('', Validators.required),
-    name: new FormControl('', Validators.required),
-    street: new FormControl('', Validators.required),
-    csz: new FormControl('', Validators.required)
+    firstname: new FormControl('', Validators.required),
+    lastname: new FormControl('', Validators.required)
   });
 
   ngOnInit() {
     this.ds.doConsole("OwnerUpdateComponent => ngOnInit()");
     this.profileForm.reset();
     let owner =  this.ds.getOwnerAccount();
-    this.ownerAccount.cell = owner.cell;
-    this.ownerAccount.name = owner.name;
-    this.ownerAccount.email = owner.email;
-    this.ownerAccount.street = owner.street;
-    this.ownerAccount.csz = owner.csz;
+    /* this.residentAccount[0].firstname = owner.firstname;
+    this.residentAccount[0].lastname = owner.lastname;
+    this.residentAccount[0].email = owner.email; */
     this.setFormValues();
   };
 
   setFormValues() {
-    this.profileForm.setValue(this.ownerAccount);
+    this.profileForm.setValue(this.residentAccount[0]);
   };
 
   setFormBlank() {
     this.profileForm.reset();
-    this.ownerAccount = { email: '', name: '', cell: '', street: '', csz: ''};
+    this.residentAccount =  [{ firstname:'', lastname:'', cell: '', email: '',uuid:'', id:0, alerts:''}];
   }
 
   submitBtn() {
     let f = this.profileForm.value;
     let d = new Date();
     let str = d.getFullYear()+"/"+(d.getMonth()+1)+"/"+d.getDate()
-    let data: IOwnerInsert = { cell: f.cell, name: f.name, street: f.street, csz: f.csz, email: f.email, updated:str };
-    this.ds.updateOwnerAccount(data);
+    let data: IResidentInsert = { cell: f.cell, firstname: f.firstname, lastname: f.lastname, email: f.email };
+    //this.ds.updateOwnerAccount(data);
 
   
     let units = this.ds.ownerUnitsList;

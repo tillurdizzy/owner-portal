@@ -6,9 +6,15 @@
     <form [formGroup]="accountForm" novalidate>
       <div class="form-container">
         <mat-form-field class="form-field">
-  
-          <input matInput placeholder="name" formControlName="username" />
-          <mat-error *ngIf="handleError('username', 'required')">
+          <input matInput placeholder="first name" formControlName="firstname" />
+          <mat-error *ngIf="handleError('firstname', 'required')">
+            required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+          <input matInput placeholder="last name" formControlName="lastname" />
+          <mat-error *ngIf="handleError('lastname', 'required')">
             required
           </mat-error>
         </mat-form-field>
@@ -23,6 +29,20 @@
         <mat-form-field class="form-field">
           <input matInput placeholder="cell" formControlName="cell" />
           <mat-error *ngIf="handleError('cell', 'required')">
+            required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+          <input matInput placeholder="street" formControlName="street" />
+          <mat-error *ngIf="handleError('street', 'required')">
+            required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+          <input matInput placeholder="city, state zip" formControlName="csz" />
+          <mat-error *ngIf="handleError('csz', 'required')">
             required
           </mat-error>
         </mat-form-field>

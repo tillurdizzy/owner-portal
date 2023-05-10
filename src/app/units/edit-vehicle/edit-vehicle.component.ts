@@ -71,18 +71,16 @@ export class EditVehicleComponent {
       make: f.make,
       model: f.model,
       color: f.color,
-      name: f.name,
-      link:'',
-      url:''
+      name: f.name
     };
 
     let idstring = this.spaceID.toString();
-    this.supabase.updateParkingSpace(aCar,idstring,'/units/units-home',this.currentUnit
+    this.supabase.updateParkingSpace(aCar,idstring,'/home',this.currentUnit
     );
   };
 
   cancelBackBtn(){
-    this.router.navigate(['/units/units-detail']);
+    this.router.navigate(['/home']);
   }
 
  

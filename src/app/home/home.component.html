@@ -4,67 +4,57 @@
       <div class="card-header-text">Home</div>
   
     </div>
-
+    <!-- Log In Form  -->
       <app-login-form *ngIf="!userAuthenticated"></app-login-form>
 
+     <!-- Not Log In Form  -->
       <div *ngIf="userAuthenticated">
 
         
         <div class="label-banner-green">
-          <span class="label-banner-font">User</span>
+          <span class="label-banner-font">User / Owner</span>
         </div>
         <div class="small-black-14 flex-row-space-between">
           <div>
-            <span class="small-black-text"></span>{{ userAccount.username }}<br>
+            <span class="small-black-text"></span>{{ userAccount.firstname }} {{userAccount.lastname}}<br>
+            <span class="small-black-text">Street: </span>{{ userAccount.street }}<br>
+            <span class="small-black-text">City: </span>{{ userAccount.csz }}<br>
             <span class="small-black-text">Cell: </span>{{ userAccount.cell }}<br>
-            <span class="small-black-text">Email: </span>{{ userAccount.email }}
+            <span class="small-black-text">Email: </span>{{ userAccount.email }}<br>
           </div>
           <div class="edit-button">
             <button type="button" mat-raised-button color="primary" 
             (click)="updateUserAccount()">EDIT</button>
           </div>
         </div>
-          <div class="spacer-10"></div>
-          <div class="label-banner-green">
-            <span class="label-banner-font">Owner</span>
-          </div>
-
-          <div class="small-black-14 flex-row-space-between">
-            <div>
-              <span>{{ ownerAccount.name }}</span><br>
-              <span class="small-black-text">Street: </span>{{ ownerAccount.street }}<br>
-              <span class="small-black-text">City: </span>{{ ownerAccount.csz }}<br>
-              <span class="small-black-text">Email: </span>{{ ownerAccount.email }}<br>
-              <span class="small-black-text">Cell: </span>{{ ownerAccount.cell }}
-            </div>
-            <div class="edit-button">
-              <button type="button" mat-raised-button color="primary" 
-              (click)="updateOwnerAccount()">EDIT</button>
-            </div>
-          </div>
-
+          
         <div class="spacer-10"></div>
-
         <div class="label-banner-green">
           <span class="label-banner-font">Units</span>
         </div>
         <div class="spacer-10"></div>
 
-        <div>
-          <form [formGroup]="unitSelectorForm" novalidate>
-            <mat-form-field class="form-field">
-              <mat-label>Choose a unit</mat-label>
-              <mat-select
-                formControlName="unitNum"
-                (selectionChange)="unitSelectorHandler()"
-              >
-                <mat-option *ngFor="let u of userAccount.units" [value]="u">
-                  {{ u }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </form>
-        </div>
+        <!--div contains 2 toggle elements  -->
+        <div id="unitDetail">
+          <div  *ngIf="unitCount > 1">
+            <form [formGroup]="unitSelectorForm" novalidate>
+              <mat-form-field class="form-field">
+                <mat-label>Choose a unit</mat-label>
+                <mat-select
+                  formControlName="unitNum"
+                  (selectionChange)="unitSelectorHandler()"
+                >
+                  <mat-option *ngFor="let u of userAccount.units" [value]="u">
+                    {{ u }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </form>
+          </div>
+          
+          <app-details *ngIf="unitCount == 1"></app-details>
+      </div>
+
 
         <div class="label-banner-green">
           <span class="label-banner-font">Forms</span>
@@ -89,6 +79,10 @@
       </div>
       <div class="spacer-10"></div>
 
+      <div class="edit-button">
+      <button type="button" mat-raised-button color="accent" 
+        (click)="resetlogIn()">RESET</button>
+      </div>
       
       <mat-card-footer></mat-card-footer>
 

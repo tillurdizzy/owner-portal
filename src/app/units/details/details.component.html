@@ -1,21 +1,4 @@
-<div class="flex-row-space-between">
-  <button
-    type="button"
-    mat-raised-button
-    color="primary"
-    (click)="cancelBackBtn()"
-  >
-    Home
-  </button>
-  <button type="button"
-    mat-raised-button
-    [disabled]="maxResidents"
-    color="primary"
-    routerLink="/units/add-resident">
-    Add Resident
-  </button>
 
-</div>
 
 <div class="spacer-10"></div>
 <mat-divider></mat-divider>
@@ -30,56 +13,50 @@
   <div class="label-banner-green">
     <span class="label-banner-font">Resident(s)</span>
   </div>
-  <div class="unit-data" *ngIf="isResidentOne">
+  <div class="unit-data" *ngIf="residentHiddenState.residentOne">
     <div class="edit-button">
-      <button type="button" mat-raised-button color="primary" 
+      <button type="button" 
+      mat-raised-button color="primary"
+      [disabled]="!residentEditStates.residentOne"
       (click)="onResidentClick(0)">EDIT</button>
     </div>
 
     <div class="small-black-14">
       <span>{{this.myProfiles[0].firstname + " " + this.myProfiles[0].lastname}}</span><br />
-      <span class="small-black-text">Email:</span> {{ this.myProfiles[0].email}}<br />
-      <span class="small-black-text">Cell:</span> {{ this.myProfiles[0].cell}}<br />
+      <span class="small-black-text"></span> {{ this.myProfiles[0].email}}<br />
+      <span class="small-black-text"></span> {{ this.myProfiles[0].cell}}<br />
     </div>
   </div>
 
-  <div class="unit-data" *ngIf="isResidentTwo">
+  <div class="unit-data" *ngIf="residentHiddenState.residentTwo">
     <div class="edit-button">
-      <button type="button" mat-raised-button color="primary" 
+      <button type="button" 
+      mat-raised-button color="primary" 
+      [disabled]="!residentEditStates.residentTwo"
       (click)="onResidentClick(1)">EDIT</button>
     </div>
 
     <div class="small-black-14">
       <span>{{this.myProfiles[1].firstname + " " + this.myProfiles[1].lastname}}</span><br />
-      <span class="small-black-text">Email:</span> {{ this.myProfiles[1].email}}<br />
-      <span class="small-black-text">Cell:</span> {{ this.myProfiles[1].cell}}<br />
+      <span class="small-black-text"></span> {{ this.myProfiles[1].email}}<br />
+      <span class="small-black-text"></span> {{ this.myProfiles[1].cell}}<br />
     </div>
   </div>
 
-  <div class="unit-data" *ngIf="isResidentThree">
-    <div class="edit-button">
-      <button type="button" mat-raised-button color="primary" 
-      (click)="onResidentClick(2)">EDIT</button>
-    </div>
-
-    <div class="small-black-14">
-      <span>{{this.myProfiles[2].firstname + " " + this.myProfiles[2].lastname}}</span><br />
-      <span class="small-black-text">Email:</span> {{ this.myProfiles[2].email}}<br />
-      <span class="small-black-text">Cell:</span> {{ this.myProfiles[2].cell}}<br />
-    </div>
-  </div>
+ 
 </div>
 
 <div class="unit-data-container">
   <div class="label-banner-green">
     <span class="label-banner-font">Vehicle(s)</span>
   </div>
-  <div class="unit-data" *ngIf="isVehicleOne">
+  <div class="unit-data" *ngIf="vehicleHiddenState.vehicleOne">
     <div class="edit-button">
       <button
         type="button"
         mat-raised-button
         color="primary"
+        [disabled]="!vehicleEditStates.vehicleOne"
         (click)="onVehicleClick(0)"
       >
         EDIT
@@ -102,13 +79,13 @@
     </div>
   </div>
 
-  <div class="unit-data" *ngIf="isVehicleTwo">
+  <div class="unit-data" *ngIf="vehicleHiddenState.vehicleTwo">
     <div class="edit-button">
       <button
         type="button"
         mat-raised-button
         color="primary"
-        color="primary"
+        [disabled]="!vehicleEditStates.vehicleTwo"
         (click)="onVehicleClick(1)"
       >
         EDIT
@@ -131,13 +108,13 @@
     </div>
   </div>
 
-  <div class="unit-data" *ngIf="isVehicleThree">
+  <div class="unit-data" *ngIf="vehicleHiddenState.vehicleThree">
     <div class="edit-button">
       <button
         type="button"
         mat-raised-button
         color="primary"
-        color="primary"
+        [disabled]="!vehicleEditStates.vehicleThree"
         (click)="onVehicleClick(2)"
       >
         EDIT

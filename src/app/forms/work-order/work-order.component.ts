@@ -5,7 +5,7 @@ import { DataService } from '../../services/data.service';
 import { Subscription } from 'rxjs'
 import { Router } from '@angular/router'
 import { IUserAccount } from '../../interfaces/iuser';
-import { IOwnerAccount } from '../../interfaces/iunit';
+import { IResidentAccount } from '../../interfaces/iunit';
 import { IWorkOrder } from 'src/app/interfaces/iforms';
 
 @Component({
@@ -17,8 +17,8 @@ export class WorkOrderComponent implements OnInit{
 
   me = 'WorkOrderComponent';
   supaScription: Subscription;
-  userAccount:IUserAccount = { id:0, username: '', role: '', cell: '', email: '', units: [], userid:'' };
-  ownerAccount: IOwnerAccount = { name: '', cell: '', email: '', street:'',csz:'' };
+  userAccount:IUserAccount = { id:0, username: '', role: '', cell: '', email: '', units: [], uuid:'',firstname:'',lastname:'',csz:'',street:'',alerts:''};
+  ownerAccount: IResidentAccount[]= this.ds.initResidentAccount();
   workOrder: IWorkOrder = {unit:0, cell:'', name:'', email:'',category:'',photo:'',description:''}
   categories = ['Building-General','Building-Roof','Lighting/Electrical','Landscape','Plumbing','Pests','Parking/Driveways','Walkways/Patio','Other'];
 

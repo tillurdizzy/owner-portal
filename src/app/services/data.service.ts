@@ -3,10 +3,12 @@ import { BehaviorSubject, Observable } from 'rxjs'
 import { Subject , Subscription} from 'rxjs';
 import { SupabaseService } from 'src/app/services/supabase.service';
 import { IUserAccount,IUserUpdate} from '../interfaces/iuser';
-import { IProfile } from '../interfaces/iprofile';
+import { IProfile, IProfileFetch } from '../interfaces/iprofile';
 import { IVehicle } from '../interfaces/ivehicle';
 import { Globals } from '../interfaces/globals';
-import { IOwnerAccount, IOwnerInsert } from '../interfaces/iunit';
+import { IResidentAccount, IResidentInsert } from '../interfaces/iunit';
+import { UnitService } from './unit.service';
+
 
 @Injectable({
   providedIn: "root",
@@ -16,25 +18,29 @@ export class DataService {
 
   private userid: string | null = null;
   private session:{} = {};
-  private currentUser:{} = {};
+  private currentUser;
   supaScription: Subscription;
 
   private userAuthenticated: boolean = false;
 
-  private userAccount: IUserAccount = { id:0, username: '', role: '', cell: '', email: '', units: [], userid:'' };
+  private userAccount: IUserAccount = { id:0, username: '', role: '', cell: '', email: '', units: [], uuid:'' ,firstname:'',lastname:'',csz:'',street:'',alerts:''};
+   //^ Not used here... used to reset ownerAccount in components
+  private emptyResidentAccount: IResidentAccount[]= [{ firstname:'', lastname:'', cell: '', email: '',uuid:'', id:0, alerts:''}];
   //* ownerAccount data is taken from first item in units array from userAccount
-  private ownerAccount: IOwnerAccount = { name: '', cell: '', email: '', street:'',csz:'' };
+  private residentAccounts: IResidentAccount[]= [{ firstname:'', lastname:'', cell: '', email: '',uuid:'', id:0, alerts:''}];
+
   private myCurrentUnit: number;
-  private myVehicles: IVehicle[];
+  //private myVehicles: IVehicle[];
   private formList = ['Work Order','Architectural Request','Crime Report','Violation Report','Message the Board']
   private selectedForm:string;
 
+  
    //* >>>>>>>>>>>>>> MESSENGER <<<<<<<<<<<<<<<<
 
   private subject = new Subject<any>();
 
   public sendData(message: any) {
-    console.log(this.g.DATA_SERVICE + " > sendData > message = " + JSON.stringify(message));
+    console.log(this.g.DATA_SERVICE + ' >> sendData  to:' + message.to + ' event:' + message.event);
     this.subject.next(message);
   };
 
@@ -48,6 +54,10 @@ export class DataService {
 
   //* >>>>>>>>>>>>>>> UTILITIES <<<<<<<<<<<<<<<<<<<<
 
+  initResidentAccount(){
+    return this.emptyResidentAccount;
+  }
+
   removeNull(obj) {
     Object.keys(obj).forEach(k => {
       if (obj[k] === null || obj[k] === undefined) {
@@ -57,7 +67,6 @@ export class DataService {
     return obj;
   };
 
-
   doConsole(message: string) {
     console.log(message);
   };
@@ -65,6 +74,7 @@ export class DataService {
   //* >>>>>>>>>>>>>>>>>> SET <<<<<<<<<<<<<<<<<<<<<<<<<<<
   setSelectedUnit(u:string){
     this.myCurrentUnit = parseInt(u)
+    this.doConsole("DataService > setSelectedUnit() >  #" + u )
   }
 
   setSelectedForm(f:string){
@@ -85,7 +95,11 @@ export class DataService {
   }
 
   getOwnerAccount(){
-    return this.ownerAccount;
+    return this.residentAccounts;
+  }
+
+  getOwnerRole(){
+    return this.userAccount.role;
   }
 
  get currentUnit(){
@@ -96,18 +110,13 @@ export class DataService {
   return this.formList;
  }
 
- updateOwnerAccount(data:IOwnerInsert){
-    this.ownerAccount.name = data.name;
-    this.ownerAccount.cell = data.cell;
-    this.ownerAccount.email = data.email;
-    this.ownerAccount.street = data.street;
-    this.ownerAccount.csz = data.csz;
- }
-
  updateUserAccount(data:IUserUpdate){
-  this.userAccount.username = data.username;
+  this.userAccount.firstname = data.firstname;
+  this.userAccount.lastname = data.lastname;
   this.userAccount.cell = data.cell;
   this.userAccount.email = data.email;
+  this.userAccount.street = data.street;
+  this.userAccount.csz = data.csz;
 }
 
  get ownerUnitsList(){
@@ -118,21 +127,34 @@ export class DataService {
 
  private authenticateUser(data: any) {
   this.userAuthenticated = true;
-  this.currentUser = data.user;
+  this.currentUser = data.data.user;
   this.session = data.session;
   let dataObj = {to: 'HomeComponent',event: 'userAuthenticated'};
   this.sendData(dataObj);
+
+  let uid =this.currentUser.id;
+  this.supabase.getUserAccount(uid);
 };
 
 private processUserAccount(data:any) {
+  console.log(this.g.DATA_SERVICE + " > processUserAccount()");
   let x = data[0]
   this.userAccount.cell = x.cell;
   this.userAccount.email = x.email;
   this.userAccount.id = x.id;
-  this.userAccount.userid = x.userid;
+  this.userAccount.uuid = x.uuid;
   this.userAccount.username = x.username;
   this.userAccount.role = x.role;
+  this.userAccount.firstname = x.firstname;
+  this.userAccount.lastname = x.lastname;
+  this.userAccount.alerts = x.alerts;
+  this.userAccount.street = x.street;
+  this.userAccount.csz = x.csz;
   this.userAccount.units = x.units.units;
+
+  if(this.userAccount.units.length > 0){
+    this.myCurrentUnit = this.userAccount.units[0]
+  }
 
   let dataObj = {
     to: 'HomeComponent',
@@ -140,27 +162,14 @@ private processUserAccount(data:any) {
     account: this.userAccount
   };
   this.sendData(dataObj);
-  let allUnits:number[] = this.userAccount.units;
-  let oneUnit = allUnits[0]
-  this.supabase.getOwnerAccount(oneUnit);
-  console.log(this.g.DATA_SERVICE + " > processUserAccount()" + JSON.stringify(this.userAccount));
+  this.us.setUserAccount(this.userAccount);
+  this.us.setCurrentUnit(this.myCurrentUnit);
+  //! Calls for Vehicles nad Residents
+  console.log(this.g.DATA_SERVICE + " > fetchResidentProfiles()");
+  console.log(this.g.DATA_SERVICE + " > fetchResidentVehicles()");
+  this.supabase.fetchResidentProfiles(this.myCurrentUnit);
+  this.supabase.fetchResidentVehicles(this.myCurrentUnit);
 };
-
-processOwnerAccount(data:any){
-  this.ownerAccount.cell = data.cell;
-  this.ownerAccount.csz = data.csz;
-  this.ownerAccount.email = data.email;
-  this.ownerAccount.name = data.name;
-  this.ownerAccount.street = data.street;
-
-  let dataObj = {
-    to: 'HomeComponent',
-    event: 'ownerAccount',
-    account: this.ownerAccount
-  };
-  this.sendData(dataObj);
-}
-
 
 
 ngOnDestroy(): void {
@@ -170,18 +179,18 @@ ngOnDestroy(): void {
 
 //* >>>>>>>>>>> CONSTRUCTOR / SUBSCRIPTIONS <<<<<<<<<<<<<
 
-  constructor(private g: Globals, private supabase:SupabaseService) {
+  constructor(private g: Globals, private supabase:SupabaseService, private us:UnitService) {
     this.doConsole('DataService > constructor()')
     this.supaScription = this.supabase.getData().subscribe(x => {
       if(x != null){
         var dataPassed = x;
         if(dataPassed.to == 'DataService'){
+          console.log('DataService >> receiveData >> ' + dataPassed.event);
           if(dataPassed.event == 'userAuthenticated' ){
             this.authenticateUser(dataPassed.result)
           }else if(dataPassed.event == 'getUserAccount' ){
            this.processUserAccount(dataPassed.result)
-          }else if(dataPassed.event == 'getOwnerAccount' ){
-            this.processOwnerAccount(dataPassed.result)
+          
           }
         }
       }

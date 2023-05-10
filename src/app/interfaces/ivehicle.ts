@@ -46,8 +46,7 @@ export interface ISpaceUpdate{
   make: string,
   model: string,
   color: string,
-  link:string,
-  url:string
+
 };
 
 export interface ISpaceBasic{
