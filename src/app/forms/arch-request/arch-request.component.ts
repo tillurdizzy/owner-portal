@@ -17,6 +17,7 @@ export class ArchRequestComponent {
 
   me = 'ArchRequestComponent';
   supaScription: Subscription;
+  unitNum = this.ds.currentUnit;
   userAccount:IUserAccount = { id:0, username: '', role: '', cell: '', email: '', units: [], uuid:'' ,firstname:'',lastname:'',csz:'',street:'',alerts:''};
   ownerAccount: IResidentAccount[]= [{ firstname:'', lastname:'', cell: '', email: '',uuid:'', id:0, alerts:''}];
 
@@ -26,7 +27,6 @@ export class ArchRequestComponent {
  
 
   myForm = new FormGroup({
-    unitNum: new FormControl('', Validators.required),
     location: new FormControl('', Validators.required),
     category: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
@@ -34,11 +34,11 @@ export class ArchRequestComponent {
 
   submitBtn() {
     let form = this.myForm.value;
-    this.formData.type = 'crime'
+    this.formData.type = 'Architectural Request'
     this.formData.userid = this.userAccount.uuid;
     this.formData.cell = this.userAccount.cell;
     this.formData.email =  this.userAccount.email;
-    this.formData.name = this.userAccount.username;
+    this.formData.name = this.userAccount.firstname + " " + this.userAccount.lastname;
     this.formData.text = form.description;
     this.formData.location = form.location;
     this.formData.category = form.category;
@@ -46,9 +46,7 @@ export class ArchRequestComponent {
     this.supabase.insertBasicForm(this.formData,'Request Submitted');
   }
 
-  unitSelectionHandler(){
-    let x = this.myForm.value.unitNum;
-  }
+  
 
   catSelectionHandler(){
     let x = this.myForm.value.category;

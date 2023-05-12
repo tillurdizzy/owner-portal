@@ -1,20 +1,10 @@
 <div class="spacer-10"></div>
 <span class="black-16-550">Maintenance Work Order</span><br />
-
+<span class="black-16-550">Unit #{{unitNum}}</span><br />
 <div class="col-container">
   <form [formGroup]="myForm" novalidate>
     <div class="form-container">
-      <mat-form-field class="form-field">
-        <mat-label>unit</mat-label>
-        <mat-select
-          formControlName="unitNum"
-          (selectionChange)="unitSelectionHandler()"
-        >
-          <mat-option *ngFor="let item of userAccount.units" [value]="item">
-            {{ item }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      
 
       <mat-form-field class="form-field">
         <mat-label>category</mat-label>

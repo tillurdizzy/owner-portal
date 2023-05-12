@@ -213,7 +213,7 @@ export class SupabaseService {
     try {
       const { data, error } = await this.supabase.from('accounts')
       .update(updateObj)
-      .eq('userid', id);
+      .eq('uuid', id);
       if(error == null){this.showResultDialog('User account updated.')}
     } catch (error) {
       this.showResultDialog('ERROR: ' + JSON.stringify(error))
@@ -286,11 +286,15 @@ export class SupabaseService {
       let { data, error } = await this.supabase
         .from('parking')
         .update(space)
-        .eq('id', id);
+        .eq('id', id).select();
      
-      this.router.navigate([nav]);
+     if(error == null){
+      this.showResultDialog('Vehicle Updated.')
+     }
     } catch (error) {
       this.showResultDialog('ERROR: ' + JSON.stringify(error))
+    }finally{
+      this.router.navigate([nav]);
     }
   };
 
@@ -441,7 +445,12 @@ export class SupabaseService {
   async insertWorkOrder(wo:IWorkOrder){
     try {
       const { data, error } = await this.supabase.from('work-orders').insert(wo);
-      this.showResultDialog('Work Order submitted.')
+      if(error == null){
+        this.showResultDialog('Work Order submitted.')
+      }else{
+        this.showResultDialog('ERROR: ' + JSON.stringify(error))
+      }
+      
     } catch (error) {
       this.showResultDialog('ERROR: ' + JSON.stringify(error))
     }finally{
@@ -452,7 +461,11 @@ export class SupabaseService {
   async insertBasicForm(frm:IBasicForm,message:string){
     try {
       const { data, error } = await this.supabase.from('forms').insert(frm);
-      this.showResultDialog(message)
+      if(error == null){
+        this.showResultDialog('Work Order submitted.')
+      }else{
+        this.showResultDialog('ERROR: ' + JSON.stringify(error))
+      }
     } catch (error) {
       this.showResultDialog('ERROR: ' + JSON.stringify(error))
     }finally{

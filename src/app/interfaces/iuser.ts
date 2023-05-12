@@ -17,7 +17,6 @@ export interface IUserAccount {
 export interface IUserUpdate{
   firstname: string;
   lastname: string;
-  email: string;
   cell: string;
   street:string;
   csz:string;

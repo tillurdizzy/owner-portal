@@ -37,7 +37,6 @@ export class HomeComponent implements OnInit{
     this.userAuthenticated = storedData.auth;
     this.userAccount = storedData.account;
     this.unitCount = this.userAccount.units.length;
-    //!this.residentAccounts = this.us.getOwnerAccount();
     this.formList = this.ds.getFormList();
   }
 

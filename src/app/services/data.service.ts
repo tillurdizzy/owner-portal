@@ -114,7 +114,6 @@ export class DataService {
   this.userAccount.firstname = data.firstname;
   this.userAccount.lastname = data.lastname;
   this.userAccount.cell = data.cell;
-  this.userAccount.email = data.email;
   this.userAccount.street = data.street;
   this.userAccount.csz = data.csz;
 }

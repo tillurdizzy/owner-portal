@@ -75,8 +75,8 @@ export class EditVehicleComponent {
     };
 
     let idstring = this.spaceID.toString();
-    this.supabase.updateParkingSpace(aCar,idstring,'/home',this.currentUnit
-    );
+    this.us.updateVehicle(aCar,idstring)
+    this.supabase.updateParkingSpace(aCar,idstring,'/home',this.currentUnit);
   };
 
   cancelBackBtn(){

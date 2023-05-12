@@ -19,43 +19,44 @@ export class WorkOrderComponent implements OnInit{
   supaScription: Subscription;
   userAccount:IUserAccount = { id:0, username: '', role: '', cell: '', email: '', units: [], uuid:'',firstname:'',lastname:'',csz:'',street:'',alerts:''};
   ownerAccount: IResidentAccount[]= this.ds.initResidentAccount();
-  workOrder: IWorkOrder = {unit:0, cell:'', name:'', email:'',category:'',photo:'',description:''}
+  unitNum = this.ds.currentUnit;
+  workOrder: IWorkOrder = {unit:this.unitNum, cell:'', name:'', email:'',category:'',photo:'',description:''}
   categories = ['Building-General','Building-Roof','Lighting/Electrical','Landscape','Plumbing','Pests','Parking/Driveways','Walkways/Patio','Other'];
+ 
+
+  ngOnInit(): void {
+    this.myForm.reset(); 
+    let storedData = this.ds.isUserAuthenticated();
+    this.userAccount = storedData.account;
+  }
+
 
   myForm = new FormGroup({
-    unitNum: new FormControl('', Validators.required),
     category: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
   });
 
   submitBtn() {
     let form = this.myForm.value;
-    this.workOrder.unit = parseInt(form.unitNum);
     this.workOrder.cell = this.userAccount.cell;
     this.workOrder.email =  this.userAccount.email;
-    this.workOrder.name = this.userAccount.username;
+    this.workOrder.name = this.userAccount.firstname + " " + this.userAccount.lastname;
     this.workOrder.category = form.category;
     this.workOrder.description = form.description;
     
     this.supabase.insertWorkOrder(this.workOrder);
   }
 
-  unitSelectionHandler(){
+/*   unitSelectionHandler(){
     let x = this.myForm.value.unitNum;
-  }
+  } */
 
   catSelectionHandler(){
     let x = this.myForm.value.category;
   }
 
 
-  ngOnInit(): void {
-    this.myForm.reset(); 
-    let storedData = this.ds.isUserAuthenticated();
-    this.userAccount = storedData.account;
-    this.ownerAccount = this.ds.getOwnerAccount();
-  }
-
+  
   public handleError = (control: string, error: string) => {
     return this.myForm.controls[control].hasError(error);
   };

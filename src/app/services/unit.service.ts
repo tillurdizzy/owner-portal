@@ -3,7 +3,7 @@ import { Observable, Subject, Subscription, BehaviorSubject } from 'rxjs'
 import { IUnit } from '../interfaces/iunit';
 import { Globals } from '../interfaces/globals';
 import { IProfile, IProfileUpdate  } from '../interfaces/iprofile';
-import { IVehicle } from '../interfaces/ivehicle';
+import { ISpaceUpdate, IVehicle } from '../interfaces/ivehicle';
 import { SupabaseService } from '../services/supabase.service';
 import { IResidentAccount, IResidentInsert } from '../interfaces/iunit';
 import { IUserAccount,IUserUpdate} from '../interfaces/iuser';
@@ -123,6 +123,28 @@ export class UnitService {
       newData.push(subData[index])
     }
     this.residentsBS.next(subData);
+  }
+
+  updateVehicle(aCar:ISpaceUpdate,id:string){
+    console.log("UnitService  > updateVehicle()")
+    var subData:IVehicle[] = undefined;
+    var newData:IVehicle[] = [];
+    const sub = this.vehiclesBS.subscribe(p => subData = p);
+    sub.unsubscribe();
+    for (let index = 0; index < subData.length; index++) {
+      const element = subData[index];
+      let thisID = element.id;
+      if (thisID = parseInt(id)) {
+        subData[index].name = aCar.name
+        subData[index].tag = aCar.tag
+        subData[index].make= aCar.make
+        subData[index].model= aCar.model
+        subData[index].color = aCar.color
+      }
+      newData.push(subData[index])
+    }
+    this.setVehiclesObs(subData)
+
   }
   
   // * >>>>>>>>>>>>>>>> Data Service <<<<<<<<<<<<<<<<<<

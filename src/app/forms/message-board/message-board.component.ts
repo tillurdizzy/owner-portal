@@ -14,7 +14,7 @@ import { IBasicForm } from 'src/app/interfaces/iforms';
 })
 export class MessageBoardComponent {
   me = 'MessageBoardComponent';
-
+  unitNum = this.ds.currentUnit;
   userAccount:IUserAccount = { id:0, username: '', role: '', cell: '', email: '', units: [], uuid:'' ,firstname:'',lastname:'',csz:'',street:'',alerts:''};
   ownerAccount: IResidentAccount[]= this.ds.initResidentAccount();
   formData: IBasicForm = {userid:'', date:'1/1/2030',location:'',cell:'', name:'', email:'',category:'',photo:'',type:'',text:''}
@@ -26,11 +26,11 @@ export class MessageBoardComponent {
 
   submitBtn() {
     let form = this.myForm.value;
-    this.formData.type = 'board'
+    this.formData.type = 'Message to Board'
     this.formData.userid = this.userAccount.uuid;
     this.formData.cell = this.userAccount.cell;
     this.formData.email =  this.userAccount.email;
-    this.formData.name = this.userAccount.username;
+    this.formData.name = this.userAccount.firstname + " " + this.userAccount.lastname;
     this.formData.category = form.category;
     this.formData.text = form.description;
     

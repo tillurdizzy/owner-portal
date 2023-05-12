@@ -18,6 +18,7 @@ import { IBasicForm } from 'src/app/interfaces/iforms';
 export class ViolationReportComponent {
 
   me = 'ViolationReportComponent';
+  unitNum = this.ds.currentUnit;
   supaScription: Subscription;
   userAccount:IUserAccount = { id:0, username: '', role: '', cell: '', email: '', units: [], uuid:'' ,firstname:'',lastname:'',csz:'',street:'',alerts:''};
   residentAccounts: IResidentAccount[] = this.ds.initResidentAccount();
@@ -36,7 +37,7 @@ export class ViolationReportComponent {
     this.formData.userid = this.userAccount.uuid;
     this.formData.cell = this.userAccount.cell;
     this.formData.email =  this.userAccount.email;
-    this.formData.name = this.userAccount.username;
+    this.formData.name = this.userAccount.firstname + " " + this.userAccount.lastname;
     this.formData.text = form.description;
     this.formData.location = form.location;
     this.formData.date = form.date;
