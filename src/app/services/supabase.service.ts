@@ -462,7 +462,7 @@ export class SupabaseService {
     try {
       const { data, error } = await this.supabase.from('forms').insert(frm);
       if(error == null){
-        this.showResultDialog('Work Order submitted.')
+        this.showResultDialog(message)
       }else{
         this.showResultDialog('ERROR: ' + JSON.stringify(error))
       }

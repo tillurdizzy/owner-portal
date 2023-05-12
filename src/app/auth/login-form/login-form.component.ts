@@ -21,8 +21,12 @@ export class LoginFormComponent implements OnInit {
   //! Default password : 'wstadmin'
   //! foe ME personallu wstadmin9954
   myForm = new FormGroup({
-    ownerEmail: new FormControl<string>('tillurdizzy@gmail.com'),
-    ownerPassword: new FormControl<string>('wstadmin9954')
+    ownerEmail: new FormControl<string>(''),
+    ownerPassword: new FormControl<string>('')
+
+
+    //ownerEmail: new FormControl<string>('tillurdizzy@live.com'),
+    //ownerPassword: new FormControl<string>('wstadmin9954')
   });
 
   ngOnInit() {
