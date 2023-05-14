@@ -42,8 +42,7 @@
                 <mat-label>Choose a unit</mat-label>
                 <mat-select
                   formControlName="unitNum"
-                  (selectionChange)="unitSelectorHandler()"
-                >
+                  (selectionChange)="unitSelectorHandler()">
                   <mat-option *ngFor="let u of userAccount.units" [value]="u">
                     {{ u }}
                   </mat-option>
@@ -51,10 +50,10 @@
               </mat-form-field>
             </form>
           </div>
+        
           
-          <app-details *ngIf="unitCount == 1"></app-details>
       </div>
-
+      <app-details *ngIf="unitCount > 0"></app-details>
 
         <div class="label-banner-green">
           <span class="label-banner-font">Forms</span>

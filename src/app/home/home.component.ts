@@ -55,8 +55,8 @@ export class HomeComponent implements OnInit{
 
   unitSelectorHandler(){
     let x = this.unitSelectorForm.value.unitNum;
-    this.ds.setSelectedUnit(x);
-    this.router.navigate(['/units']);
+    this.ds.fetchResident(x);
+    
   }
 
   formSelectorHandler(){
@@ -81,10 +81,18 @@ export class HomeComponent implements OnInit{
     this.router.navigate(['/forms/user-update']);
   }
 
-  
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 
   constructor(private ds: DataService, private router: Router) {
 
+    this.ds.getAccountObs().subscribe((x:IUserAccount) =>  {
+      console.log('Home >> getAccountObs');
+      this.onAccountReceived(x);
+    });
+
+      //^ Make Observable???
     this.subscription = this.ds.getData().subscribe(x => {
       if(x != null){
         let dataPassed = x;
@@ -92,15 +100,9 @@ export class HomeComponent implements OnInit{
           console.log('Home >> receiveData >> ' + dataPassed.event);
           if(dataPassed.event == 'userAuthenticated' ){
             this.userAuthenticated = true;
-          }else if(dataPassed.event == 'userAccount' ){
-            this.userAccount = dataPassed.account;
-            this.onAccountReceived(dataPassed.account);
-          }else if(dataPassed.event == 'ownerAccount' ){
-            //this.residentAccounts = dataPassed.account;
           }
         }
       }
     })
-
   }
 }

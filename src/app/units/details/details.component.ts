@@ -39,7 +39,7 @@ export class DetailsComponent implements OnInit{
 
 
   ngOnInit(): void {
-    console.log(this.me + "ngOnInit()")
+    console.log(this.me + " ngOnInit()")
     this.selectedUnit = this.ds.currentUnit;
     this.ownerRole = this.ds.getOwnerRole();
     this.supabase.fetchUnit(this.selectedUnit);
@@ -69,7 +69,6 @@ export class DetailsComponent implements OnInit{
   };
 
   resetTableData() {
-
     this.residentEditStates = {residentOne:true,residentTwo:true}
     this.residentHiddenState = {residentOne:true,residentTwo:true}
   };
@@ -142,14 +141,8 @@ export class DetailsComponent implements OnInit{
       if(x != null){
         var dataPassed = x;
         if(dataPassed.to == this.me){
-          if(dataPassed.event == 'fetchResidentProfiles' ){
-            //this.processProfiles(dataPassed.data);
-          }else if(dataPassed.event == 'fetchResidentVehicles' ){
-            //this.processVehicles(dataPassed.data)
-          }else if(dataPassed.event == 'publishUnitData' ){
+         if(dataPassed.event == 'publishUnitData' ){
             this.myUnit = dataPassed.iUnit;
-          }else if(dataPassed.event == 'xx' ){
-            //this.set
           }
         }
       }

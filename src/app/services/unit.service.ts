@@ -15,7 +15,7 @@ export class UnitService {
 
   private supaSubscription: Subscription
 
-  private allUnits = [100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120,
+  private allUnits = [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120,
     121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 200, 201, 202,
     203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225,
     226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311,
@@ -59,8 +59,10 @@ export class UnitService {
     var ownerUuid = this.userAccount.uuid;
     var clone = structuredClone(this.emptyResidentAccount);
     var residentAccountArray = [];
-    if (role == 'resident' && ownerUuid != null) {
-
+    if (role == 'admin') {
+      residentAccountArray.push(n[0])
+      residentAccountArray.push(n[1])
+    }else if (role == 'resident' && ownerUuid != null) {
       clone.firstname = this.userAccount.firstname;
       clone.lastname = this.userAccount.lastname;
       clone.cell = this.userAccount.cell;
@@ -72,19 +74,12 @@ export class UnitService {
       residentAccountArray.push(n[1])
       
     } else if (role == 'resident +') {
-      // If owner is 'resident +', get Primary Resident info from Accounts table IF!
-      // currentUnitselected == ResidesAt
+      // If owner is 'resident +', get currentUnit info from Accounts table Units.reSidesAt!
+      //^ currentUnitselected == ResidesAt
       let u = this.userAccount.units;
       let v = this.parseObj(u, 'residesAt');
       if (v == this.currentUnit  && ownerUuid != null)  {
-        clone.firstname = this.userAccount.firstname;
-        clone.lastname = this.userAccount.lastname;
-        clone.cell = this.userAccount.cell;
-        clone.email = this.userAccount.email;
-        clone.id = this.userAccount.id;
-        clone.alerts = this.userAccount.alerts;
-        clone.uuid = this.userAccount.uuid;
-        residentAccountArray.push(clone)
+        residentAccountArray.push(n[0])
         residentAccountArray.push(n[1])
       } 
     }
@@ -300,7 +295,7 @@ export class UnitService {
       let dataPassed = x;
       let f = dataPassed.to;
       let ar = f.split(',');
-      this.doConsole('UnitService > supaSubscription = ' + dataPassed.event);
+      console.log('UnitService > supaSubscription = ' + dataPassed.event);
       if(ar.indexOf("UnitService") > -1){
         //* Unit/Owner
         if(dataPassed.event == 'publishUnitData'){
@@ -308,11 +303,12 @@ export class UnitService {
         //* Vehicles
         }else if(dataPassed.event == 'fetchResidentVehicles'){
           this.setVehiclesObs(dataPassed.data)
-          //this.setUnitVehicles(dataPassed.vehicles);
+          console.log('UnitService > this.setVehiclesObs(data)');
          //* Residents / Profiles  
         }else if(dataPassed.event == 'fetchResidentProfiles'){
           //this.unitProfiles = dataPassed.profiles;
           this.setResidentObs(dataPassed.data);
+          console.log('UnitService > this.setResidentObs(data)');
         //* Residents / Delete Profile
         }else if (dataPassed.event == 'updateResidentProfile success!') {
          this.selectedProfile = undefined;

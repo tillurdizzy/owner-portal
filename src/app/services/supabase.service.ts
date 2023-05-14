@@ -100,7 +100,7 @@ export class SupabaseService {
   }
 
   async fetchResidentVehicles(unit: number) {
-    this.doConsole('SupabaseService > getAdminVehicles()');
+    this.doConsole('SupabaseService > fetchResidentVehicles()');
     try {
       let data = await this.supabase.from('parking').select('*').eq('unit', unit);
       if(data != null && data!=undefined){
@@ -130,7 +130,7 @@ export class SupabaseService {
 
     this.dataObj = {
       to: 'DataServices',
-      event: 'publishUnitData',
+      event: 'fetchUnit',
       iUnit: data,
     };
     this.sendData(this.dataObj);

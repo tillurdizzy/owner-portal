@@ -34,6 +34,18 @@ export class DataService {
   private formList = ['Work Order','Architectural Request','Crime Report','Violation Report','Message the Board']
   private selectedForm:string;
 
+  //^account$
+  private accountBS: BehaviorSubject<IUserAccount> = new BehaviorSubject(this.userAccount);
+  public accounts$ = this.accountBS.asObservable();
+
+  getAccountObs(): Observable<IUserAccount> {
+    return this.accounts$
+  }
+
+  setAccountObs(n:IUserAccount){
+    this.accountBS.next(n);
+  }
+
   
    //* >>>>>>>>>>>>>> MESSENGER <<<<<<<<<<<<<<<<
 
@@ -155,20 +167,29 @@ private processUserAccount(data:any) {
     this.myCurrentUnit = this.userAccount.units[0]
   }
 
-  let dataObj = {
+  this.setAccountObs(this.userAccount);
+
+  /* let dataObj = {
     to: 'HomeComponent',
     event: 'userAccount',
     account: this.userAccount
-  };
-  this.sendData(dataObj);
+  }; */
+  //this.sendData(dataObj);
   this.us.setUserAccount(this.userAccount);
-  this.us.setCurrentUnit(this.myCurrentUnit);
-  //! Calls for Vehicles nad Residents
-  console.log(this.g.DATA_SERVICE + " > fetchResidentProfiles()");
-  console.log(this.g.DATA_SERVICE + " > fetchResidentVehicles()");
+  //! Calls for Vehicles and Residents
   this.supabase.fetchResidentProfiles(this.myCurrentUnit);
   this.supabase.fetchResidentVehicles(this.myCurrentUnit);
+ 
 };
+
+fetchResident(u:string){
+  this.myCurrentUnit = parseInt(u)
+  this.us.setCurrentUnit(this.myCurrentUnit);
+  console.log(this.g.DATA_SERVICE + " > fetchResident-Profiles()");
+  console.log(this.g.DATA_SERVICE + " > fetchResident-Vehicles()");
+  this.supabase.fetchResidentProfiles(this.myCurrentUnit);
+  this.supabase.fetchResidentVehicles(this.myCurrentUnit);
+}
 
 
 ngOnDestroy(): void {
@@ -190,7 +211,10 @@ ngOnDestroy(): void {
           }else if(dataPassed.event == 'getUserAccount' ){
            this.processUserAccount(dataPassed.result)
           
-          }
+          }else if(dataPassed.event == 'fetchUnit' ){
+            this.processUserAccount(dataPassed.result)
+           
+           }
         }
       }
     })
