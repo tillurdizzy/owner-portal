@@ -18,7 +18,7 @@ export class DetailsComponent implements OnInit{
   me: string = "DetailsComponent"
   supaScription: Subscription;
   showSpinner:boolean = false;
-  selectedUnit: number = 0;
+ 
   unitSelected:boolean = false;
   ownerRole:string = 'resident'
   maxResidents = false;
@@ -40,9 +40,9 @@ export class DetailsComponent implements OnInit{
 
   ngOnInit(): void {
     console.log(this.me + " ngOnInit()")
-    this.selectedUnit = this.ds.currentUnit;
     this.ownerRole = this.ds.getOwnerRole();
-    this.supabase.fetchUnit(this.selectedUnit);
+    let u = this.ds.currentUnit;
+    this.us.unitSelectionHandler(u)
   }
 
   cancelBackBtn(){
@@ -77,6 +77,7 @@ export class DetailsComponent implements OnInit{
 
   private processProfiles(data:any){
     if(data == null){return}
+    this.resetTableData()
     this.myProfiles = [];
     for (let index = 0; index < data.length; index++) {
       let p:IResidentAccount = { firstname: '', lastname: '', email: '', cell: '', uuid: '', id:0, alerts:''};
@@ -135,6 +136,11 @@ export class DetailsComponent implements OnInit{
 
     this.us.getVehiclesObs().subscribe((x:IVehicle[]) =>  {
       this.processVehicles(x)
+    });
+
+    this.us.getUnitObs().subscribe((x:IUnit) =>  {
+      this.myUnit = x;
+      console.log('DetailsComponent >> getUnitObs = ' + this.myUnit.unit + " sqft = " + this.myUnit.sqft)
     });
 
     this.supaScription = this.supabase.getData().subscribe(x => {

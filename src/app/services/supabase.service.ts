@@ -90,7 +90,7 @@ export class SupabaseService {
 
   //* >>>>>>>>>>>>>>>>>>> FETCH RESIDENT DATA <<<<<<<<<<<<<<<<<<<<<<<
   async fetchResidentProfiles(unit: number) {
-    this.doConsole('SupabaseService > fetchResidentProfiles');
+    this.doConsole('SupabaseService > fetchResidentProfiles()');
     try {
       let data = await this.supabase.from('profiles').select('*').eq('unit', unit);
       this.publishData('UnitService','fetchResidentProfiles',data.data);
@@ -129,18 +129,18 @@ export class SupabaseService {
   publishUnitData(data) {
 
     this.dataObj = {
-      to: 'DataServices',
-      event: 'fetchUnit',
-      iUnit: data,
-    };
-    this.sendData(this.dataObj);
-
-    this.dataObj = {
-      to: 'DetailsComponent',
+      to: 'UnitService',
       event: 'publishUnitData',
       iUnit: data,
     };
     this.sendData(this.dataObj);
+    //! replace with Obsv
+    /* this.dataObj = {
+      to: 'DetailsComponent',
+      event: 'publishUnitData',
+      iUnit: data,
+    };
+    this.sendData(this.dataObj); */
   }
 
 

@@ -86,7 +86,7 @@ export class DataService {
   //* >>>>>>>>>>>>>>>>>> SET <<<<<<<<<<<<<<<<<<<<<<<<<<<
   setSelectedUnit(u:string){
     this.myCurrentUnit = parseInt(u)
-    this.doConsole("DataService > setSelectedUnit() >  #" + u )
+    console.log("DataService > setSelectedUnit() > #" + u )
   }
 
   setSelectedForm(f:string){
@@ -182,14 +182,14 @@ private processUserAccount(data:any) {
  
 };
 
-fetchResident(u:string){
+/* fetchResident(u:string){
   this.myCurrentUnit = parseInt(u)
   this.us.setCurrentUnit(this.myCurrentUnit);
   console.log(this.g.DATA_SERVICE + " > fetchResident-Profiles()");
   console.log(this.g.DATA_SERVICE + " > fetchResident-Vehicles()");
   this.supabase.fetchResidentProfiles(this.myCurrentUnit);
   this.supabase.fetchResidentVehicles(this.myCurrentUnit);
-}
+} */
 
 
 ngOnDestroy(): void {

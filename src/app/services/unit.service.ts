@@ -43,6 +43,17 @@ export class UnitService {
   private currentUnit: number;
 
   //* >>>>>>>>>>> OBSERVABLES  <<<<<<<<<<<<
+  //^unit$
+  private unitBS: BehaviorSubject<IUnit> = new BehaviorSubject(this.selectedUnit);
+  public unit$ = this.unitBS.asObservable();
+
+  getUnitObs(): Observable<IUnit> {
+    return this.unit$
+  }
+  setUnitObs(u:IUnit){
+    this.unitBS.next(u)
+  }
+
   
   //^residents$
   private residentsBS: BehaviorSubject<IResidentAccount[]> = new BehaviorSubject([]);
@@ -62,6 +73,11 @@ export class UnitService {
     if (role == 'admin') {
       residentAccountArray.push(n[0])
       residentAccountArray.push(n[1])
+
+    }else if(role == 'non-resident'){
+      residentAccountArray.push(n[0])
+      residentAccountArray.push(n[1])
+      
     }else if (role == 'resident' && ownerUuid != null) {
       clone.firstname = this.userAccount.firstname;
       clone.lastname = this.userAccount.lastname;
@@ -97,6 +113,14 @@ export class UnitService {
   setVehiclesObs(n:IVehicle[]){
     n.sort((e1, e2) => e1.space > e2.space ? 1 : e1.space < e2.space ? -1 : 0);
     this.vehiclesBS.next(n);
+  }
+
+  unitSelectionHandler(u:number){
+    console.log("UnitService  > unitSelectionHandler() = " + u)
+    this.currentUnit = u;
+    this.supabase.fetchUnit(u);
+    this.supabase.fetchResidentProfiles(this.currentUnit);
+    this.supabase.fetchResidentVehicles(this.currentUnit);
   }
 
   updateResidentProfile(updatedProfile:IProfile){
@@ -221,10 +245,12 @@ export class UnitService {
     this.selectedVehicle = car;
   };
 
-  // Gets Set from UnitHomeComponent in unitSelectionHandler
-  setCurrentUnit(u: number) {
+  
+  /* setCurrentUnit(u: number) {
     this.currentUnit = u;
-  };
+    this.supabase.fetchUnit(u);
+    
+  }; */
 
   // Called ngDestroy in  AdminComponent
   resetUnitData() {
@@ -300,6 +326,7 @@ export class UnitService {
         //* Unit/Owner
         if(dataPassed.event == 'publishUnitData'){
           this.selectedUnit = dataPassed.iUnit;
+          this.setUnitObs(dataPassed.iUnit)
         //* Vehicles
         }else if(dataPassed.event == 'fetchResidentVehicles'){
           this.setVehiclesObs(dataPassed.data)

@@ -1,6 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from '../services/data.service';
+import { UnitService } from '../services/unit.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { IUserAccount} from '../interfaces/iuser';
@@ -55,8 +56,10 @@ export class HomeComponent implements OnInit{
 
   unitSelectorHandler(){
     let x = this.unitSelectorForm.value.unitNum;
-    this.ds.fetchResident(x);
-    
+    console.log('Home >> unitSelectorHandler() = ' + x);
+    this.ds.setSelectedUnit(x);
+    let y = parseInt(x)
+    this.us.unitSelectionHandler(y);
   }
 
   formSelectorHandler(){
@@ -85,7 +88,7 @@ export class HomeComponent implements OnInit{
     this.subscription.unsubscribe();
   }
 
-  constructor(private ds: DataService, private router: Router) {
+  constructor(private ds: DataService, private us: UnitService, private router: Router) {
 
     this.ds.getAccountObs().subscribe((x:IUserAccount) =>  {
       console.log('Home >> getAccountObs');

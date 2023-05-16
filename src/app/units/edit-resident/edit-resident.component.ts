@@ -66,7 +66,6 @@ export class EditResidentComponent {
       firstname: f.firstname,
       lastname: f.lastname
     };
-   
     this.updateResidentProfile()
   };
 
