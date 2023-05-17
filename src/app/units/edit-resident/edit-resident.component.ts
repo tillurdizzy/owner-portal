@@ -24,14 +24,15 @@ export class EditResidentComponent {
   myForm = new FormGroup({
     email: new FormControl(''),
     firstname: new FormControl('', Validators.required),
-    lastname: new FormControl('', Validators.required),
-    cell: new FormControl('', Validators.required),
+    lastname: new FormControl(''),
+    cell: new FormControl(''),
   });
 
 
   // * >>>>>>>>>>>>>>>>>>>>  Methods <<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
   ngOnInit() {
+    console.log(this.me + " ngOnInit()")
     this.myProfile = this.removeNull(this.us.getSelectedProfile());
     this.profileID = this.us.getUpdateProfileID()
     this.myForm.reset();
@@ -66,6 +67,7 @@ export class EditResidentComponent {
       firstname: f.firstname,
       lastname: f.lastname
     };
+    console.log(this.me + " submitBtn()")
     this.updateResidentProfile()
   };
 
@@ -75,9 +77,8 @@ export class EditResidentComponent {
   }
 
   updateResidentProfile() {
-    this.us.doConsole(this.me + " > updateResidentProfile")
+    console.log(this.me + " > updateResidentProfile()")
     let id = this.us.getResidentID();
-    //let unitNum = this.us.getCurrentUnit();
     this.supabase.updateProfile(this.myProfile, id);
   };
 

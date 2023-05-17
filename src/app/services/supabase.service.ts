@@ -172,7 +172,7 @@ export class SupabaseService {
   async updateProfile(p: IProfileUpdate, id: number) {
     this.doConsole('updateProfile id = ' + id);
     try {
-      const { data, error } = await this.supabase.from('profiles').update(p).match({ id: id }).select();
+      const { data, error } = await this.supabase.from('profiles').update(p).eq('id',id ).select();
       if(data != null){
         let d = data[0] as IProfile;
 
@@ -460,7 +460,7 @@ export class SupabaseService {
 
   async insertBasicForm(frm:IBasicForm,message:string){
     try {
-      const { data, error } = await this.supabase.from('forms').insert(frm);
+      const { data, error } = await this.supabase.from('forms').insert(frm).select();
       if(error == null){
         this.showResultDialog(message)
       }else{

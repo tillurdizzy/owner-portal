@@ -11,29 +11,23 @@
   <form [formGroup]="myForm" novalidate>
     <div>
       <mat-form-field class="form-field">
-        <input matInput placeholder="first*" formControlName="firstname" />
+        <input matInput placeholder="first" formControlName="firstname" />
         <mat-error *ngIf="handleError('firstname', 'required')">
           required
         </mat-error>
       </mat-form-field>
       <mat-form-field class="form-field">
-        <input matInput placeholder="last*" formControlName="lastname" />
-        <mat-error *ngIf="handleError('lastname', 'required')">
-          required
-        </mat-error>
+        <input matInput placeholder="last" formControlName="lastname" />
+       
       </mat-form-field>
       <mat-form-field class="form-field">
-        <input matInput placeholder="cell*" formControlName="cell" />
-        <mat-error *ngIf="handleError('cell', 'required')">
-          required
-        </mat-error>
+        <input matInput placeholder="cell" formControlName="cell" />
+        
       </mat-form-field>
 
       <mat-form-field class="form-field">
         <input matInput placeholder="email" formControlName="email" />
-        <mat-error *ngIf="handleError('email', 'required')">
-          required
-        </mat-error>
+       
       </mat-form-field>
 
      

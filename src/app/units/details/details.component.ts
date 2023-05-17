@@ -57,12 +57,14 @@ export class DetailsComponent implements OnInit{
   // >>>>>>>>>>>  TABLE EDIT HANDLERS <<<<<<<<<<<<<
 
   onVehicleClick(n: number) {
+    console.log(this.me + " onVehicleClick() = " + n)
     this.editVehicle = this.myVehicles[n];
     this.us.setSelectedVehicle(this.editVehicle);
     this.router.navigate(['/units/edit-vehicle']);
   };
 
   onResidentClick(n: number) {
+    console.log(this.me + " onResidentClick() = " + n)
     this.editProfile = this.myProfiles[n];
     this.us.setSelectedProfile(this.editProfile);
     this.router.navigate(['/units/edit-resident']);
