@@ -66,8 +66,7 @@
               <mat-label>Choose a form</mat-label>
               <mat-select
                 formControlName="form"
-                (selectionChange)="formSelectorHandler()"
-              >
+                (selectionChange)="formSelectorHandler()">
                 <mat-option *ngFor="let f of formList" [value]="f">
                   {{ f }}
                 </mat-option>
@@ -78,10 +77,10 @@
       </div>
       <div class="spacer-10"></div>
 
-      <div class="edit-button">
+      <!-- <div class="edit-button">
       <button type="button" mat-raised-button color="accent" 
         (click)="resetlogIn()">RESET</button>
-      </div>
+      </div> -->
       
       <mat-card-footer></mat-card-footer>
 
